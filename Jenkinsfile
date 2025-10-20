@@ -29,7 +29,7 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 echo 'Analizando calidad del código con SonarQube...'
-                withSonarQubeEnv('Sonar') {
+                withSonarQubeEnv('sonarqube-server') {
                     bat '''
                         mvn sonar:sonar \
                             -Dsonar.projectKey=markenx-service \
