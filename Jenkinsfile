@@ -4,7 +4,7 @@ pipeline {
     environment {
         SONAR_HOST = 'http://localhost:9000'
         SONAR_TOKEN = credentials('sonar-token')
-        GITHUB_REPO = 'https://github.com/ChrisJMora/udla-markenx-service.git'
+        GITHUB_REPO = 'ChrisJMora/udla-markenx-service'
         GITHUB_TOKEN = credentials('github-creds')
         IMAGE_NAME = 'markenx-service'
         CONTAINER_NAME = 'spring-dev'
@@ -31,10 +31,10 @@ pipeline {
                 echo 'Analizando calidad del código con SonarQube...'
                 withSonarQubeEnv('sonarqube-server') {
                     bat '''
-                        mvn sonar:sonar \
-                            -Dsonar.projectKey=markenx-service \
-                            -Dsonar.host.url=${SONAR_HOST} \
-                            -Dsonar.login=${SONAR_TOKEN}
+                        mvn sonar:sonar ^
+                            -Dsonar.projectKey=markenx-service ^
+                            -Dsonar.host.url=%SONAR_HOST% ^
+                            -Dsonar.login=%SONAR_TOKEN%
                     '''
                 }
             }
@@ -44,17 +44,22 @@ pipeline {
             steps {
                 echo 'Reconstruyendo e iniciando contenedor Docker del servicio Spring Boot...'
                 bat '''
-                    echo "Deteniendo y eliminando contenedor previo si existe..."
-                    docker ps -q --filter "name=${CONTAINER_NAME}" | grep -q . && docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME} || echo "No hay contenedor previo."
+                    echo Deteniendo y eliminando contenedor previo si existe...
+                    for /f "tokens=*" %%i in ('docker ps -q --filter "name=%CONTAINER_NAME%"') do (
+                        docker stop %%i
+                        docker rm %%i
+                    ) || echo No hay contenedor previo.
 
-                    echo "Eliminando imagen previa si existe..."
-                    docker images -q ${IMAGE_NAME} | grep -q . && docker rmi ${IMAGE_NAME} || echo "No hay imagen previa."
+                    echo Eliminando imagen previa si existe...
+                    for /f "tokens=*" %%i in ('docker images -q %IMAGE_NAME%') do (
+                        docker rmi %%i
+                    ) || echo No hay imagen previa.
 
-                    echo "Reconstruyendo imagen y levantando servicio..."
+                    echo Reconstruyendo imagen y levantando servicio...
                     docker compose build app
                     docker compose up -d app
 
-                    echo "Contenedor ${CONTAINER_NAME} desplegado exitosamente."
+                    echo Contenedor %CONTAINER_NAME% desplegado exitosamente.
                 '''
             }
         }
@@ -64,10 +69,10 @@ pipeline {
         always {
             echo 'Ejecutando tareas post-pipeline...'
             bat """
-            curl -H "Authorization: token ${GITHUB_TOKEN}" \
-                 -H "Accept: application/vnd.github.v3+json" \
-                 -d '{"state": "success", "context": "ci/jenkins", "description": "Pipeline completado"}' \
-                 https://api.github.com/repos/${GITHUB_REPO}/statuses/${GIT_COMMIT}
+            curl -H "Authorization: token %GITHUB_TOKEN%" ^
+                 -H "Accept: application/vnd.github.v3+json" ^
+                 -d "{\\"state\\": \\"success\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"Pipeline completado\\"}" ^
+                 https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
             """
         }
 
@@ -78,10 +83,10 @@ pipeline {
         failure {
             echo 'Pipeline fallido. Verifica los logs de Jenkins y Docker.'
             bat """
-            curl -H "Authorization: token ${GITHUB_TOKEN}" \
-                 -H "Accept: application/vnd.github.v3+json" \
-                 -d '{"state": "failure", "context": "ci/jenkins", "description": "Pipeline fallido"}' \
-                 https://api.github.com/repos/${GITHUB_REPO}/statuses/${GIT_COMMIT}
+            curl -H "Authorization: token %GITHUB_TOKEN%" ^
+                 -H "Accept: application/vnd.github.v3+json" ^
+                 -d "{\\"state\\": \\"failure\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"Pipeline fallido\\"}" ^
+                 https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
             """
         }
     }
