@@ -11,18 +11,21 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                echo 'Compilando y empaquetando la aplicación Spring Boot...'
                 bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Unit Tests') {
             steps {
+                echo 'Ejecutando pruebas unitarias...'
                 bat 'mvn test'
             }
         }
 
-        stage('Code Quality') {
+        stage('Code Quality Analysis') {
             steps {
+                echo 'Analizando calidad del código con SonarQube...'
                 withSonarQubeEnv('sonarqube-server') {
                     bat '''
                         mvn sonar:sonar ^
@@ -36,21 +39,27 @@ pipeline {
 
         stage('Inject .env Secret File') {
             steps {
+                echo 'Inyectando archivo .env para Docker Compose...'
                 withCredentials([file(credentialsId: 'docker-compose-secret-env-file', variable: 'ENV_FILE')]) {
                     bat 'copy "%ENV_FILE%" .env'
                 }
             }
         }
 
-        stage('Deploy Only App') {
+        stage('Deploy App Only') {
             steps {
+                echo 'Desplegando solo el contenedor de la app...'
                 bat '''
-                    docker compose --env-file .env stop app || echo app no estaba corriendo
-                    docker compose --env-file .env rm -f app || echo app no existía
+                    REM Detener y eliminar solo el contenedor de la app
+                    docker ps -q --filter "name=spring-dev" | findstr . >nul && docker stop spring-dev && docker rm spring-dev || echo "Contenedor spring-dev no estaba corriendo"
 
+                    REM Reconstruir la imagen de la app
                     docker compose --env-file .env build --no-cache app
+
+                    REM Levantar solo la app
                     docker compose --env-file .env up -d app
 
+                    REM Verificar que el contenedor esté corriendo
                     docker ps --filter "name=spring-dev" --format "table {{.Names}}\t{{.Status}}"
                 '''
             }
@@ -59,8 +68,10 @@ pipeline {
 
     post {
         always {
+            echo 'Limpiando archivo .env...'
             bat 'del /f .env 2>nul || echo .env no encontrado'
 
+            echo 'Marcando estado pendiente en GitHub...'
             bat """
                 curl -s -o nul ^
                      -H "Authorization: token %GITHUB_TOKEN%" ^
@@ -69,6 +80,7 @@ pipeline {
             """
         }
         success {
+            echo 'Pipeline completado correctamente.'
             bat """
                 curl -s -o nul ^
                      -H "Authorization: token %GITHUB_TOKEN%" ^
@@ -77,6 +89,7 @@ pipeline {
             """
         }
         failure {
+            echo 'Pipeline fallido. Revisa Jenkins y Docker.'
             bat """
                 curl -s -o nul ^
                      -H "Authorization: token %GITHUB_TOKEN%" ^
