@@ -15,14 +15,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Compilando y empaquetando la aplicación Spring Boot...'
-                sh 'mvn clean package -DskipTests'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Unit Tests') {
             steps {
                 echo 'Ejecutando pruebas unitarias y generando cobertura...'
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
 
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 echo 'Analizando calidad del código con SonarQube...'
                 withSonarQubeEnv('Sonar') {
-                    sh '''
+                    bat '''
                         mvn sonar:sonar \
                             -Dsonar.projectKey=markenx-service \
                             -Dsonar.host.url=${SONAR_HOST} \
@@ -43,7 +43,7 @@ pipeline {
         stage('Docker Deploy') {
             steps {
                 echo 'Reconstruyendo e iniciando contenedor Docker del servicio Spring Boot...'
-                sh '''
+                bat '''
                     echo "Deteniendo y eliminando contenedor previo si existe..."
                     docker ps -q --filter "name=${CONTAINER_NAME}" | grep -q . && docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME} || echo "No hay contenedor previo."
 
@@ -63,7 +63,7 @@ pipeline {
     post {
         always {
             echo 'Ejecutando tareas post-pipeline...'
-            sh """
+            bat """
             curl -H "Authorization: token ${GITHUB_TOKEN}" \
                  -H "Accept: application/vnd.github.v3+json" \
                  -d '{"state": "success", "context": "ci/jenkins", "description": "Pipeline completado"}' \
@@ -77,7 +77,7 @@ pipeline {
 
         failure {
             echo 'Pipeline fallido. Verifica los logs de Jenkins y Docker.'
-            sh """
+            bat """
             curl -H "Authorization: token ${GITHUB_TOKEN}" \
                  -H "Accept: application/vnd.github.v3+json" \
                  -d '{"state": "failure", "context": "ci/jenkins", "description": "Pipeline fallido"}' \
