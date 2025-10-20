@@ -4,8 +4,8 @@ pipeline {
     environment {
         GITHUB_REPO = 'ChrisJMora/udla-markenx-service'
         GITHUB_TOKEN = credentials('github-creds')
-        IMAGE_NAME = 'markenx-service'
-        CONTAINER_NAME = 'spring-dev'
+        IMAGE_NAME = 'markenx-service-app'
+        CONTAINER_NAME = 'markenx-service'
     }
 
     stages {
