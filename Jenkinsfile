@@ -31,7 +31,7 @@ pipeline {
                 withSonarQubeEnv('sonarqube-server') {
                     bat '''
                         mvn sonar:sonar ^
-                            -Dsonar.projectKey=markenx-service ^
+                            -Dsonar.projectKey=udla-markenx-service ^
                             -Dsonar.host.url=%SONAR_HOST_URL% ^
                             -Dsonar.login=%SONAR_AUTH_TOKEN%
                     '''
