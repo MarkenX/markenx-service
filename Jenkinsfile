@@ -34,7 +34,7 @@ pipeline {
 
         stage('Inject .env Secret File') {
             steps {
-                withCredentials([file(credentialsId: 'docker-env-file-dev', variable: 'ENV_FILE')]) {
+                withCredentials([file(credentialsId: 'docker-compose-secret-env-file', variable: 'ENV_FILE')]) {
                     bat "copy \"%ENV_FILE%\" .env"
                     bat 'type .env'
                 }
