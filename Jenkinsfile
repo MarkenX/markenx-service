@@ -6,28 +6,24 @@ pipeline {
         GITHUB_TOKEN = credentials('github-creds')
         IMAGE_NAME = 'markenx-service'
         CONTAINER_NAME = 'spring-dev'
+        DB_HOST = 'db'
     }
 
     stages {
-
         stage('Build') {
             steps {
-                echo 'Compilando y empaquetando la aplicación Spring Boot...'
                 bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                echo 'Ejecutando pruebas unitarias y generando cobertura...'
                 bat 'mvn test'
             }
         }
 
-        stage('Code Quality Analysis') {
+        stage('Code Quality') {
             steps {
-                echo 'Analizando calidad del código con SonarQube...'
-                // 'sonarqube-server' debe estar configurado en Jenkins (Manage Jenkins > Configure System)
                 withSonarQubeEnv('sonarqube-server') {
                     bat '''
                         mvn sonar:sonar ^
@@ -39,53 +35,67 @@ pipeline {
             }
         }
 
-        stage('Docker Deploy') {
+        stage('Docker Deploy with Secrets') {
             steps {
-                echo 'Reconstruyendo e iniciando contenedor Docker del servicio Spring Boot...'
-                bat '''
-                    echo Deteniendo y eliminando contenedor previo si existe...
-                    for /f "tokens=*" %%i in ('docker ps -q --filter "name=%CONTAINER_NAME%"') do (
-                        docker stop %%i
-                        docker rm %%i
-                    ) || echo No hay contenedor previo.
+                withCredentials([
+                    string(credentialsId: 'db-user-dev', variable: 'DB_USER'),
+                    string(credentialsId: 'db-pass-dev', variable: 'DB_PASS'),
+                    string(credentialsId: 'db-root-pass-dev', variable: 'DB_ROOT_PASS'),
+                    string(credentialsId: 'db-name-dev', variable: 'DB_NAME'),
+                    string(credentialsId: 'db-port-dev', variable: 'DB_PORT')
+                ]) {
+                    bat '''
+                        echo Deteniendo contenedor previo...
+                        for /f "tokens=*" %%i in ('docker ps -q --filter "name=^%CONTAINER_NAME%^" 2^>nul') do (
+                            docker stop %%i
+                            docker rm %%i
+                        ) || echo No previous container.
 
-                    echo Eliminando imagen previa si existe...
-                    for /f "tokens=*" %%i in ('docker images -q %IMAGE_NAME%') do (
-                        docker rmi %%i
-                    ) || echo No hay imagen previa.
+                        echo Eliminando imagen previa...
+                        for /f "tokens=*" %%i in ('docker images -q %IMAGE_NAME% 2^>nul') do (
+                            docker rmi -f %%i
+                        ) || echo No previous image.
 
-                    echo Reconstruyendo imagen y levantando servicio...
-                    docker compose build app
-                    docker compose up -d app
+                        echo Construyendo y desplegando con variables inyectadas...
+                        set DB_USER=%DB_USER%
+                        set DB_PASS=%DB_PASS%
+                        set DB_ROOT_PASS=%DB_ROOT_PASS%
+                        set DB_NAME=%DB_NAME%
+                        set DB_PORT=%DB_PORT%
+                        set DB_HOST=%DB_HOST%
 
-                    echo Contenedor %CONTAINER_NAME% desplegado exitosamente.
-                '''
+                        docker compose build app
+                        docker compose up -d app
+                    '''
+                }
             }
         }
     }
 
     post {
         always {
-            echo 'Ejecutando tareas post-pipeline...'
+            echo 'Enviando estado a GitHub...'
             bat """
-            curl -H "Authorization: token %GITHUB_TOKEN%" ^
-                 -H "Accept: application/vnd.github.v3+json" ^
-                 -d "{\\"state\\": \\"success\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"Pipeline completado\\"}" ^
-                 https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
+                curl -s -o nul ^
+                     -H "Authorization: token %GITHUB_TOKEN%" ^
+                     -d "{\\"state\\": \\"pending\\", \\"context\\": \\"ci/jenkins\\"}" ^
+                     https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
             """
         }
-
         success {
-            echo 'Pipeline completado exitosamente.'
-        }
-
-        failure {
-            echo 'Pipeline fallido. Verifica los logs de Jenkins y Docker.'
             bat """
-            curl -H "Authorization: token %GITHUB_TOKEN%" ^
-                 -H "Accept: application/vnd.github.v3+json" ^
-                 -d "{\\"state\\": \\"failure\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"Pipeline fallido\\"}" ^
-                 https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
+                curl -s -o nul ^
+                     -H "Authorization: token %GITHUB_TOKEN%" ^
+                     -d "{\\"state\\": \\"success\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"Build OK\\"}" ^
+                     https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
+            """
+        }
+        failure {
+            bat """
+                curl -s -o nul ^
+                     -H "Authorization: token %GITHUB_TOKEN%" ^
+                     -d "{\\"state\\": \\"failure\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"Build failed\\"}" ^
+                     https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
             """
         }
     }
