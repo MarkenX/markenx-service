@@ -2,8 +2,6 @@ pipeline {
     agent any
 
     environment {
-        SONAR_HOST = 'http://localhost:9000'
-        SONAR_TOKEN = credentials('sonar-token')
         GITHUB_REPO = 'ChrisJMora/udla-markenx-service'
         GITHUB_TOKEN = credentials('github-creds')
         IMAGE_NAME = 'markenx-service'
@@ -29,12 +27,13 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 echo 'Analizando calidad del código con SonarQube...'
+                // 'sonarqube-server' debe estar configurado en Jenkins (Manage Jenkins > Configure System)
                 withSonarQubeEnv('sonarqube-server') {
                     bat '''
                         mvn sonar:sonar ^
                             -Dsonar.projectKey=markenx-service ^
-                            -Dsonar.host.url=%SONAR_HOST% ^
-                            -Dsonar.login=%SONAR_TOKEN%
+                            -Dsonar.host.url=%SONAR_HOST_URL% ^
+                            -Dsonar.login=%SONAR_AUTH_TOKEN%
                     '''
                 }
             }
