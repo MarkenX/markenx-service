@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Credentials and local enviroment ###
+.env

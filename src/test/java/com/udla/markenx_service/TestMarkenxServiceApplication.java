@@ -2,6 +2,8 @@ package com.udla.markenx_service;
 
 import org.springframework.boot.SpringApplication;
 
+import com.udla.markenx.MarkenxServiceApplication;
+
 public class TestMarkenxServiceApplication {
 
 	public static void main(String[] args) {

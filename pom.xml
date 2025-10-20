@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.udla</groupId>
-	<artifactId>markenx-service</artifactId>
+	<artifactId>markenx</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>markenx-service</name>
 	<description>Service responsible for managing the creation of custom game sessions based on administrator-defined configurations.  These configurations are exported to a Unity-based video game and deployed to student clients,  enabling personalized gameplay experiences aligned with the administrator’s setup.</description>
@@ -77,6 +77,26 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>mysql</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

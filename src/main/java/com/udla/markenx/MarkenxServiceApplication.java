@@ -1,4 +1,4 @@
-package com.udla.markenx_service;
+package com.udla.markenx;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
