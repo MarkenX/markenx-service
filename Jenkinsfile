@@ -71,6 +71,12 @@ pipeline {
         }
         success {
             echo 'Pipeline completado correctamente.'
+            emailext(
+                subject: "BUILD SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "El build ha sido exitoso.\n\nVer detalles en ${env.BUILD_URL}",
+                to: "daviandy3@gmail.com"
+            )
+
             bat """
                 curl -s -o nul ^
                      -H "Authorization: token %GITHUB_TOKEN%" ^
@@ -78,8 +84,15 @@ pipeline {
                      https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
             """
         }
+
         failure {
             echo 'Pipeline fallido. Revisa Jenkins y Docker.'
+            emailext(
+                subject: "BUILD FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "El build ha fallado. Revisa los logs en ${env.BUILD_URL}",
+                to: "daviandy3@gmail.com"
+            )
+
             bat """
                 curl -s -o nul ^
                      -H "Authorization: token %GITHUB_TOKEN%" ^
