@@ -55,74 +55,69 @@ pipeline {
             }
         }
     }
-    
     post {
-    success {
-        echo 'Pipeline completado correctamente.'
-
-        withCredentials([usernamePassword(credentialsId: 'gmail-smtp-creds', usernameVariable: 'SMTP_USER', passwordVariable: 'SMTP_PASS')]) {
+        always {
+            echo 'Limpiando archivo .env...'
+            bat 'del /f .env 2>nul || echo .env no encontrado'
+    
+            bat """
+                curl -s -o nul ^
+                     -H "Authorization: token %GITHUB_TOKEN%" ^
+                     -d "{\\"state\\": \\"pending\\", \\"context\\": \\"ci/jenkins\\"}" ^
+                     https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
+            """
+        }
+    
+        success {
+            echo 'Pipeline completado correctamente.'
+    
             emailext(
                 subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
                     <h2>Build Exitoso</h2>
                     <p><strong>Proyecto:</strong> ${env.JOB_NAME}</p>
                     <p><strong>Build #:</strong> ${env.BUILD_NUMBER}</p>
-                    <p><a href="${env.BUILD_URL}">Ver en Jenkins</a></p>
+                    <p><strong>Duración:</strong> ${currentBuild.durationString}</p>
+                    <p><a href="${env.BUILD_URL}">Ver detalles en Jenkins</a></p>
                 """,
                 to: 'daviandy3@gmail.com',
-                from: '${SMTP_USER}',
                 replyTo: 'daviandy3@gmail.com',
                 mimeType: 'text/html',
-                attachLog: true,
-                smtpHost: 'smtp.gmail.com',
-                smtpPort: '587',
-                smtpAuth: true,
-                smtpUsername: '${SMTP_USER}',
-                smtpPassword: '${SMTP_PASS}',
-                useSsl: false
+                attachLog: true
             )
+    
+            bat """
+                curl -s -o nul ^
+                     -H "Authorization: token %GITHUB_TOKEN%" ^
+                     -d "{\\"state\\": \\"success\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"App redeployed\\"}" ^
+                     https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
+            """
         }
-
-        bat """
-            curl -s -o nul ^
-                 -H "Authorization: token %GITHUB_TOKEN%" ^
-                 -d "{\\"state\\": \\"success\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"App redeployed\\"}" ^
-                 https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
-        """
-    }
-
-    failure {
-        echo 'Pipeline fallido.'
-
-        withCredentials([usernamePassword(credentialsId: 'gmail-smtp-creds', usernameVariable: 'SMTP_USER', passwordVariable: 'SMTP_PASS')]) {
+    
+        failure {
+            echo 'Pipeline fallido.'
+    
             emailext(
                 subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
                     <h2>Build Fallido</h2>
                     <p><strong>Proyecto:</strong> ${env.JOB_NAME}</p>
                     <p><strong>Build #:</strong> ${env.BUILD_NUMBER}</p>
-                    <p><a href="${env.BUILD_URL}">Ver logs</a></p>
+                    <p><strong>Error:</strong> Revisa los logs adjuntos.</p>
+                    <p><a href="${env.BUILD_URL}">Ver logs completos</a></p>
                 """,
                 to: 'daviandy3@gmail.com',
-                from: '${SMTP_USER}',
                 replyTo: 'daviandy3@gmail.com',
                 mimeType: 'text/html',
-                attachLog: true,
-                smtpHost: 'smtp.gmail.com',
-                smtpPort: '587',
-                smtpAuth: true,
-                smtpUsername: '${SMTP_USER}',
-                smtpPassword: '${SMTP_PASS}',
-                useSsl: false
+                attachLog: true
             )
+    
+            bat """
+                curl -s -o nul ^
+                     -H "Authorization: token %GITHUB_TOKEN%" ^
+                     -d "{\\"state\\": \\"failure\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"Deploy failed\\"}" ^
+                     https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
+            """
         }
-
-        bat """
-            curl -s -o nul ^
-                 -H "Authorization: token %GITHUB_TOKEN%" ^
-                 -d "{\\"state\\": \\"failure\\", \\"context\\": \\"ci/jenkins\\", \\"description\\": \\"Deploy failed\\"}" ^
-                 https://api.github.com/repos/%GITHUB_REPO%/statuses/%GIT_COMMIT%
-        """
     }
-}
 }
