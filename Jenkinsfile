@@ -46,21 +46,11 @@ pipeline {
             }
         }
 
-        stage('Deploy App Only') {
+        stage('Deploy Docker Compose') {
             steps {
-                echo 'Desplegando solo el contenedor de la app...'
+                echo 'Desplegando todos los servicios desde docker-compose.dev.yml local...'
                 bat '''
-                    REM Detener y eliminar solo el contenedor de la app
-                    docker ps -q --filter "name=spring-dev" | findstr . >nul && docker stop spring-dev && docker rm spring-dev || echo "Contenedor spring-dev no estaba corriendo"
-
-                    REM Reconstruir la imagen de la app
-                    docker compose --env-file .env build --no-cache app
-
-                    REM Levantar solo la app
-                    docker compose --env-file .env up -d app
-
-                    REM Verificar que el contenedor esté corriendo
-                    docker ps --filter "name=spring-dev" --format "table {{.Names}}\t{{.Status}}"
+                    docker compose --env-file .env -f docker-compose.dev.yml up -d --build
                 '''
             }
         }
