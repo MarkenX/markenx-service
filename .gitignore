@@ -34,3 +34,4 @@ build/
 
 ### Credentials and local enviroment ###
 .env
+.env.*

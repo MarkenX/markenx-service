@@ -1,19 +1,21 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: mysql-dev
+    container_name: mysql_db_dev
     restart: always
+    env_file:
+      - .env.dev
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
     ports:
-      - "${DB_PORT}:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - hexagonal_net
+      - shared_network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -23,22 +25,22 @@ services:
 
   app:
     build: .
-    container_name: spring-dev
+    container_name: markenx_service_dev
     depends_on:
       mysql:
         condition: service_healthy
     env_file:
-      - .env
+      - .env.dev
     environment:
       SPRING_PROFILES_ACTIVE: dev
     ports:
       - "8082:8080"
     networks:
-      - hexagonal_net
+      - shared_network
 
 volumes:
   mysql_data:
 
 networks:
-  hexagonal_net:
+  shared_network:
     driver: bridge
