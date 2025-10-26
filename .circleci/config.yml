@@ -32,9 +32,7 @@ jobs:
       - checkout
       - run:
           name: Analyze on SonarQube Cloud
-          command: mvn verify sonar:sonar \
-                  -Dsonar.projectKey=ChrisJMora_udla-markenx-service \
-                  -Dsonar.host.url=https://sonarcloud.io \
+          command: mvn verify sonar:sonar -Dsonar.projectKey=ChrisJMora_udla-markenx-service -Dsonar.organization=chrisjmora -Dsonar.host.url=https://sonarcloud.io
 
 workflows:
   main:
