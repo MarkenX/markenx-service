@@ -1,0 +1,50 @@
+version: 2.1
+
+defaults: &job_defaults
+  docker:
+    - image: 'cimg/openjdk:17.0'
+  working_directory: ~/project
+  steps:
+    - checkout
+
+jobs:
+  build:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - run:
+          name: Build Application
+          command: mvn clean package -DskipTests
+
+  test:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - run:
+          name: Run Tests
+          command: mvn test
+      - store_test_results:
+          path: target/surefire-reports
+
+  sonar:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - run:
+          name: Analyze on SonarQube Cloud
+          command: mvn verify sonar:sonar -Dsonar.projectKey=ChrisJMora_udla-markenx-service
+
+workflows:
+  main:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - sonar:
+          requires:
+            - test
+          context: SonarCloud
+          filters:
+            branches:
+              only: develop
