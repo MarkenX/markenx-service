@@ -44,7 +44,7 @@ jobs:
       - email/send:
           to: $EMAIL_TO
           subject: $EMAIL_SUBJECT
-          body: $EMAIL_BODY
+          body: "El pipeline ha finalizado. Revisa los resultados en: $CIRCLE_BUILD_URL"
 
 workflows:
   main:
