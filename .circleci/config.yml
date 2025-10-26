@@ -47,4 +47,4 @@ workflows:
           context: SonarCloud
           filters:
             branches:
-              only: develop
+              only: main
