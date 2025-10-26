@@ -1,10 +1,15 @@
 version: 2.1
 
+defaults: &job_defaults
+  docker:
+    - image: 'cimg/openjdk:17.0'
+  working_directory: ~/project
+  steps:
+    - checkout
+
 jobs:
   build:
-    docker:
-      - image: 'cimg/openjdk:17.0'
-    working_directory: /app
+    <<: *job_defaults
     steps:
       - checkout
       - run:
@@ -12,19 +17,17 @@ jobs:
           command: mvn clean package -DskipTests
 
   test:
-    docker:
-      - image: 'cimg/openjdk:17.0'
-    working_directory: /app
+    <<: *job_defaults
     steps:
       - checkout
       - run:
           name: Run Tests
           command: mvn test
+      - store_test_results:
+          path: target/surefire-reports
 
   sonar:
-    docker:
-      - image: 'cimg/openjdk:17.0'
-    working_directory: /app
+    <<: *job_defaults
     steps:
       - checkout
       - run:
