@@ -1,4 +1,4 @@
-package com.udla.markenx_service.adapters.outbound.persistance.jpa.repository;
+package com.udla.markenx.adapters.outbound.persistance.jpa.repository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.adapters.outbound.persistance.jpa.entity.StudentJpaEntity;
 import com.udla.markenx.adapters.outbound.persistance.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.adapters.outbound.persistance.jpa.repository.StudentJpaRepository;
-import com.udla.markenx.adapters.outbound.persistance.jpa.repository.TaskJpaRepository;
 import com.udla.markenx.domain.model.AssignmentStatus;
 
 @SpringBootTest
