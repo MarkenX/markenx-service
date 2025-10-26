@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build_and_sonar:
     docker:
-      - image: maven:3.8.6-eclipse-temurin-11
+      - image: maven:3.8.6-eclipse-temurin-17
     working_directory: /app
     steps:
       - checkout
