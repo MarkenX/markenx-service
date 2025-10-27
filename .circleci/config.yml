@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  email: cinotify/email@1.2.1
+  slack: circleci/slack@6.0.0
 
 defaults: &job_defaults
   docker:
@@ -14,7 +14,6 @@ jobs:
   build:
     <<: *job_defaults
     steps:
-      - checkout
       - run:
           name: Build Application
           command: mvn clean package -DskipTests
@@ -22,7 +21,6 @@ jobs:
   test:
     <<: *job_defaults
     steps:
-      - checkout
       - run:
           name: Run Tests
           command: mvn test
@@ -32,19 +30,30 @@ jobs:
   sonar:
     <<: *job_defaults
     steps:
-      - checkout
       - run:
-          name: Analyze on SonarQube Cloud
+          name: Analyze on SonarCloud
           command: mvn clean verify sonar:sonar -Dsonar.login=$SONAR_TOKEN
 
-  send_email:
+  notify_slack:
     docker:
       - image: cimg/base:stable
     steps:
-      - email/send:
-          to: $EMAIL_TO
-          subject: $EMAIL_SUBJECT
-          body: "El pipeline ha finalizado. Revisa los resultados en: $CIRCLE_BUILD_URL"
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": ":rocket: *Pipeline finalizado* \n*Proyecto:* $CIRCLE_PROJECT_REPONAME \n*Branch:* $CIRCLE_BRANCH \n<${CIRCLE_BUILD_URL}|Ver detalles en CircleCI>",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
 
 workflows:
   main:
@@ -60,7 +69,8 @@ workflows:
           filters:
             branches:
               only: main
-      - send_email:
+      - notify_slack:
           requires:
             - test
             - sonar
+          context: Slack
