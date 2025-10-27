@@ -47,16 +47,14 @@ jobs:
               "blocks": [
                 {
                   "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": ":rocket: *Pipeline finalizado* \n*Proyecto:* $CIRCLE_PROJECT_REPONAME \n*Branch:* $CIRCLE_BRANCH \n<${CIRCLE_BUILD_URL}|Ver detalles en CircleCI>",
-                      "emoji": true
-                    }
-                  ]
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":rocket: *Pipeline finalizado*\n*Proyecto:* $CIRCLE_PROJECT_REPONAME\n*Branch:* $CIRCLE_BRANCH\n<${CIRCLE_BUILD_URL}|Ver detalles en CircleCI>"
+                  }
                 }
               ]
             }
+
 
 workflows:
   main:
