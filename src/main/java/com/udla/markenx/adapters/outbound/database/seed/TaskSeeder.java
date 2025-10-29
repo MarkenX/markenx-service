@@ -40,8 +40,8 @@ public class TaskSeeder {
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
                 TaskJpaEntity task = new TaskJpaEntity(
-                        faker.job().title(),
-                        faker.lorem().sentence(),
+                        faker.app().name(),
+                        faker.lorem().paragraph(2),
                         AssignmentStatus.values()[faker.random().nextInt(AssignmentStatus.values().length)],
                         localFutureDate,
                         faker.number().numberBetween(0, 3),
