@@ -4,10 +4,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.udla.markenx.adapters.inbound.rest.dto.AttemptResponseDTO;
 import com.udla.markenx.adapters.inbound.rest.dto.TaskResponseDTO;
+import com.udla.markenx.adapters.inbound.rest.mapper.AttemptMapper;
 import com.udla.markenx.adapters.inbound.rest.mapper.TaskMapper;
 import com.udla.markenx.application.service.TaskService;
 import com.udla.markenx.domain.model.AssignmentStatus;
+import com.udla.markenx.domain.model.Attempt;
 import com.udla.markenx.domain.model.Task;
 
 import java.time.LocalDate;
@@ -22,24 +25,35 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/api/markenx")
 public class TaskController {
 
-    private final TaskService taskService;
+	private final TaskService taskService;
 
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
+	public TaskController(TaskService taskService) {
+		this.taskService = taskService;
+	}
 
-    @GetMapping("/students/{studentId}/tasks")
-    public ResponseEntity<Page<TaskResponseDTO>> getTasksByFilters(
-            @PathVariable Long studentId,
-            @RequestParam(required = false) AssignmentStatus status,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+	@GetMapping("/students/{studentId}/tasks")
+	public ResponseEntity<Page<TaskResponseDTO>> getTasksByFilters(
+			@PathVariable Long studentId,
+			@RequestParam(required = false) AssignmentStatus status,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 
-        Page<Task> tasks = taskService.getStudentTasks(studentId, startDate, endDate, status, page, size);
+		Page<Task> tasks = taskService.getStudentTasks(studentId, startDate, endDate, status, page, size);
 
-        Page<TaskResponseDTO> response = tasks.map(TaskMapper::toDto);
-        return ResponseEntity.ok(response);
-    }
+		Page<TaskResponseDTO> response = tasks.map(TaskMapper::toDto);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/tasks/{taskId}/attempts")
+	public ResponseEntity<Page<AttemptResponseDTO>> getTaskAttempts(
+			@PathVariable Long taskId,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Page<Attempt> attempts = taskService.getTaskAttempts(taskId, page, size);
+
+		Page<AttemptResponseDTO> response = attempts.map(AttemptMapper::toDto);
+		return ResponseEntity.ok(response);
+	}
 }
