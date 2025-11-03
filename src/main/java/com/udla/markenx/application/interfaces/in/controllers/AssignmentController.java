@@ -1,4 +1,4 @@
-package com.udla.markenx.api.inbound.rest;
+package com.udla.markenx.application.interfaces.in.controllers;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.udla.markenx.api.inbound.rest.dto.AssignmentStatusResponseDTO;
-import com.udla.markenx.api.inbound.rest.mapper.AssignmentStatusMapper;
+import com.udla.markenx.application.interfaces.in.dtos.AssignmentStatusResponseDTO;
+import com.udla.markenx.application.interfaces.in.mappers.AssignmentStatusMapper;
 
 @RestController
 @RequestMapping("/api/markenx")

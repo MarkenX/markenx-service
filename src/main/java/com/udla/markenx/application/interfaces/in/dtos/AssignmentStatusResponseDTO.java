@@ -1,4 +1,4 @@
-package com.udla.markenx.api.inbound.rest.dto;
+package com.udla.markenx.application.interfaces.in.dtos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

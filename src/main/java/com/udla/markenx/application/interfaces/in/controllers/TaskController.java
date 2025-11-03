@@ -1,13 +1,13 @@
-package com.udla.markenx.api.inbound.rest;
+package com.udla.markenx.application.interfaces.in.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.udla.markenx.api.inbound.rest.dto.AttemptResponseDTO;
-import com.udla.markenx.api.inbound.rest.dto.TaskResponseDTO;
-import com.udla.markenx.api.inbound.rest.mapper.AttemptMapper;
-import com.udla.markenx.api.inbound.rest.mapper.TaskMapper;
+import com.udla.markenx.application.interfaces.in.dtos.AttemptResponseDTO;
+import com.udla.markenx.application.interfaces.in.dtos.TaskResponseDTO;
+import com.udla.markenx.application.interfaces.in.mappers.AttemptMapper;
+import com.udla.markenx.application.interfaces.in.mappers.TaskMapper;
 import com.udla.markenx.application.service.TaskService;
 import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.models.Attempt;

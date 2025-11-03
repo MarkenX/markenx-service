@@ -1,6 +1,6 @@
-package com.udla.markenx.api.inbound.rest.mapper;
+package com.udla.markenx.application.interfaces.in.mappers;
 
-import com.udla.markenx.api.inbound.rest.dto.AttemptResponseDTO;
+import com.udla.markenx.application.interfaces.in.dtos.AttemptResponseDTO;
 import com.udla.markenx.core.models.Attempt;
 
 public class AttemptMapper {

@@ -1,10 +1,10 @@
-package com.udla.markenx.api.inbound.rest.mapper;
+package com.udla.markenx.application.interfaces.in.mappers;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.udla.markenx.api.inbound.rest.dto.AssignmentStatusResponseDTO;
+import com.udla.markenx.application.interfaces.in.dtos.AssignmentStatusResponseDTO;
 import com.udla.markenx.core.enums.AssignmentStatus;
 
 public class AssignmentStatusMapper {
