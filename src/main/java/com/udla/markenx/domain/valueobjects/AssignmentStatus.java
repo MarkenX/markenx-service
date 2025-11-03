@@ -1,19 +1,19 @@
 package com.udla.markenx.domain.valueobjects;
 
 public enum AssignmentStatus {
-    NOT_STARTED("Sin empezar"),
-    IN_PROGRESS("En curso"),
-    COMPLETED("Completada"),
-    OUTDATED("Vencida"),
-    FAILED("Fallida");
+	NOT_STARTED("Sin empezar"),
+	IN_PROGRESS("En curso"),
+	COMPLETED("Completada"),
+	OUTDATED("Vencida"),
+	FAILED("Fallida");
 
-    private final String label;
+	private final String label;
 
-    AssignmentStatus(String label) {
-        this.label = label;
-    }
+	AssignmentStatus(String label) {
+		this.label = label;
+	}
 
-    public String getLabel() {
-        return label;
-    }
+	public String getLabel() {
+		return label;
+	}
 }
