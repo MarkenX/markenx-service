@@ -2,7 +2,7 @@ package com.udla.markenx.infrastructure.out.repository.jpa.entity;
 
 import java.time.LocalDate;
 
-import com.udla.markenx.core.enums.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

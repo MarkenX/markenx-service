@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.core.enums.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 import com.udla.markenx.infrastructure.out.repository.jpa.entity.StudentJpaEntity;
 import com.udla.markenx.infrastructure.out.repository.jpa.entity.TaskJpaEntity;
 import com.udla.markenx.infrastructure.out.repository.jpa.repository.TaskJpaRepository;

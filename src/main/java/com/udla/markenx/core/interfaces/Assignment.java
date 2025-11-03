@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import lombok.Getter;
 
-import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.exceptions.InvalidEntityException;
+import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
 @Getter
 public abstract class Assignment {

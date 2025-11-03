@@ -4,7 +4,7 @@ import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
 import com.udla.markenx.core.models.Task;
 
 public class TaskMapper {
-	public static TaskResponseDTO toDto(Task task) {
+	public static TaskResponseDTO toResponseDto(Task task) {
 		if (task == null)
 			return null;
 

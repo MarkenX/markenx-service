@@ -3,9 +3,9 @@ package com.udla.markenx.core.models;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.exceptions.InvalidEntityException;
 import com.udla.markenx.core.interfaces.Assignment;
+import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
 import lombok.Getter;
 import lombok.EqualsAndHashCode;

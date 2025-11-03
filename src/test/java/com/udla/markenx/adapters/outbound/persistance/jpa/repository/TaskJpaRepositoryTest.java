@@ -19,7 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.core.enums.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 import com.udla.markenx.infrastructure.out.repository.jpa.entity.StudentJpaEntity;
 import com.udla.markenx.infrastructure.out.repository.jpa.entity.TaskJpaEntity;
 import com.udla.markenx.infrastructure.out.repository.jpa.repository.StudentJpaRepository;

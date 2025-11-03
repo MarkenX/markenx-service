@@ -20,4 +20,12 @@ public class TaskMapper {
 
 		return task;
 	}
+
+	public static TaskJpaEntity toEntity(Task domain) {
+		if (domain == null) {
+			return null;
+		}
+
+		return null;
+	}
 }

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.udla.markenx.core.enums.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 import com.udla.markenx.infrastructure.out.repository.jpa.entity.TaskJpaEntity;
 
 public interface TaskJpaRepository extends JpaRepository<TaskJpaEntity, Long> {
