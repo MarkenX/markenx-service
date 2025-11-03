@@ -4,10 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.udla.markenx.application.interfaces.in.dtos.AttemptResponseDTO;
-import com.udla.markenx.application.interfaces.in.dtos.TaskResponseDTO;
-import com.udla.markenx.application.interfaces.in.mappers.AttemptMapper;
-import com.udla.markenx.application.interfaces.in.mappers.TaskMapper;
+import com.udla.markenx.application.dtos.AttemptResponseDTO;
+import com.udla.markenx.application.dtos.TaskResponseDTO;
+import com.udla.markenx.application.mappers.AttemptMapper;
+import com.udla.markenx.application.mappers.TaskMapper;
 import com.udla.markenx.application.services.TaskService;
 import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.models.Attempt;

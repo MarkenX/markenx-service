@@ -1,4 +1,4 @@
-package com.udla.markenx.application.interfaces.in.dtos;
+package com.udla.markenx.application.dtos;
 
 import java.time.LocalDate;
 
