@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.udla.markenx.application.interfaces.out.repository.AttemptRepositoryPort;
-import com.udla.markenx.application.interfaces.out.repository.TaskRepositoryPort;
+import com.udla.markenx.application.interfaces.out.repositories.AttemptRepositoryPort;
+import com.udla.markenx.application.interfaces.out.repositories.TaskRepositoryPort;
 import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.Task;
