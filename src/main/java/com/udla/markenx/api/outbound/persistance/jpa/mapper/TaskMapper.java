@@ -1,7 +1,7 @@
 package com.udla.markenx.api.outbound.persistance.jpa.mapper;
 
 import com.udla.markenx.api.outbound.persistance.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.core.model.Task;
+import com.udla.markenx.core.models.Task;
 
 public class TaskMapper {
 

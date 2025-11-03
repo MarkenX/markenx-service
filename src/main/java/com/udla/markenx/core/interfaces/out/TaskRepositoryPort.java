@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.data.domain.Page;
 
-import com.udla.markenx.core.model.Task;
+import com.udla.markenx.core.models.Task;
 import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 public interface TaskRepositoryPort {

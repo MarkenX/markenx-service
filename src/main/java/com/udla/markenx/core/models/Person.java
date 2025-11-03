@@ -1,4 +1,4 @@
-package com.udla.markenx.core.model;
+package com.udla.markenx.core.models;
 
 public class Person {
     private long id;

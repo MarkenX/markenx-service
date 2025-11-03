@@ -1,7 +1,7 @@
 package com.udla.markenx.api.inbound.rest.mapper;
 
 import com.udla.markenx.api.inbound.rest.dto.TaskResponseDTO;
-import com.udla.markenx.core.model.Task;
+import com.udla.markenx.core.models.Task;
 
 public class TaskMapper {
 	public static TaskResponseDTO toDto(Task task) {

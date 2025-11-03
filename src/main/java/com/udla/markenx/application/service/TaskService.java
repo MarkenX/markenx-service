@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.udla.markenx.core.interfaces.out.AttemptRepositoryPort;
 import com.udla.markenx.core.interfaces.out.TaskRepositoryPort;
-import com.udla.markenx.core.model.Attempt;
-import com.udla.markenx.core.model.Task;
+import com.udla.markenx.core.models.Attempt;
+import com.udla.markenx.core.models.Task;
 import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 @Service

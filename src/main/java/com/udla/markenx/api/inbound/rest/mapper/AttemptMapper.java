@@ -1,7 +1,7 @@
 package com.udla.markenx.api.inbound.rest.mapper;
 
 import com.udla.markenx.api.inbound.rest.dto.AttemptResponseDTO;
-import com.udla.markenx.core.model.Attempt;
+import com.udla.markenx.core.models.Attempt;
 
 public class AttemptMapper {
   public static AttemptResponseDTO toDto(Attempt attempt) {
