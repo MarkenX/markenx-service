@@ -1,0 +1,23 @@
+package com.udla.markenx.api.inbound.rest;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.udla.markenx.api.inbound.rest.dto.AssignmentStatusResponseDTO;
+import com.udla.markenx.api.inbound.rest.mapper.AssignmentStatusMapper;
+
+@RestController
+@RequestMapping("/api/markenx")
+public class AssignmentController {
+
+    @GetMapping("/assignments/status")
+    public ResponseEntity<List<AssignmentStatusResponseDTO>> getAssignmentStatus() {
+        List<AssignmentStatusResponseDTO> statusList = AssignmentStatusMapper.toDtoList();
+
+        return ResponseEntity.ok(statusList);
+    }
+}
