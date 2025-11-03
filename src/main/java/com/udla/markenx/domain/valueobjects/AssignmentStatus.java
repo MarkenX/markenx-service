@@ -1,10 +1,11 @@
-package com.udla.markenx.domain.model;
+package com.udla.markenx.domain.valueobjects;
 
 public enum AssignmentStatus {
     NOT_STARTED("Sin empezar"),
     IN_PROGRESS("En curso"),
     COMPLETED("Completada"),
-    OUTDATED("Vencida");
+    OUTDATED("Vencida"),
+    FAILED("Fallida");
 
     private final String label;
 
