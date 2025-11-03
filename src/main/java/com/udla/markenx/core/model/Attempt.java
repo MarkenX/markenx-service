@@ -1,4 +1,4 @@
-package com.udla.markenx.domain.model;
+package com.udla.markenx.core.model;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -19,8 +19,7 @@ public class Attempt {
     public Attempt(
             double score,
             LocalDate date,
-            Duration duration
-            ) {
+            Duration duration) {
         this.score = score;
         this.date = date;
         this.duration = duration;

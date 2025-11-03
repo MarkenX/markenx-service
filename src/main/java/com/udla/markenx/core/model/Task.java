@@ -1,6 +1,8 @@
-package com.udla.markenx.domain.model;
+package com.udla.markenx.core.model;
 
 import java.time.LocalDate;
+
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,8 +23,7 @@ public class Task extends Assignment {
             AssignmentStatus currentStatus,
             int activeAttempt,
             int maxAttempts,
-            LocalDate dueDate
-            ) {
+            LocalDate dueDate) {
         super(title, summary, dueDate, currentStatus);
         this.activeAttempt = activeAttempt;
         this.maxAttempts = maxAttempts;

@@ -1,4 +1,4 @@
-package com.udla.markenx.domain.valueobjects;
+package com.udla.markenx.core.valueobjects;
 
 public enum AssignmentStatus {
 	NOT_STARTED("Sin empezar"),

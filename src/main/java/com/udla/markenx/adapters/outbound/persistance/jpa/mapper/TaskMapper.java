@@ -1,12 +1,13 @@
 package com.udla.markenx.adapters.outbound.persistance.jpa.mapper;
 
 import com.udla.markenx.adapters.outbound.persistance.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.domain.model.Task;
+import com.udla.markenx.core.model.Task;
 
 public class TaskMapper {
-    
+
     public static Task toDomain(TaskJpaEntity entity) {
-        if (entity == null) return null;
+        if (entity == null)
+            return null;
 
         Task task = new Task();
         task.setId(entity.getId());

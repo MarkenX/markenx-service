@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.adapters.outbound.persistance.jpa.entity.StudentJpaEntity;
 import com.udla.markenx.adapters.outbound.persistance.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.domain.model.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.ANY)
@@ -47,7 +47,8 @@ class TaskJpaRepositoryTest {
     @BeforeEach
     void setUp() {
         student = studentJpaRepository.save(new StudentJpaEntity("John", "Doe"));
-        taskJpaRepository.save(new TaskJpaEntity(TASK_TITLE, TASK_SUMMARY, TASK_STATUS, DUE_DATE, TASK_ACTIVE_ATTEMPT, TASK_MAX_ATTEMPTS, student));
+        taskJpaRepository.save(new TaskJpaEntity(TASK_TITLE, TASK_SUMMARY, TASK_STATUS, DUE_DATE, TASK_ACTIVE_ATTEMPT,
+                TASK_MAX_ATTEMPTS, student));
     }
 
     @Test
@@ -124,7 +125,8 @@ class TaskJpaRepositoryTest {
                 TASK_STATUS,
                 PageRequest.of(0, 10));
 
-        assertThat("Task active attempt should match", result.getContent().get(0).getActiveAttempt(), equalTo(TASK_ACTIVE_ATTEMPT));
+        assertThat("Task active attempt should match", result.getContent().get(0).getActiveAttempt(),
+                equalTo(TASK_ACTIVE_ATTEMPT));
     }
 
     @Test
@@ -135,7 +137,8 @@ class TaskJpaRepositoryTest {
                 TASK_STATUS,
                 PageRequest.of(0, 10));
 
-        assertThat("Task max attempts should match", result.getContent().get(0).getMaxAttempts(), equalTo(TASK_MAX_ATTEMPTS));
+        assertThat("Task max attempts should match", result.getContent().get(0).getMaxAttempts(),
+                equalTo(TASK_MAX_ATTEMPTS));
     }
 
     @Test
@@ -146,6 +149,7 @@ class TaskJpaRepositoryTest {
                 TASK_STATUS,
                 PageRequest.of(0, 10));
 
-        assertThat("Task student ID should match", result.getContent().get(0).getStudent().getId(), equalTo(student.getId()));
+        assertThat("Task student ID should match", result.getContent().get(0).getStudent().getId(),
+                equalTo(student.getId()));
     }
 }

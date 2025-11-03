@@ -9,9 +9,9 @@ import com.udla.markenx.adapters.inbound.rest.dto.TaskResponseDTO;
 import com.udla.markenx.adapters.inbound.rest.mapper.AttemptMapper;
 import com.udla.markenx.adapters.inbound.rest.mapper.TaskMapper;
 import com.udla.markenx.application.service.TaskService;
-import com.udla.markenx.domain.model.AssignmentStatus;
-import com.udla.markenx.domain.model.Attempt;
-import com.udla.markenx.domain.model.Task;
+import com.udla.markenx.core.model.Attempt;
+import com.udla.markenx.core.model.Task;
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 import java.time.LocalDate;
 

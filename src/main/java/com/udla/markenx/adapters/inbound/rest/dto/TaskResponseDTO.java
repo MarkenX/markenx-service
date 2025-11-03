@@ -2,7 +2,7 @@ package com.udla.markenx.adapters.inbound.rest.dto;
 
 import java.time.LocalDate;
 
-import com.udla.markenx.domain.model.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

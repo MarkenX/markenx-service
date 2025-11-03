@@ -5,11 +5,11 @@ import java.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.udla.markenx.domain.model.AssignmentStatus;
-import com.udla.markenx.domain.model.Attempt;
-import com.udla.markenx.domain.model.Task;
-import com.udla.markenx.domain.port.out.AttemptRepositoryPort;
-import com.udla.markenx.domain.port.out.TaskRepositoryPort;
+import com.udla.markenx.core.model.Attempt;
+import com.udla.markenx.core.model.Task;
+import com.udla.markenx.core.port.out.AttemptRepositoryPort;
+import com.udla.markenx.core.port.out.TaskRepositoryPort;
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 @Service
 public class TaskService {

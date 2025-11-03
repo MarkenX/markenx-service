@@ -1,4 +1,4 @@
-package com.udla.markenx.domain.model;
+package com.udla.markenx.core.model;
 
 public class Person {
     private long id;
@@ -11,7 +11,7 @@ public class Person {
         this.lastName = lastname;
     }
 
-    //#region Getters
+    // #region Getters
 
     public long getId() {
         return id;
@@ -25,5 +25,5 @@ public class Person {
         return lastName;
     }
 
-    //#endregion
+    // #endregion
 }

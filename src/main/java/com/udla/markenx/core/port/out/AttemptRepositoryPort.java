@@ -1,8 +1,8 @@
-package com.udla.markenx.domain.port.out;
+package com.udla.markenx.core.port.out;
 
 import org.springframework.data.domain.Page;
 
-import com.udla.markenx.domain.model.Attempt;
+import com.udla.markenx.core.model.Attempt;
 
 public interface AttemptRepositoryPort {
     Page<Attempt> getAttemptsByTaskId(Long taskId, int page, int size);

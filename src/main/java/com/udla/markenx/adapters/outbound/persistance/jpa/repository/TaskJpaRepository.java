@@ -7,11 +7,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.adapters.outbound.persistance.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.domain.model.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 public interface TaskJpaRepository extends JpaRepository<TaskJpaEntity, Long> {
     Page<TaskJpaEntity> findByStudentId(Long studentId, Pageable pageable);
-    Page<TaskJpaEntity> findByStudentIdAndCurrentStatus(Long studentId, AssignmentStatus currentStatus, Pageable pageable);
-    Page<TaskJpaEntity> findByStudentIdAndDueDateBetween(Long studentId, LocalDate startDate, LocalDate endDate, Pageable pageable);
-    Page<TaskJpaEntity> findByStudentIdAndDueDateBetweenAndCurrentStatus(Long studentId, LocalDate startDate, LocalDate endDate, AssignmentStatus currentStatus, Pageable pageable);
+
+    Page<TaskJpaEntity> findByStudentIdAndCurrentStatus(Long studentId, AssignmentStatus currentStatus,
+            Pageable pageable);
+
+    Page<TaskJpaEntity> findByStudentIdAndDueDateBetween(Long studentId, LocalDate startDate, LocalDate endDate,
+            Pageable pageable);
+
+    Page<TaskJpaEntity> findByStudentIdAndDueDateBetweenAndCurrentStatus(Long studentId, LocalDate startDate,
+            LocalDate endDate, AssignmentStatus currentStatus, Pageable pageable);
 }

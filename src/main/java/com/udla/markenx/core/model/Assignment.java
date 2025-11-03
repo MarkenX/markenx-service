@@ -1,6 +1,8 @@
-package com.udla.markenx.domain.model;
+package com.udla.markenx.core.model;
 
 import java.time.LocalDate;
+
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +22,7 @@ public class Assignment {
             String title,
             String summary,
             LocalDate dueDate,
-            AssignmentStatus currentStatus
-            ) {
+            AssignmentStatus currentStatus) {
         this.title = title;
         this.summnary = summary;
         this.currentStatus = currentStatus;

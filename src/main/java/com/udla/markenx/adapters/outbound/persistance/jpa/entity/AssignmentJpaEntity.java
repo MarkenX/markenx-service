@@ -2,7 +2,7 @@ package com.udla.markenx.adapters.outbound.persistance.jpa.entity;
 
 import java.time.LocalDate;
 
-import com.udla.markenx.domain.model.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

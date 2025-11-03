@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.udla.markenx.adapters.inbound.rest.dto.AssignmentStatusResponseDTO;
-import com.udla.markenx.domain.model.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 public class AssignmentStatusMapper {
     public static AssignmentStatusResponseDTO toDto(AssignmentStatus status) {
@@ -14,7 +14,7 @@ public class AssignmentStatusMapper {
 
     public static List<AssignmentStatusResponseDTO> toDtoList() {
         return Arrays.stream(AssignmentStatus.values())
-                     .map(AssignmentStatusMapper::toDto)
-                     .collect(Collectors.toList());
+                .map(AssignmentStatusMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

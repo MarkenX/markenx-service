@@ -15,7 +15,7 @@ import com.github.javafaker.Faker;
 import com.udla.markenx.adapters.outbound.persistance.jpa.entity.StudentJpaEntity;
 import com.udla.markenx.adapters.outbound.persistance.jpa.entity.TaskJpaEntity;
 import com.udla.markenx.adapters.outbound.persistance.jpa.repository.TaskJpaRepository;
-import com.udla.markenx.domain.model.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 @Component
 @Profile("dev")

@@ -1,4 +1,4 @@
-package com.udla.markenx.domain.model;
+package com.udla.markenx.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
