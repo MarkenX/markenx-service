@@ -1,4 +1,4 @@
-package com.udla.markenx.application.interfaces.out;
+package com.udla.markenx.application.interfaces.out.repository;
 
 import org.springframework.data.domain.Page;
 

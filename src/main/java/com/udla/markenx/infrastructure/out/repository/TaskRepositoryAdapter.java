@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.udla.markenx.application.interfaces.out.TaskRepositoryPort;
+import com.udla.markenx.application.interfaces.out.repository.TaskRepositoryPort;
 import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.models.Task;
 import com.udla.markenx.infrastructure.out.repository.jpa.mapper.TaskMapper;
