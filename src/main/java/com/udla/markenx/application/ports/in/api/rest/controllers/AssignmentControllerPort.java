@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import com.udla.markenx.application.dtos.AssignmentStatusResponseDTO;
+import com.udla.markenx.application.dtos.responses.AssignmentStatusResponseDTO;
 
 public interface AssignmentControllerPort {
   ResponseEntity<List<AssignmentStatusResponseDTO>> getAssignmentStatus();

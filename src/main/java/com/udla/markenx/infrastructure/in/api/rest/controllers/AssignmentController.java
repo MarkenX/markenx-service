@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.udla.markenx.application.dtos.AssignmentStatusResponseDTO;
+import com.udla.markenx.application.dtos.responses.AssignmentStatusResponseDTO;
 import com.udla.markenx.application.mappers.AssignmentStatusMapper;
 import com.udla.markenx.application.ports.in.api.rest.controllers.AssignmentControllerPort;
 

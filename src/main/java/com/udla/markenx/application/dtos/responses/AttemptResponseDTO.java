@@ -1,4 +1,4 @@
-package com.udla.markenx.application.dtos;
+package com.udla.markenx.application.dtos.responses;
 
 import java.time.Duration;
 import java.time.LocalDate;
