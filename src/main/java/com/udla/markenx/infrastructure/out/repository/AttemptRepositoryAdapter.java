@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.udla.markenx.application.interfaces.out.repositories.AttemptRepositoryPort;
+import com.udla.markenx.application.ports.out.repositories.AttemptRepositoryPort;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.infrastructure.out.repository.jpa.mapper.AttemptMapper;
 import com.udla.markenx.infrastructure.out.repository.jpa.repository.AttemptJpaRepository;
