@@ -1,13 +1,16 @@
 package com.udla.markenx.infrastructure.out.persistance.jpa.mappers;
 
+import org.springframework.lang.NonNull;
+
 import com.udla.markenx.core.models.Task;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.MappingException;
 import com.udla.markenx.infrastructure.out.persistance.jpa.entities.TaskJpaEntity;
 
 public class TaskMapper {
 
-	public static Task toDomain(TaskJpaEntity entity) {
+	public static @NonNull Task toDomain(TaskJpaEntity entity) {
 		if (entity == null) {
-			return null;
+			throw new MappingException("No se puede mapear una entidad JPA nula a un objeto de dominio.");
 		}
 
 		Task task = new Task(
@@ -21,11 +24,20 @@ public class TaskMapper {
 		return task;
 	}
 
-	public static TaskJpaEntity toEntity(Task domain) {
+	public static @NonNull TaskJpaEntity toEntity(Task domain) {
 		if (domain == null) {
-			return null;
+			throw new MappingException("No se puede mapear un objeto nulo de dominio a entidad JPA.");
 		}
 
-		return null;
+		TaskJpaEntity entity = new TaskJpaEntity();
+		entity.setId(domain.getId());
+		entity.setTitle(domain.getTitle());
+		entity.setSummary(domain.getSummary());
+		entity.setCurrentStatus(domain.getCurrentStatus());
+		entity.setDueDate(domain.getDueDate());
+		entity.setMaxAttempts(domain.getMaxAttempts());
+		entity.setActiveAttempt(domain.getActiveAttempt());
+
+		return entity;
 	}
 }

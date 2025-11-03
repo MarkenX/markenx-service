@@ -1,7 +1,5 @@
 package com.udla.markenx.infrastructure.out.persistance.jpa.adapters;
 
-import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

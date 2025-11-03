@@ -39,14 +39,15 @@ public class TaskSeeder {
                 LocalDate localFutureDate = Instant.ofEpochMilli(futureDate.getTime())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
-                TaskJpaEntity task = new TaskJpaEntity(
-                        faker.app().name(),
-                        faker.lorem().paragraph(2),
-                        AssignmentStatus.values()[faker.random().nextInt(AssignmentStatus.values().length)],
-                        localFutureDate,
-                        faker.number().numberBetween(0, 3),
-                        3,
-                        student);
+                TaskJpaEntity task = new TaskJpaEntity();
+                task.setTitle(faker.app().name());
+                task.setSummary(faker.lorem().paragraph(2));
+                task.setCurrentStatus(
+                        AssignmentStatus.values()[faker.random().nextInt(AssignmentStatus.values().length)]);
+                task.setDueDate(localFutureDate);
+                task.setActiveAttempt(faker.number().numberBetween(0, 3));
+                task.setMaxAttempts(3);
+                task.setStudent(student);
                 TaskJpaEntity saved = taskRepository.save(task);
                 tasks.add(saved);
             }
