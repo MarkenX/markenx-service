@@ -5,19 +5,19 @@ import com.udla.markenx.infrastructure.out.repository.jpa.entity.TaskJpaEntity;
 
 public class TaskMapper {
 
-    public static Task toDomain(TaskJpaEntity entity) {
-        if (entity == null)
-            return null;
+	public static Task toDomain(TaskJpaEntity entity) {
+		if (entity == null) {
+			return null;
+		}
 
-        Task task = new Task();
-        task.setId(entity.getId());
-        task.setTitle(entity.getTitle());
-        task.setSummnary(entity.getSummnary());
-        task.setCurrentStatus(entity.getCurrentStatus());
-        task.setActiveAttempt(entity.getActiveAttempt());
-        task.setMaxAttempts(entity.getMaxAttempts());
-        task.setDueDate(entity.getDueDate());
+		Task task = new Task(
+				entity.getId(),
+				entity.getTitle(),
+				entity.getSummary(),
+				entity.getDueDate(),
+				entity.getMaxAttempts(),
+				entity.getActiveAttempt());
 
-        return task;
-    }
+		return task;
+	}
 }

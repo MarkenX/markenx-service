@@ -1,29 +1,50 @@
 package com.udla.markenx.core.interfaces;
 
-public abstract class Person {
-	private long id;
-	private String name;
-	private String lastName;
+import lombok.Getter;
 
-	public Person(long id, String name, String lastname) {
+import com.udla.markenx.core.exceptions.InvalidEntityException;
+
+@Getter
+public class Person {
+	private final long id;
+	private final String firstName;
+	private final String lastName;
+
+	public Person(long id, String firstName, String lastName) {
+		validateId(id);
+		this.firstName = validateAndNormalizeString(firstName, "firstName");
+		this.lastName = validateAndNormalizeString(lastName, "lastName");
 		this.id = id;
-		this.name = name;
-		this.lastName = lastname;
 	}
 
-	// #region Getters
+	// #region Validations
 
-	public long getId() {
-		return id;
+	private void validateId(long id) {
+		if (id <= 0) {
+			throw new InvalidEntityException("Person", "id",
+					"debe ser mayor a 0");
+		}
 	}
 
-	public String getName() {
-		return name;
+	private String validateAndNormalizeString(String value, String fieldName) {
+		if (value == null) {
+			throw new InvalidEntityException("Person", fieldName,
+					"no puede ser nulo");
+		}
+
+		String normalized = value.trim();
+
+		if (normalized.isEmpty()) {
+			throw new InvalidEntityException("Person", fieldName,
+					"no puede estar vacío");
+		}
+
+		return normalized;
 	}
 
-	public String getLastName() {
-		return lastName;
-	}
+	// #endregion Validations
 
-	// #endregion
+	public String getFullName() {
+		return firstName + ' ' + lastName;
+	}
 }

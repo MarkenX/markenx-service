@@ -95,7 +95,7 @@ class TaskJpaRepositoryTest {
                                 TASK_STATUS,
                                 PageRequest.of(0, 10));
 
-                assertThat("Task summary should match", result.getContent().get(0).getSummnary(),
+                assertThat("Task summary should match", result.getContent().get(0).getSummary(),
                                 equalTo(TASK_SUMMARY));
         }
 

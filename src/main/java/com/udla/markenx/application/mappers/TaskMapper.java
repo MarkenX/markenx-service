@@ -11,7 +11,7 @@ public class TaskMapper {
 		TaskResponseDTO dto = new TaskResponseDTO();
 		dto.setId(task.getId());
 		dto.setTitle(task.getTitle());
-		dto.setSummary(task.getSummnary());
+		dto.setSummary(task.getSummary());
 		dto.setDueDate(task.getDueDate());
 		dto.setCurrentStatus(task.getCurrentStatus());
 		dto.setActiveAttempt(task.getActiveAttempt());

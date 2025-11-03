@@ -38,7 +38,7 @@ public class AssignmentJpaEntity {
     private String title;
 
     @Column(name = "assignment_summary")
-    private String summnary;
+    private String summary;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "assignment_current_status")
@@ -59,7 +59,7 @@ public class AssignmentJpaEntity {
             LocalDate dueDate,
             StudentJpaEntity student) {
         this.title = title;
-        this.summnary = summary;
+        this.summary = summary;
         this.currentStatus = currentStatus;
         this.dueDate = dueDate;
         this.student = student;
