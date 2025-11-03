@@ -1,4 +1,4 @@
-package com.udla.markenx.core.interfaces.out;
+package com.udla.markenx.application.interfaces.out;
 
 import java.time.LocalDate;
 

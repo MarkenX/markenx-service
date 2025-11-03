@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.api.outbound.persistance.jpa.mapper.TaskMapper;
 import com.udla.markenx.api.outbound.persistance.jpa.repository.TaskJpaRepository;
+import com.udla.markenx.application.interfaces.out.TaskRepositoryPort;
 import com.udla.markenx.core.enums.AssignmentStatus;
-import com.udla.markenx.core.interfaces.out.TaskRepositoryPort;
 import com.udla.markenx.core.models.Task;
 
 @Repository
