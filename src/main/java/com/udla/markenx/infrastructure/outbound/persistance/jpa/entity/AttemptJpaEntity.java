@@ -1,4 +1,4 @@
-package com.udla.markenx.api.outbound.persistance.jpa.entity;
+package com.udla.markenx.infrastructure.outbound.persistance.jpa.entity;
 
 import java.time.Duration;
 import java.time.LocalDate;

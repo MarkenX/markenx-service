@@ -1,4 +1,4 @@
-package com.udla.markenx.api.outbound.database.seed;
+package com.udla.markenx.infrastructure.outbound.database.seed;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.api.outbound.persistance.jpa.entity.StudentJpaEntity;
-import com.udla.markenx.api.outbound.persistance.jpa.entity.TaskJpaEntity;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.entity.StudentJpaEntity;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.entity.TaskJpaEntity;
 
 @Component
 @Profile("dev")

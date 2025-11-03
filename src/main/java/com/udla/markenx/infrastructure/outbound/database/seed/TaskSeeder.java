@@ -1,4 +1,4 @@
-package com.udla.markenx.api.outbound.database.seed;
+package com.udla.markenx.infrastructure.outbound.database.seed;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.api.outbound.persistance.jpa.entity.StudentJpaEntity;
-import com.udla.markenx.api.outbound.persistance.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.api.outbound.persistance.jpa.repository.TaskJpaRepository;
 import com.udla.markenx.core.enums.AssignmentStatus;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.entity.StudentJpaEntity;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.entity.TaskJpaEntity;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.repository.TaskJpaRepository;
 
 @Component
 @Profile("dev")

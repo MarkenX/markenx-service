@@ -1,4 +1,4 @@
-package com.udla.markenx.api.outbound.database.seed;
+package com.udla.markenx.infrastructure.outbound.database.seed;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.api.outbound.persistance.jpa.entity.AttemptJpaEntity;
-import com.udla.markenx.api.outbound.persistance.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.api.outbound.persistance.jpa.repository.AttemptJpaRepository;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.entity.AttemptJpaEntity;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.entity.TaskJpaEntity;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.repository.AttemptJpaRepository;
 
 @Component
 @Profile("dev")

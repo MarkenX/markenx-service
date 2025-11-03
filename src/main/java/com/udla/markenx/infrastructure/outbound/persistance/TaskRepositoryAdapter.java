@@ -1,4 +1,4 @@
-package com.udla.markenx.api.outbound.persistance;
+package com.udla.markenx.infrastructure.outbound.persistance;
 
 import java.time.LocalDate;
 
@@ -7,11 +7,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.udla.markenx.api.outbound.persistance.jpa.mapper.TaskMapper;
-import com.udla.markenx.api.outbound.persistance.jpa.repository.TaskJpaRepository;
 import com.udla.markenx.application.interfaces.out.TaskRepositoryPort;
 import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.models.Task;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.mapper.TaskMapper;
+import com.udla.markenx.infrastructure.outbound.persistance.jpa.repository.TaskJpaRepository;
 
 @Repository
 public class TaskRepositoryAdapter implements TaskRepositoryPort {
