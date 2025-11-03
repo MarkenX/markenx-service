@@ -15,6 +15,8 @@ public abstract class Assignment {
 	private LocalDate dueDate;
 	protected AssignmentStatus currentStatus;
 
+	// #region Constructors
+
 	public Assignment(String title, String summary, LocalDate dueDate) {
 		this.title = title;
 		this.summary = summary;
@@ -27,6 +29,8 @@ public abstract class Assignment {
 		this.summary = summary;
 		setDueDate(dueDate);
 	}
+
+	// #endregion Constructors
 
 	// #region Setters
 
