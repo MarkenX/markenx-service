@@ -1,4 +1,4 @@
-package com.udla.markenx.core.models;
+package com.udla.markenx.core.interfaces;
 
 import java.time.LocalDate;
 
