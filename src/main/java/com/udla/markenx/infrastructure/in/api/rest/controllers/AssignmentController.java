@@ -8,16 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.udla.markenx.application.dtos.AssignmentStatusResponseDTO;
+import com.udla.markenx.application.interfaces.in.api.rest.controllers.AssignmentControllerPort;
 import com.udla.markenx.application.mappers.AssignmentStatusMapper;
 
 @RestController
 @RequestMapping("/api/markenx")
-public class AssignmentController {
+public class AssignmentController implements AssignmentControllerPort {
 
-    @GetMapping("/assignments/status")
-    public ResponseEntity<List<AssignmentStatusResponseDTO>> getAssignmentStatus() {
-        List<AssignmentStatusResponseDTO> statusList = AssignmentStatusMapper.toDtoList();
+	@GetMapping("/assignments/status")
+	public ResponseEntity<List<AssignmentStatusResponseDTO>> getAssignmentStatus() {
+		List<AssignmentStatusResponseDTO> statusList = AssignmentStatusMapper.toDtoList();
 
-        return ResponseEntity.ok(statusList);
-    }
+		return ResponseEntity.ok(statusList);
+	}
 }
