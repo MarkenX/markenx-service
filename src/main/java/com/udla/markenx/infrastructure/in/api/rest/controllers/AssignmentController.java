@@ -1,4 +1,4 @@
-package com.udla.markenx.application.interfaces.in.controllers;
+package com.udla.markenx.infrastructure.in.api.rest.controllers;
 
 import java.util.List;
 
