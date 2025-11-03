@@ -6,8 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.infrastructure.out.repository.jpa.entity.StudentJpaEntity;
-import com.udla.markenx.infrastructure.out.repository.jpa.entity.TaskJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.jpa.entities.StudentJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.jpa.entities.TaskJpaEntity;
 
 @Component
 @Profile("dev")

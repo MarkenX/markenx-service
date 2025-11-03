@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.infrastructure.out.repository.jpa.entity.StudentJpaEntity;
-import com.udla.markenx.infrastructure.out.repository.jpa.repository.StudentJpaRepository;
+import com.udla.markenx.infrastructure.out.persistance.jpa.entities.StudentJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.jpa.repositories.StudentJpaRepository;
 
 @Component
 @Profile("dev")

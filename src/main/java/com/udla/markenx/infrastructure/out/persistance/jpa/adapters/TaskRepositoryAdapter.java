@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.repository;
+package com.udla.markenx.infrastructure.out.persistance.jpa.adapters;
 
 import java.util.Optional;
 
@@ -11,9 +11,9 @@ import com.udla.markenx.application.ports.out.repositories.TaskRepositoryPort;
 import com.udla.markenx.core.models.Task;
 import com.udla.markenx.core.valueobjects.RangeDate;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.infrastructure.out.repository.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.infrastructure.out.repository.jpa.mapper.TaskMapper;
-import com.udla.markenx.infrastructure.out.repository.jpa.repository.TaskJpaRepository;
+import com.udla.markenx.infrastructure.out.persistance.jpa.entities.TaskJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.jpa.mappers.TaskMapper;
+import com.udla.markenx.infrastructure.out.persistance.jpa.repositories.TaskJpaRepository;
 
 @Repository
 public class TaskRepositoryAdapter implements TaskRepositoryPort {

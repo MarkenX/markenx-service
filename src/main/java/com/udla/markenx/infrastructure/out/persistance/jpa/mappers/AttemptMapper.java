@@ -1,7 +1,7 @@
-package com.udla.markenx.infrastructure.out.repository.jpa.mapper;
+package com.udla.markenx.infrastructure.out.persistance.jpa.mappers;
 
 import com.udla.markenx.core.models.Attempt;
-import com.udla.markenx.infrastructure.out.repository.jpa.entity.AttemptJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.jpa.entities.AttemptJpaEntity;
 
 public class AttemptMapper {
 

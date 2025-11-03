@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.infrastructure.out.repository.jpa.entity.AttemptJpaEntity;
-import com.udla.markenx.infrastructure.out.repository.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.infrastructure.out.repository.jpa.repository.AttemptJpaRepository;
+import com.udla.markenx.infrastructure.out.persistance.jpa.entities.AttemptJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.jpa.entities.TaskJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.jpa.repositories.AttemptJpaRepository;
 
 @Component
 @Profile("dev")
