@@ -23,7 +23,7 @@ import com.udla.markenx.api.outbound.persistance.jpa.entity.StudentJpaEntity;
 import com.udla.markenx.api.outbound.persistance.jpa.entity.TaskJpaEntity;
 import com.udla.markenx.api.outbound.persistance.jpa.repository.StudentJpaRepository;
 import com.udla.markenx.api.outbound.persistance.jpa.repository.TaskJpaRepository;
-import com.udla.markenx.core.valueobjects.AssignmentStatus;
+import com.udla.markenx.core.enums.AssignmentStatus;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.ANY)

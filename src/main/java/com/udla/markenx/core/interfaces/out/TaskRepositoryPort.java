@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import org.springframework.data.domain.Page;
 
+import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.models.Task;
-import com.udla.markenx.core.valueobjects.AssignmentStatus;
 
 public interface TaskRepositoryPort {
     Page<Task> getTasksByStudentId(Long studentId, int page, int size);

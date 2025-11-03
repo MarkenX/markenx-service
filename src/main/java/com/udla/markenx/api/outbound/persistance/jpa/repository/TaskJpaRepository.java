@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.api.outbound.persistance.jpa.entity.TaskJpaEntity;
-import com.udla.markenx.core.valueobjects.AssignmentStatus;
+import com.udla.markenx.core.enums.AssignmentStatus;
 
 public interface TaskJpaRepository extends JpaRepository<TaskJpaEntity, Long> {
         Page<TaskJpaEntity> findByStudentId(Long studentId, Pageable pageable);

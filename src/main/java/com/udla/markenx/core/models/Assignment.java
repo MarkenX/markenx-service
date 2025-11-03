@@ -2,7 +2,7 @@ package com.udla.markenx.core.models;
 
 import java.time.LocalDate;
 
-import com.udla.markenx.core.valueobjects.AssignmentStatus;
+import com.udla.markenx.core.enums.AssignmentStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
