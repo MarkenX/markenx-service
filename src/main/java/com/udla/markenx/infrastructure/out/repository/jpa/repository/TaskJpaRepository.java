@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.outbound.persistance.jpa.repository;
+package com.udla.markenx.infrastructure.out.repository.jpa.repository;
 
 import java.time.LocalDate;
 
@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.core.enums.AssignmentStatus;
-import com.udla.markenx.infrastructure.outbound.persistance.jpa.entity.TaskJpaEntity;
+import com.udla.markenx.infrastructure.out.repository.jpa.entity.TaskJpaEntity;
 
 public interface TaskJpaRepository extends JpaRepository<TaskJpaEntity, Long> {
         Page<TaskJpaEntity> findByStudentId(Long studentId, Pageable pageable);
