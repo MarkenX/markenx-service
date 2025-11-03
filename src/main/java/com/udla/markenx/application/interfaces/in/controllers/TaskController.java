@@ -8,7 +8,7 @@ import com.udla.markenx.application.interfaces.in.dtos.AttemptResponseDTO;
 import com.udla.markenx.application.interfaces.in.dtos.TaskResponseDTO;
 import com.udla.markenx.application.interfaces.in.mappers.AttemptMapper;
 import com.udla.markenx.application.interfaces.in.mappers.TaskMapper;
-import com.udla.markenx.application.service.TaskService;
+import com.udla.markenx.application.services.TaskService;
 import com.udla.markenx.core.enums.AssignmentStatus;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.Task;
