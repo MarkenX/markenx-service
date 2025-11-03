@@ -13,108 +13,108 @@ import lombok.EqualsAndHashCode;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class Task extends Assignment {
-    private static final int MIN_ATTEMPT = 0;
+	private static final int MIN_ATTEMPT = 0;
 
-    private int activeAttempt;
-    private int maxAttempts;
-    private List<Attempt> attempts;
-    private double minimumScoreToPass;
+	private int activeAttempt;
+	private int maxAttempts;
+	private List<Attempt> attempts;
+	private double minimumScoreToPass;
 
-    // #region Constructors
+	// #region Constructors
 
-    public Task(String title, String summary, LocalDate dueDate, int maxAttempts) {
-        super(title, summary, dueDate);
-        setMaxAttempts(maxAttempts);
-        setActiveAttempt(MIN_ATTEMPT);
-    }
+	public Task(String title, String summary, LocalDate dueDate, int maxAttempts) {
+		super(title, summary, dueDate);
+		setMaxAttempts(maxAttempts);
+		setActiveAttempt(MIN_ATTEMPT);
+	}
 
-    public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts) {
-        super(id, title, summary, dueDate);
-        setMaxAttempts(maxAttempts);
-        setActiveAttempt(MIN_ATTEMPT);
-    }
+	public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts) {
+		super(id, title, summary, dueDate);
+		setMaxAttempts(maxAttempts);
+		setActiveAttempt(MIN_ATTEMPT);
+	}
 
-    public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts, int activeAttempt) {
-        super(title, summary, dueDate);
-        setMaxAttempts(maxAttempts);
-        setActiveAttempt(activeAttempt);
-    }
+	public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts, int activeAttempt) {
+		super(title, summary, dueDate);
+		setMaxAttempts(maxAttempts);
+		setActiveAttempt(activeAttempt);
+	}
 
-    // #endregion Constructors
+	// #endregion Constructors
 
-    // #region Setters
+	// #region Setters
 
-    public void setMaxAttempts(int maxAttempts) {
-        validateMaxAttempts(maxAttempts);
-        this.maxAttempts = maxAttempts;
-        if (this.activeAttempt > MIN_ATTEMPT) {
-            validateActiveAttempt(this.activeAttempt);
-        }
-    }
+	public void setMaxAttempts(int maxAttempts) {
+		validateMaxAttempts(maxAttempts);
+		this.maxAttempts = maxAttempts;
+		if (this.activeAttempt > MIN_ATTEMPT) {
+			validateActiveAttempt(this.activeAttempt);
+		}
+	}
 
-    public void setActiveAttempt(int activeAttempt) {
-        validateActiveAttempt(activeAttempt);
-        this.activeAttempt = activeAttempt;
-        updateStatus();
-    }
+	public void setActiveAttempt(int activeAttempt) {
+		validateActiveAttempt(activeAttempt);
+		this.activeAttempt = activeAttempt;
+		updateStatus();
+	}
 
-    // #endregion Setters
+	// #endregion Setters
 
-    // #region Validations
+	// #region Validations
 
-    private void validateMaxAttempts(int maxAttempts) {
-        if (maxAttempts <= MIN_ATTEMPT) {
-            throw new InvalidEntityException("Task", "maxAttempts",
-                    "debe ser mayor a 0.");
-        }
-    }
+	private void validateMaxAttempts(int maxAttempts) {
+		if (maxAttempts <= MIN_ATTEMPT) {
+			throw new InvalidEntityException("Task", "maxAttempts",
+					"debe ser mayor a 0.");
+		}
+	}
 
-    private void validateActiveAttempt(int activeAttempt) {
-        if (activeAttempt < MIN_ATTEMPT || isOverMaxAttempts()) {
-            throw new InvalidEntityException("Task", "activeAttempt",
-                    "debe ser mayor o igual a 0 y menor o igual a maxAttempts.");
-        }
-    }
+	private void validateActiveAttempt(int activeAttempt) {
+		if (activeAttempt < MIN_ATTEMPT || isOverMaxAttempts()) {
+			throw new InvalidEntityException("Task", "activeAttempt",
+					"debe ser mayor o igual a 0 y menor o igual a maxAttempts.");
+		}
+	}
 
-    // #endregion Validations
+	// #endregion Validations
 
-    @Override
-    public void updateStatus() {
-        if (isOverdue()) {
-            this.currentStatus = AssignmentStatus.OUTDATED;
-            return;
-        }
-        if (isNotStarted()) {
-            this.currentStatus = AssignmentStatus.NOT_STARTED;
-            return;
-        }
-        if (didAnyAttemptPass()) {
-            this.currentStatus = AssignmentStatus.COMPLETED;
-            return;
-        } else if (isOverMaxAttempts()) {
-            this.currentStatus = AssignmentStatus.FAILED;
-            return;
-        }
-        this.currentStatus = AssignmentStatus.IN_PROGRESS;
-    }
+	@Override
+	public void updateStatus() {
+		if (isOverdue()) {
+			this.currentStatus = AssignmentStatus.OUTDATED;
+			return;
+		}
+		if (isNotStarted()) {
+			this.currentStatus = AssignmentStatus.NOT_STARTED;
+			return;
+		}
+		if (didAnyAttemptPass()) {
+			this.currentStatus = AssignmentStatus.COMPLETED;
+			return;
+		} else if (isOverMaxAttempts()) {
+			this.currentStatus = AssignmentStatus.FAILED;
+			return;
+		}
+		this.currentStatus = AssignmentStatus.IN_PROGRESS;
+	}
 
-    private boolean isOverdue() {
-        return getDueDate().isBefore(LocalDate.now());
-    }
+	private boolean isOverdue() {
+		return getDueDate().isBefore(LocalDate.now());
+	}
 
-    private boolean isNotStarted() {
-        return this.activeAttempt == 0;
-    }
+	private boolean isNotStarted() {
+		return this.activeAttempt == 0;
+	}
 
-    private boolean isOverMaxAttempts() {
-        return this.activeAttempt > this.maxAttempts;
-    }
+	private boolean isOverMaxAttempts() {
+		return this.activeAttempt > this.maxAttempts;
+	}
 
-    private boolean didAnyAttemptPass() {
-        if (attempts == null || attempts.isEmpty()) {
-            return false;
-        }
+	private boolean didAnyAttemptPass() {
+		if (attempts == null || attempts.isEmpty()) {
+			return false;
+		}
 
-        return attempts.stream().anyMatch(attempt -> attempt.getScore() >= minimumScoreToPass);
-    }
+		return attempts.stream().anyMatch(attempt -> attempt.getScore() >= minimumScoreToPass);
+	}
 }
