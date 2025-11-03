@@ -1,29 +1,29 @@
 package com.udla.markenx.core.interfaces;
 
-public class Person {
-    private long id;
-    private String name;
-    private String lastName;
+public abstract class Person {
+	private long id;
+	private String name;
+	private String lastName;
 
-    public Person(long id, String name, String lastname) {
-        this.id = id;
-        this.name = name;
-        this.lastName = lastname;
-    }
+	public Person(long id, String name, String lastname) {
+		this.id = id;
+		this.name = name;
+		this.lastName = lastname;
+	}
 
-    // #region Getters
+	// #region Getters
 
-    public long getId() {
-        return id;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    // #endregion
+	// #endregion
 }

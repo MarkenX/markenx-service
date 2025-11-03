@@ -11,20 +11,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Assignment {
-    private Long id;
-    private String title;
-    private String summnary;
-    private LocalDate dueDate;
-    private AssignmentStatus currentStatus;
+public abstract class Assignment {
+	private Long id;
+	private String title;
+	private String summnary;
+	private LocalDate dueDate;
+	private AssignmentStatus currentStatus;
 
-    public Assignment(
-            String title,
-            String summary,
-            LocalDate dueDate,
-            AssignmentStatus currentStatus) {
-        this.title = title;
-        this.summnary = summary;
-        this.currentStatus = currentStatus;
-    }
+	public Assignment(
+			String title,
+			String summary,
+			LocalDate dueDate,
+			AssignmentStatus currentStatus) {
+		this.title = title;
+		this.summnary = summary;
+		this.currentStatus = currentStatus;
+	}
 }
