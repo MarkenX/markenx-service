@@ -1,4 +1,4 @@
-package com.udla.markenx.application.mappers;
+package com.udla.markenx.application.dtos.mappers;
 
 import java.util.Arrays;
 import java.util.List;

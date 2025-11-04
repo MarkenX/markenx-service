@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.database.utils.generators.interfaces;
+package com.udla.markenx.application.data.generators;
 
 import java.time.Duration;
 

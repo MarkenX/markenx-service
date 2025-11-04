@@ -7,8 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.udla.markenx.application.dtos.mappers.TaskMapper;
 import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
-import com.udla.markenx.application.mappers.TaskMapper;
 import com.udla.markenx.application.ports.out.repositories.TaskRepositoryPort;
 import com.udla.markenx.core.valueobjects.RangeDate;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;

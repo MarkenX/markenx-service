@@ -1,8 +1,8 @@
 package com.udla.markenx.infrastructure.out.persistance.database.utils.generators.classes.faker;
 
 import com.github.javafaker.Faker;
+import com.udla.markenx.application.data.generators.RandomAssignmentDataGenerator;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.infrastructure.out.persistance.database.utils.generators.interfaces.RandomAssignmentDataGenerator;
 
 public class FakerRandomAssignmentDataGenerator implements RandomAssignmentDataGenerator {
 

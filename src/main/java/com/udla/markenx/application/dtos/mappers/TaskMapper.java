@@ -1,4 +1,4 @@
-package com.udla.markenx.application.mappers;
+package com.udla.markenx.application.dtos.mappers;
 
 import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
 import com.udla.markenx.core.models.Task;

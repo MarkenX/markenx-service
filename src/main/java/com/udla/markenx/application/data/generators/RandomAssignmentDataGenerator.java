@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.database.utils.generators.interfaces;
+package com.udla.markenx.application.data.generators;
 
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 

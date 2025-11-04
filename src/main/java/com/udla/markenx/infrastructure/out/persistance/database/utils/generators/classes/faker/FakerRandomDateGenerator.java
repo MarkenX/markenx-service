@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.infrastructure.out.persistance.database.utils.generators.interfaces.RandomDateGenerator;
+import com.udla.markenx.application.data.generators.RandomDateGenerator;
 
 @Component
 public class FakerRandomDateGenerator implements RandomDateGenerator {

@@ -3,7 +3,7 @@ package com.udla.markenx.infrastructure.out.persistance.database.utils.generator
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.infrastructure.out.persistance.database.utils.generators.interfaces.RandomPersonDataGenerator;
+import com.udla.markenx.application.data.generators.RandomPersonDataGenerator;
 
 @Component
 public class FakerRandomPersonDataGenerator implements RandomPersonDataGenerator {

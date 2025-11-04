@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.udla.markenx.application.dtos.mappers.AttemptMapper;
 import com.udla.markenx.application.dtos.responses.AttemptResponseDTO;
-import com.udla.markenx.application.mappers.AttemptMapper;
 import com.udla.markenx.application.services.TaskService;
 import com.udla.markenx.core.models.Attempt;
 
