@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.database.utils.generators.classes.faker;
+package com.udla.markenx.infrastructure.out.persistance.database.utils.generators.faker;
 
 import com.github.javafaker.Faker;
 import com.udla.markenx.application.data.generators.RandomAssignmentDataGenerator;
