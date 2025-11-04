@@ -11,10 +11,12 @@ public class FakerRandomPersonDataGenerator implements RandomPersonDataGenerator
     this.faker = faker;
   }
 
+  @Override
   public String firstName() {
     return faker.name().firstName();
   }
 
+  @Override
   public String lastName() {
     return faker.name().lastName();
   }
