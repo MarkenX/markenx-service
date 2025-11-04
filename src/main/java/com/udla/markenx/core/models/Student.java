@@ -4,10 +4,11 @@ import com.udla.markenx.core.interfaces.Person;
 
 public class Student extends Person {
 
-    public Student(
-            long id,
-            String name,
-            String lastname) {
-        super(id, name, lastname);
-    }
+	public Student(String firstName, String lastName) {
+		super(firstName, lastName);
+	}
+
+	public Student(long id, String firstName, String lastname) {
+		super(id, firstName, lastname);
+	}
 }

@@ -6,9 +6,14 @@ import com.udla.markenx.core.exceptions.InvalidEntityException;
 
 @Getter
 public class Person {
-	private final long id;
+	private long id;
 	private final String firstName;
 	private final String lastName;
+
+	public Person(String firstName, String lastName) {
+		this.firstName = validateAndNormalizeString(firstName, "firstName");
+		this.lastName = validateAndNormalizeString(lastName, "lastName");
+	}
 
 	public Person(long id, String firstName, String lastName) {
 		validateId(id);
