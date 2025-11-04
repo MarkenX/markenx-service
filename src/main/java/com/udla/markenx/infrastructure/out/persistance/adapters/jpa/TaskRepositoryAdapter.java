@@ -11,7 +11,7 @@ import com.udla.markenx.core.valueobjects.RangeDate;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 import com.udla.markenx.infrastructure.out.persistance.adapters.jpa.repositories.TaskJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.database.entities.TaskJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.database.mappers.TaskMapper;
+import com.udla.markenx.infrastructure.out.persistance.database.utils.mappers.TaskMapper;
 
 @Repository
 public class TaskRepositoryAdapter implements TaskRepositoryPort {

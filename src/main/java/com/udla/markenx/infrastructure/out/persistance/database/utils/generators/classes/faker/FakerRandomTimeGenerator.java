@@ -1,7 +1,7 @@
-package com.udla.markenx.infrastructure.out.persistance.database.generators.classes.faker;
+package com.udla.markenx.infrastructure.out.persistance.database.utils.generators.classes.faker;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.infrastructure.out.persistance.database.generators.interfaces.RandomTimeGenerator;
+import com.udla.markenx.infrastructure.out.persistance.database.utils.generators.interfaces.RandomTimeGenerator;
 
 import java.time.Duration;
 

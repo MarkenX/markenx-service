@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.database.generators.interfaces;
+package com.udla.markenx.infrastructure.out.persistance.database.utils.generators.interfaces;
 
 import java.time.LocalDate;
 

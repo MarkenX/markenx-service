@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.database.mappers;
+package com.udla.markenx.infrastructure.out.persistance.database.utils.mappers;
 
 import org.springframework.lang.NonNull;
 
