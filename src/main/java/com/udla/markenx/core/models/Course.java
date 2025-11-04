@@ -10,11 +10,17 @@ import lombok.Getter;
 @Getter
 public class Course {
 
-  private String id;
+  private Long id;
   private final List<Assignment> assignments;
   private final List<Student> students;
 
   public Course() {
+    this.assignments = new ArrayList<>();
+    this.students = new ArrayList<>();
+  }
+
+  public Course(long id) {
+    this.id = id;
     this.assignments = new ArrayList<>();
     this.students = new ArrayList<>();
   }
