@@ -6,20 +6,29 @@ import org.springframework.stereotype.Component;
 
 import com.udla.markenx.application.builders.AttemptBuilder;
 import com.udla.markenx.application.builders.TaskBuilder;
+import com.udla.markenx.application.ports.out.data.random.generators.RandomNumberGeneratorPort;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.Task;
 
 @Component
 public class RandomTaskFactory {
+  private static final int MAX_ATTEMPTS = 10;
+
   private final TaskBuilder taskBuilder;
   private final AttemptBuilder attemptBuilder;
+  private final RandomNumberGeneratorPort numberGenerator;
 
-  public RandomTaskFactory(TaskBuilder taskBuilder, AttemptBuilder attemptBuilder) {
+  public RandomTaskFactory(
+      TaskBuilder taskBuilder,
+      AttemptBuilder attemptBuilder,
+      RandomNumberGeneratorPort numberGenerator) {
     this.taskBuilder = taskBuilder;
     this.attemptBuilder = attemptBuilder;
+    this.numberGenerator = numberGenerator;
   }
 
-  public Task createRandomTaskWithAttempts(int attemptCount, LocalDate limitDueDate) {
+  public Task createRandomTaskWithAttempts(LocalDate limitDueDate) {
+    int attemptCount = numberGenerator.positiveInteger(MAX_ATTEMPTS);
     LocalDate today = LocalDate.now();
     Task task = taskBuilder
         .reset()
