@@ -1,4 +1,4 @@
-package com.udla.markenx.application.data.random.builders;
+package com.udla.markenx.application.builders;
 
 import org.springframework.stereotype.Component;
 

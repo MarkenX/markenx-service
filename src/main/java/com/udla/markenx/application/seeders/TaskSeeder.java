@@ -1,4 +1,4 @@
-package com.udla.markenx.application.data.random.seeders;
+package com.udla.markenx.application.seeders;
 
 import java.time.Instant;
 import java.time.LocalDate;
