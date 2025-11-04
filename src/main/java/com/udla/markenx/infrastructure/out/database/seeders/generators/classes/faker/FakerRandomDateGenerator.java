@@ -5,9 +5,12 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.stereotype.Component;
+
 import com.github.javafaker.Faker;
 import com.udla.markenx.infrastructure.out.database.seeders.generators.interfaces.RandomDateGenerator;
 
+@Component
 public class FakerRandomDateGenerator implements RandomDateGenerator {
 
   private static final int MIN_DAYS_OFFSET = 1;
