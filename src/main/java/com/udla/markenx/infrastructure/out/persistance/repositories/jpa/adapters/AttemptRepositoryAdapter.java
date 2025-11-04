@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.repositories.jpa;
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.adapters;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.application.ports.out.persistance.repositories.AttemptRepositoryPort;
 import com.udla.markenx.core.models.Attempt;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.AttemptJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.AttemptMapper;
 
 @Repository
