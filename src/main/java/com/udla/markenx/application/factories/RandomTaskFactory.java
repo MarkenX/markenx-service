@@ -27,6 +27,18 @@ public class RandomTaskFactory {
     this.numberGenerator = numberGenerator;
   }
 
+  public Task createRandomTask(LocalDate limitDueDate) {
+    LocalDate today = LocalDate.now();
+    Task task = taskBuilder
+        .reset()
+        .randomTitle()
+        .randomSummary()
+        .randomDueDate(today, limitDueDate)
+        .randomMinimumScoreToPass()
+        .build();
+    return task;
+  }
+
   public Task createRandomTaskWithAttempts(LocalDate limitDueDate) {
     int attemptCount = numberGenerator.positiveInteger(MAX_ATTEMPTS);
     LocalDate today = LocalDate.now();

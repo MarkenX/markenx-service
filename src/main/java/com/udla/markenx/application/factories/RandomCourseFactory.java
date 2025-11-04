@@ -43,7 +43,12 @@ public class RandomCourseFactory {
 
     int taskCount = numberGenerator.positiveInteger(MAX_TASKS);
     for (int i = 0; i < taskCount; i++) {
-      Task task = taskFactory.createRandomTaskWithAttempts(endDate);
+      Task task;
+      if (i % 2 == 0) {
+        task = taskFactory.createRandomTask(endDate);
+      } else {
+        task = taskFactory.createRandomTaskWithAttempts(endDate);
+      }
       course.addAssignment(task);
     }
 
