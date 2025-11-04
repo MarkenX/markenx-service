@@ -8,11 +8,11 @@ public class AttemptMapper {
     if (attempt == null)
       return null;
 
-    AttemptResponseDTO dto = new AttemptResponseDTO();
-    dto.setId(attempt.getId());
-    dto.setScore(attempt.getScore());
-    dto.setDate(attempt.getDate());
-    dto.setDuration(attempt.getDuration());
+    AttemptResponseDTO dto = new AttemptResponseDTO(
+        attempt.getId(),
+        attempt.getScore(),
+        attempt.getDate(),
+        attempt.getDuration());
 
     return dto;
   }

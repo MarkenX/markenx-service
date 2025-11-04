@@ -3,24 +3,5 @@ package com.udla.markenx.application.dtos.responses;
 import java.time.Duration;
 import java.time.LocalDate;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class AttemptResponseDTO {
-  @NotNull
-  private Long id;
-  @Positive
-  private double score;
-  @NotNull
-  private LocalDate date;
-  @NotNull
-  private Duration duration;
+public record AttemptResponseDTO(Long id, double score, LocalDate date, Duration duration) {
 }

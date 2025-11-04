@@ -8,14 +8,14 @@ public class TaskMapper {
 		if (task == null)
 			return null;
 
-		TaskResponseDTO dto = new TaskResponseDTO();
-		dto.setId(task.getId());
-		dto.setTitle(task.getTitle());
-		dto.setSummary(task.getSummary());
-		dto.setDueDate(task.getDueDate());
-		dto.setCurrentStatus(task.getCurrentStatus());
-		dto.setActiveAttempt(task.getActiveAttempt());
-		dto.setMaxAttempts(task.getMaxAttempts());
+		TaskResponseDTO dto = new TaskResponseDTO(
+				task.getId(),
+				task.getTitle(),
+				task.getSummary(),
+				task.getDueDate(),
+				task.getCurrentStatus(),
+				task.getActiveAttempt(),
+				task.getMaxAttempts());
 
 		return dto;
 	}
