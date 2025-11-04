@@ -20,4 +20,11 @@ public class AcademicPeriod {
     this.label = label;
     this.courses = new ArrayList<>();
   }
+
+  public boolean addCourse(Course course) {
+    if (course == null) {
+      return false;
+    }
+    return this.courses.add(course);
+  }
 }
