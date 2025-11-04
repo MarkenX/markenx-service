@@ -7,7 +7,7 @@ import com.udla.markenx.core.models.Task;
 
 import com.udla.markenx.core.valueobjects.RangeDate;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.infrastructure.out.persistance.jpa.entities.TaskJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.database.entities.TaskJpaEntity;
 
 public interface TaskRepositoryPort {
 	Page<Task> getTasksByStudentId(Long studentId, Pageable pageable);
