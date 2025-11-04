@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.application.ports.out.persistance.repositories.AttemptRepositoryPort;
 import com.udla.markenx.core.models.Attempt;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.AttemptJpaRepository;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.AttemptJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.AttemptMapper;
 
 @Repository

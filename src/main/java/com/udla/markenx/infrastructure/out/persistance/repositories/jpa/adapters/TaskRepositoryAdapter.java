@@ -9,8 +9,8 @@ import com.udla.markenx.application.ports.out.persistance.repositories.TaskRepos
 import com.udla.markenx.core.models.Task;
 import com.udla.markenx.core.valueobjects.RangeDate;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.TaskJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.TaskMapper;
 
 @Repository

@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.repositories.jpa;
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces;
 
 import java.time.LocalDate;
 

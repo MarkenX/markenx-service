@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.repositories.jpa;
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

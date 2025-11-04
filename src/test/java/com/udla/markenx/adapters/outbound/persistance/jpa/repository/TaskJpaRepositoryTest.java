@@ -20,10 +20,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.StudentJpaRepository;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.TaskJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.ANY)
