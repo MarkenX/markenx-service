@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.database.seed;
+package com.udla.markenx.infrastructure.out.database.seeders;
 
 import java.util.List;
 
