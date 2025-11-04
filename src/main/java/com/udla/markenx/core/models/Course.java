@@ -1,12 +1,35 @@
 package com.udla.markenx.core.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import com.udla.markenx.core.interfaces.Assignment;
+
+import lombok.Getter;
+
+@Getter
 public class Course {
-  public String id;
+
+  private String id;
+  private final List<Assignment> assignments;
+  private final List<Student> students;
+
+  public Course() {
+    this.assignments = new ArrayList<>();
+    this.students = new ArrayList<>();
+  }
+
+  public boolean addAssignment(Assignment assignment) {
+    if (assignment == null) {
+      return false;
+    }
+    return this.assignments.add(assignment);
+  }
+
+  public boolean addStudent(Student student) {
+    if (student == null) {
+      return false;
+    }
+    return this.students.add(student);
+  }
 }

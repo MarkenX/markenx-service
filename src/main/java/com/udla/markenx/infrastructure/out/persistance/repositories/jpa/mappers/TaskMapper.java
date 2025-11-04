@@ -19,7 +19,8 @@ public class TaskMapper {
 				entity.getSummary(),
 				entity.getDueDate(),
 				entity.getMaxAttempts(),
-				entity.getActiveAttempt());
+				entity.getActiveAttempt(),
+				entity.getMinimumScoreToPass());
 
 		return task;
 	}

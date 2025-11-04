@@ -35,7 +35,20 @@ public class FakerRandomDateGenerator implements RandomDateGeneratorPort {
     return convertDateToLocalDate(pastDate);
   }
 
+  @Override
+  public LocalDate dateInRange(LocalDate from, LocalDate to) {
+    Date fromDate = convertLocalDateToDate(from);
+    Date toDate = convertLocalDateToDate(to);
+
+    Date randomDate = faker.date().between(fromDate, toDate);
+    return convertDateToLocalDate(randomDate);
+  }
+
   private LocalDate convertDateToLocalDate(Date date) {
     return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+  }
+
+  private Date convertLocalDateToDate(LocalDate localDate) {
+    return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
   }
 }

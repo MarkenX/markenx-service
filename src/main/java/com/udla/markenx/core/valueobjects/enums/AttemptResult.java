@@ -1,13 +1,12 @@
 package com.udla.markenx.core.valueobjects.enums;
 
-public enum AttemptStatus {
-  IN_PROGRESS("En progreso"),
-  COMPLETED("Completado"),
-  INTERRUPTED("Interrumpido");
+public enum AttemptResult {
+  APPROVED("Aprobado"),
+  DISAPPROVED("Desaprobado");
 
   private final String label;
 
-  AttemptStatus(String label) {
+  AttemptResult(String label) {
     this.label = label;
   }
 

@@ -29,4 +29,7 @@ public class TaskJpaEntity extends AssignmentJpaEntity {
 
 	@Column(name = "task_max_attempts")
 	private int maxAttempts;
+
+	@Column(name = "attempt_minimum_score_to_pass")
+	private double minimumScoreToPass;
 }

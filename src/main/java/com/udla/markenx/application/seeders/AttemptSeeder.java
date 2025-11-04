@@ -45,14 +45,14 @@ public class AttemptSeeder {
         long minutes = faker.number().numberBetween(1, 90);
         Duration duration = Duration.ofMinutes(minutes);
 
-        AttemptJpaEntity attempt = new AttemptJpaEntity(
-            randomScore,
-            localFutureDate,
-            duration,
-            task);
+        // AttemptJpaEntity attempt = new AttemptJpaEntity(
+        // randomScore,
+        // localFutureDate,
+        // duration,
+        // task);
 
-        AttemptJpaEntity saved = attemptRepository.save(attempt);
-        attempts.add(saved);
+        // AttemptJpaEntity saved = attemptRepository.save(attempt);
+        // attempts.add(saved);
       }
     }
     return attempts;

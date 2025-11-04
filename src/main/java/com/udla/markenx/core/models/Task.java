@@ -1,10 +1,13 @@
 package com.udla.markenx.core.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
 import com.udla.markenx.core.interfaces.Assignment;
+import com.udla.markenx.core.valueobjects.Score;
+import com.udla.markenx.core.valueobjects.Timestamps;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
 import lombok.Getter;
@@ -17,44 +20,91 @@ public class Task extends Assignment {
 
 	private int activeAttempt;
 	private int maxAttempts;
-	private List<Attempt> attempts;
-	private double minimumScoreToPass;
+	private Score minimumScoreToPass;
+	private final List<Attempt> attempts;
+	private final Timestamps timestamps;
 
 	// #region Constructors
 
-	public Task(String title, String summary, LocalDate dueDate, int maxAttempts) {
+	public Task(String title, String summary, LocalDate dueDate, int maxAttempts, double minimumScoreToPass) {
 		super(title, summary, dueDate);
-		setMaxAttempts(maxAttempts);
-		setActiveAttempt(MIN_ATTEMPT);
+		this.maxAttempts = ensureValidMaxAttempts(maxAttempts);
+		this.activeAttempt = ensureValidActiveAttempt(MIN_ATTEMPT);
+		this.minimumScoreToPass = new Score(minimumScoreToPass);
+		this.attempts = new ArrayList<>();
+		this.timestamps = new Timestamps();
+		updateStatus();
 	}
 
-	public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts) {
+	public Task(String title, String summary, LocalDate dueDate, int maxAttempts, int activeAttempt,
+			double minimumScoreToPass) {
+		super(title, summary, dueDate);
+		this.maxAttempts = ensureValidMaxAttempts(maxAttempts);
+		this.activeAttempt = ensureValidActiveAttempt(activeAttempt);
+		this.minimumScoreToPass = new Score(minimumScoreToPass);
+		this.attempts = new ArrayList<>();
+		this.timestamps = new Timestamps();
+		updateStatus();
+	}
+
+	public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts,
+			double minimumScoreToPass) {
 		super(id, title, summary, dueDate);
-		setMaxAttempts(maxAttempts);
-		setActiveAttempt(MIN_ATTEMPT);
+		this.maxAttempts = ensureValidMaxAttempts(maxAttempts);
+		this.activeAttempt = ensureValidActiveAttempt(MIN_ATTEMPT);
+		this.minimumScoreToPass = new Score(minimumScoreToPass);
+		this.attempts = new ArrayList<>();
+		this.timestamps = new Timestamps();
+		updateStatus();
 	}
 
-	public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts, int activeAttempt) {
+	public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts, int activeAttempt,
+			double minimumScoreToPass) {
 		super(title, summary, dueDate);
-		setMaxAttempts(maxAttempts);
-		setActiveAttempt(activeAttempt);
+		this.maxAttempts = ensureValidMaxAttempts(maxAttempts);
+		this.activeAttempt = ensureValidActiveAttempt(activeAttempt);
+		this.minimumScoreToPass = new Score(minimumScoreToPass);
+		this.attempts = new ArrayList<>();
+		this.timestamps = new Timestamps();
+		updateStatus();
 	}
 
 	// #endregion Constructors
 
+	// #region Getters
+
+	public double getMinimumScoreToPass() {
+		return this.minimumScoreToPass.value();
+	}
+
+	public LocalDate getCreatedDate() {
+		return timestamps.getCreatedDate();
+	}
+
+	public LocalDate getUpdatedDate() {
+		return timestamps.getUpdatedDate();
+	}
+
+	// #endregion Getters
+
 	// #region Setters
 
 	public void setMaxAttempts(int maxAttempts) {
-		validateMaxAttempts(maxAttempts);
+		ensureValidMaxAttempts(maxAttempts);
 		this.maxAttempts = maxAttempts;
 		if (this.activeAttempt > MIN_ATTEMPT) {
-			validateActiveAttempt(this.activeAttempt);
+			ensureValidActiveAttempt(this.activeAttempt);
 		}
 	}
 
 	public void setActiveAttempt(int activeAttempt) {
-		validateActiveAttempt(activeAttempt);
+		ensureValidActiveAttempt(activeAttempt);
 		this.activeAttempt = activeAttempt;
+		updateStatus();
+	}
+
+	public void setMinimumScoreToPass(Score minimumScoreToPass) {
+		this.minimumScoreToPass = minimumScoreToPass;
 		updateStatus();
 	}
 
@@ -62,18 +112,20 @@ public class Task extends Assignment {
 
 	// #region Validations
 
-	private void validateMaxAttempts(int maxAttempts) {
+	private int ensureValidMaxAttempts(int maxAttempts) {
 		if (maxAttempts <= MIN_ATTEMPT) {
 			throw new InvalidEntityException("Task", "maxAttempts",
 					"debe ser mayor a 0.");
 		}
+		return maxAttempts;
 	}
 
-	private void validateActiveAttempt(int activeAttempt) {
+	private int ensureValidActiveAttempt(int activeAttempt) {
 		if (activeAttempt < MIN_ATTEMPT || isOverMaxAttempts()) {
 			throw new InvalidEntityException("Task", "activeAttempt",
 					"debe ser mayor o igual a 0 y menor o igual a maxAttempts.");
 		}
+		return activeAttempt;
 	}
 
 	// #endregion Validations
@@ -98,6 +150,17 @@ public class Task extends Assignment {
 		this.currentStatus = AssignmentStatus.IN_PROGRESS;
 	}
 
+	public boolean addAttempt(Attempt attempt) {
+		if (attempt == null) {
+			return false;
+		}
+		return this.attempts.add(attempt);
+	}
+
+	public void markUpdated() {
+		this.timestamps.markUpdated();
+	}
+
 	private boolean isOverdue() {
 		return getDueDate().isBefore(LocalDate.now());
 	}
@@ -114,7 +177,6 @@ public class Task extends Assignment {
 		if (attempts == null || attempts.isEmpty()) {
 			return false;
 		}
-
-		return attempts.stream().anyMatch(attempt -> attempt.getScore() >= minimumScoreToPass);
+		return attempts.stream().anyMatch(attempt -> attempt.isApproved());
 	}
 }

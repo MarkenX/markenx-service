@@ -9,11 +9,12 @@ public class AttemptMapper {
     if (entity == null)
       return null;
 
-    Attempt attempt = new Attempt();
-    attempt.setId(entity.getId());
-    attempt.setScore(entity.getScore());
-    attempt.setDate(entity.getDate());
-    attempt.setDuration(entity.getDuration());
+    Attempt attempt = new Attempt(
+        entity.getScore(),
+        entity.getDate(),
+        entity.getDuration(),
+        entity.getResult(),
+        entity.getCurrentStatus());
 
     return attempt;
   }
