@@ -1,9 +1,9 @@
-package com.udla.markenx.infrastructure.out.database.seeders.generators.classes.faker;
+package com.udla.markenx.infrastructure.out.database.generators.classes.faker;
 
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.infrastructure.out.database.seeders.generators.interfaces.RandomPersonDataGenerator;
+import com.udla.markenx.infrastructure.out.database.generators.interfaces.RandomPersonDataGenerator;
 
 @Component
 public class FakerRandomPersonDataGenerator implements RandomPersonDataGenerator {

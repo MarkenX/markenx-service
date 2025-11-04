@@ -1,12 +1,11 @@
-package com.udla.markenx.infrastructure.out.database.seeders.generators.classes.faker;
+package com.udla.markenx.infrastructure.out.database.generators.classes.faker;
 
 import com.github.javafaker.Faker;
+import com.udla.markenx.infrastructure.out.database.generators.interfaces.RandomTimeGenerator;
 
 import java.time.Duration;
 
 import org.springframework.stereotype.Component;
-
-import com.udla.markenx.infrastructure.out.database.seeders.generators.interfaces.RandomTimeGenerator;
 
 @Component
 public class FakerRandomTimeGenerator implements RandomTimeGenerator {

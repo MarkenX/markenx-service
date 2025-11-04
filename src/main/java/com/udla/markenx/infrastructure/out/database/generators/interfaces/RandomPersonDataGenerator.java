@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.database.seeders.generators.interfaces;
+package com.udla.markenx.infrastructure.out.database.generators.interfaces;
 
 public interface RandomPersonDataGenerator {
   String firstName();

@@ -1,7 +1,7 @@
-package com.udla.markenx.infrastructure.out.database.seeders.generators.classes.faker;
+package com.udla.markenx.infrastructure.out.database.generators.classes.faker;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.infrastructure.out.database.seeders.generators.interfaces.RandomNumberGenerator;
+import com.udla.markenx.infrastructure.out.database.generators.interfaces.RandomNumberGenerator;
 
 public class FakerRandomNumberGenerator implements RandomNumberGenerator {
 

@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.database.seeders.generators.classes.faker;
+package com.udla.markenx.infrastructure.out.database.generators.classes.faker;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
-import com.udla.markenx.infrastructure.out.database.seeders.generators.interfaces.RandomDateGenerator;
+import com.udla.markenx.infrastructure.out.database.generators.interfaces.RandomDateGenerator;
 
 @Component
 public class FakerRandomDateGenerator implements RandomDateGenerator {
