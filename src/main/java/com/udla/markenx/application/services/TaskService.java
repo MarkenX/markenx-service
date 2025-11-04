@@ -3,7 +3,7 @@ package com.udla.markenx.application.services;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.udla.markenx.application.ports.out.repositories.AttemptRepositoryPort;
+import com.udla.markenx.application.ports.out.persistance.repositories.AttemptRepositoryPort;
 import com.udla.markenx.core.models.Attempt;
 
 @Service

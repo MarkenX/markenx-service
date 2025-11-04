@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.udla.markenx.application.dtos.mappers.TaskMapper;
 import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
-import com.udla.markenx.application.ports.out.repositories.TaskRepositoryPort;
+import com.udla.markenx.application.ports.out.persistance.repositories.TaskRepositoryPort;
 import com.udla.markenx.core.valueobjects.RangeDate;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
