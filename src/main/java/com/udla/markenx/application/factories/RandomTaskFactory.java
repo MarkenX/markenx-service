@@ -2,11 +2,14 @@ package com.udla.markenx.application.factories;
 
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Component;
+
 import com.udla.markenx.application.builders.AttemptBuilder;
 import com.udla.markenx.application.builders.TaskBuilder;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.Task;
 
+@Component
 public class RandomTaskFactory {
   private final TaskBuilder taskBuilder;
   private final AttemptBuilder attemptBuilder;
