@@ -10,7 +10,7 @@ import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 
 @Component
-public class RandomTaskFactory {
+public class TaskBuilder {
 
   private static final int DEFAULT_DAYS_IN_FUTURE = 30;
   private static final int MAX_ATTEMPTS_RANGE = 10;
@@ -19,7 +19,7 @@ public class RandomTaskFactory {
   private final RandomDateGeneratorPort dateGenerator;
   private final RandomNumberGeneratorPort numberGenerator;
 
-  public RandomTaskFactory(
+  public TaskBuilder(
       RandomAssignmentDataGeneratorPort assignmentGenerator,
       RandomDateGeneratorPort dateGenerator,
       RandomNumberGeneratorPort numberGenerator) {
