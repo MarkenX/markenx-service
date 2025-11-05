@@ -1,8 +1,11 @@
 package com.udla.markenx.infrastructure.out.data.random.generators.faker;
 
+import org.springframework.stereotype.Component;
+
 import com.github.javafaker.Faker;
 import com.udla.markenx.application.ports.out.data.random.generators.RandomNumberGeneratorPort;
 
+@Component
 public class FakerRandomNumberGenerator implements RandomNumberGeneratorPort {
 
   private static final int MIN_POSITIVE_NUMBER = 1;
