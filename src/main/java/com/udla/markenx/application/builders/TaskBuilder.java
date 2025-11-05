@@ -66,7 +66,6 @@ public class TaskBuilder {
 
   public Task build() {
     LocalDateTime now = LocalDateTime.now();
-    ;
     return new Task(title, summary, dueDate, maxAttempt, activeAttempt, minimumScoreToPass, now, now);
   }
 }

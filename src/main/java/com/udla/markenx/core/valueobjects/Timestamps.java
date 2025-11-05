@@ -34,4 +34,12 @@ public class Timestamps {
   public LocalDate getUpdatedDate() {
     return updatedAt.atZone(ZoneId.systemDefault()).toLocalDate();
   }
+
+  public LocalDateTime getCreatedDateTime() {
+    return createdAt.atZone(ZoneId.systemDefault()).toLocalDateTime();
+  }
+
+  public LocalDateTime getUpdatedDateTime() {
+    return updatedAt.atZone(ZoneId.systemDefault()).toLocalDateTime();
+  }
 }

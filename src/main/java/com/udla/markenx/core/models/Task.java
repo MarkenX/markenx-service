@@ -71,8 +71,16 @@ public class Task extends Assignment {
 		return timestamps.getCreatedDate();
 	}
 
+	public LocalDateTime getCreatedDateTime() {
+		return timestamps.getCreatedDateTime();
+	}
+
 	public LocalDate getUpdatedDate() {
 		return timestamps.getUpdatedDate();
+	}
+
+	public LocalDateTime getUpdatedDateTime() {
+		return timestamps.getUpdatedDateTime();
 	}
 
 	// #endregion Getters

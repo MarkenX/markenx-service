@@ -56,6 +56,8 @@ public final class TaskMapper {
 		entity.setDueDate(domain.getDueDate());
 		entity.setMaxAttempts(domain.getMaxAttempts());
 		entity.setActiveAttempt(domain.getActiveAttempt());
+		entity.setCreatedAt(domain.getCreatedDateTime());
+		entity.setUpdatedAt(domain.getUpdatedDateTime());
 
 		List<AttemptJpaEntity> attempts = domain.getAttempts().stream()
 				.map(AttemptMapper::toEntity)
