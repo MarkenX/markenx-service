@@ -37,7 +37,7 @@ public class AssignmentJpaEntity {
 	private LocalDate dueDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "student_id")
+	@JoinColumn(name = "course_id")
 	private CourseJpaEntity course;
 
 	public AssignmentJpaEntity(
