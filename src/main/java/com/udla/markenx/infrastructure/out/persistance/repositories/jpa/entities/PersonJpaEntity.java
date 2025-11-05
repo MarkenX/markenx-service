@@ -23,7 +23,7 @@ public class PersonJpaEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "person_id")
-	private long id;
+	private Long id;
 
 	@Column(name = "person_firstname")
 	private String firstName;
