@@ -8,7 +8,7 @@ import com.udla.markenx.application.ports.out.data.random.generators.RandomNumbe
 @Component
 public class FakerRandomNumberGenerator implements RandomNumberGeneratorPort {
 
-  private static final int MIN_POSITIVE_NUMBER = 1;
+  private static final int MIN_POSITIVE_NUMBER = 0;
 
   private final Faker faker;
 
@@ -17,11 +17,18 @@ public class FakerRandomNumberGenerator implements RandomNumberGeneratorPort {
   }
 
   @Override
-  public int positiveInteger(int limit) {
-    if (limit <= MIN_POSITIVE_NUMBER) {
+  public int positiveIntegerBetween(int min, int max) {
+    validatePositiveLimit(min);
+    if (max < min) {
       throw new IllegalArgumentException(
-          "El límite debe ser mayor que " + MIN_POSITIVE_NUMBER + " (valor recibido: " + limit + ")");
+          String.format("El valor máximo (%d) no puede ser menor que el valor mínimo (%d).", max, min));
     }
+    return faker.number().numberBetween(min, max);
+  }
+
+  @Override
+  public int positiveInteger(int limit) {
+    validatePositiveLimit(limit);
     return faker.number().numberBetween(MIN_POSITIVE_NUMBER, limit);
   }
 
@@ -34,5 +41,12 @@ public class FakerRandomNumberGenerator implements RandomNumberGeneratorPort {
     int maxInt = (int) Math.ceil(limit);
     double randomScore = faker.number().randomDouble(2, 0, maxInt);
     return Math.min(randomScore, limit);
+  }
+
+  private void validatePositiveLimit(int value) {
+    if (value <= MIN_POSITIVE_NUMBER) {
+      throw new IllegalArgumentException(
+          String.format("El valor debe ser mayor que %d (valor recibido: %d).", MIN_POSITIVE_NUMBER, value));
+    }
   }
 }

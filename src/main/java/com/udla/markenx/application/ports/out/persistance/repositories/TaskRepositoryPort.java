@@ -10,14 +10,17 @@ import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 
 public interface TaskRepositoryPort {
-	Page<Task> getTasksByStudentId(Long studentId, Pageable pageable);
+	// Page<Task> getTasksByStudentId(Long studentId, Pageable pageable);
 
-	Page<Task> getStudentTasksByDueDate(Long studentId, RangeDate rangeDate, Pageable pageable);
+	// Page<Task> getStudentTasksByDueDate(Long studentId, RangeDate rangeDate,
+	// Pageable pageable);
 
-	Page<Task> getStudentTasksByStatus(Long studentId, AssignmentStatus status, Pageable pageable);
+	// Page<Task> getStudentTasksByStatus(Long studentId, AssignmentStatus status,
+	// Pageable pageable);
 
-	Page<Task> getStudentTasksByDueDateAndStatus(Long studentId, RangeDate rangeDate, AssignmentStatus status,
-			Pageable pageable);
+	// Page<Task> getStudentTasksByDueDateAndStatus(Long studentId, RangeDate
+	// rangeDate, AssignmentStatus status,
+	// Pageable pageable);
 
-	TaskJpaEntity createTask(Task task);
+	// TaskJpaEntity createTask(Task task);
 }

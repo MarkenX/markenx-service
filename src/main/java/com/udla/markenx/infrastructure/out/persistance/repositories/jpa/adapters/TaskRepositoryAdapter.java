@@ -21,36 +21,42 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 		this.jpaRepository = jpaRepository;
 	}
 
-	@Override
-	public Page<Task> getTasksByStudentId(Long studentId, Pageable pageable) {
-		return jpaRepository.findByStudentId(studentId, pageable)
-				.map(TaskMapper::toDomain);
-	}
+	// @Override
+	// public Page<Task> getTasksByStudentId(Long studentId, Pageable pageable) {
+	// return jpaRepository.findByStudentId(studentId, pageable)
+	// .map(TaskMapper::toDomain);
+	// }
 
-	@Override
-	public Page<Task> getStudentTasksByDueDate(Long studentId, RangeDate rangeDate, Pageable pageable) {
-		return jpaRepository
-				.findByStudentIdAndDueDateBetween(studentId, rangeDate.getStartDate(), rangeDate.getEndDate(), pageable)
-				.map(TaskMapper::toDomain);
-	}
+	// @Override
+	// public Page<Task> getStudentTasksByDueDate(Long studentId, RangeDate
+	// rangeDate, Pageable pageable) {
+	// return jpaRepository
+	// .findByStudentIdAndDueDateBetween(studentId, rangeDate.getStartDate(),
+	// rangeDate.getEndDate(), pageable)
+	// .map(TaskMapper::toDomain);
+	// }
 
-	@Override
-	public Page<Task> getStudentTasksByStatus(Long studentId, AssignmentStatus status, Pageable pageable) {
-		return jpaRepository.findByStudentIdAndCurrentStatus(studentId, status, pageable)
-				.map(TaskMapper::toDomain);
-	}
+	// @Override
+	// public Page<Task> getStudentTasksByStatus(Long studentId, AssignmentStatus
+	// status, Pageable pageable) {
+	// return jpaRepository.findByStudentIdAndCurrentStatus(studentId, status,
+	// pageable)
+	// .map(TaskMapper::toDomain);
+	// }
 
-	@Override
-	public Page<Task> getStudentTasksByDueDateAndStatus(Long studentId, RangeDate rangeDate,
-			AssignmentStatus status, Pageable pageable) {
-		return jpaRepository
-				.findByStudentIdAndDueDateBetweenAndCurrentStatus(studentId, rangeDate.getStartDate(), rangeDate.getEndDate(),
-						status, pageable)
-				.map(TaskMapper::toDomain);
-	}
+	// @Override
+	// public Page<Task> getStudentTasksByDueDateAndStatus(Long studentId, RangeDate
+	// rangeDate,
+	// AssignmentStatus status, Pageable pageable) {
+	// return jpaRepository
+	// .findByStudentIdAndDueDateBetweenAndCurrentStatus(studentId,
+	// rangeDate.getStartDate(), rangeDate.getEndDate(),
+	// status, pageable)
+	// .map(TaskMapper::toDomain);
+	// }
 
-	@Override
-	public TaskJpaEntity createTask(Task task) {
-		return jpaRepository.save(TaskMapper.toEntity(task));
-	}
+	// @Override
+	// public TaskJpaEntity createTask(Task task) {
+	// return jpaRepository.save(TaskMapper.toEntity(task));
+	// }
 }

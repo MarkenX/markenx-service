@@ -1,6 +1,7 @@
 package com.udla.markenx.application.builders;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
 
@@ -64,6 +65,8 @@ public class TaskBuilder {
   }
 
   public Task build() {
-    return new Task(title, summary, dueDate, activeAttempt, maxAttempt, minimumScoreToPass);
+    LocalDateTime now = LocalDateTime.now();
+    ;
+    return new Task(title, summary, dueDate, maxAttempt, activeAttempt, minimumScoreToPass, now, now);
   }
 }

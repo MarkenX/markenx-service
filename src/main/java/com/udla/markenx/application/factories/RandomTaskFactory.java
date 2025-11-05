@@ -28,13 +28,13 @@ public class RandomTaskFactory {
   }
 
   public Task createRandomTask(LocalDate limitDueDate) {
-    int attemptCount = numberGenerator.positiveInteger(MAX_ATTEMPTS);
-    LocalDate today = LocalDate.now();
+    int attemptCount = numberGenerator.positiveIntegerBetween(1, MAX_ATTEMPTS);
+    LocalDate tomorrow = LocalDate.now().plusDays(1);
     Task task = taskBuilder
         .reset()
         .randomTitle()
         .randomSummary()
-        .randomDueDate(today, limitDueDate)
+        .randomDueDate(tomorrow, limitDueDate)
         .randomMaxAttempts(attemptCount)
         .randomMinimumScoreToPass()
         .build();
@@ -42,13 +42,13 @@ public class RandomTaskFactory {
   }
 
   public Task createRandomTaskWithAttempts(LocalDate limitDueDate) {
-    int attemptCount = numberGenerator.positiveInteger(MAX_ATTEMPTS);
-    LocalDate today = LocalDate.now();
+    int attemptCount = numberGenerator.positiveIntegerBetween(1, MAX_ATTEMPTS);
+    LocalDate tomorrow = LocalDate.now().plusDays(1);
     Task task = taskBuilder
         .reset()
         .randomTitle()
         .randomSummary()
-        .randomDueDate(today, limitDueDate)
+        .randomDueDate(tomorrow, limitDueDate)
         .randomMaxAttempts(attemptCount)
         .randomActiveAttempt()
         .randomMinimumScoreToPass()

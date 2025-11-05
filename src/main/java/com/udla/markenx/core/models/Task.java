@@ -38,21 +38,10 @@ public class Task extends Assignment {
 	}
 
 	public Task(String title, String summary, LocalDate dueDate, int maxAttempts, int activeAttempt,
-			double minimumScoreToPass) {
+			double minimumScoreToPass, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(title, summary, dueDate);
 		this.maxAttempts = ensureValidMaxAttempts(maxAttempts);
 		this.activeAttempt = ensureValidActiveAttempt(activeAttempt);
-		this.minimumScoreToPass = new Score(minimumScoreToPass);
-		this.attempts = new ArrayList<>();
-		this.timestamps = new Timestamps();
-		updateStatus();
-	}
-
-	public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts,
-			double minimumScoreToPass) {
-		super(id, title, summary, dueDate);
-		this.maxAttempts = ensureValidMaxAttempts(maxAttempts);
-		this.activeAttempt = ensureValidActiveAttempt(MIN_ATTEMPT);
 		this.minimumScoreToPass = new Score(minimumScoreToPass);
 		this.attempts = new ArrayList<>();
 		this.timestamps = new Timestamps();

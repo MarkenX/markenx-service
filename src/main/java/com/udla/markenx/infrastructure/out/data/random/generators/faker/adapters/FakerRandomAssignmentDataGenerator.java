@@ -33,7 +33,7 @@ public class FakerRandomAssignmentDataGenerator implements RandomAssignmentDataG
 
   @Override
   public String summary() {
-    return this.faker.lorem().paragraph();
+    return this.faker.lorem().paragraph(2);
   }
 
   @Override
@@ -54,7 +54,7 @@ public class FakerRandomAssignmentDataGenerator implements RandomAssignmentDataG
 
   @Override
   public int maxAttempt(int limit) {
-    return numberGenerator.positiveInteger(limit);
+    return numberGenerator.positiveIntegerBetween(1, limit);
   }
 
   @Override

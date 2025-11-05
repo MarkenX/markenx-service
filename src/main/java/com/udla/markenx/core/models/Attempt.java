@@ -32,7 +32,8 @@ public class Attempt {
 
 	public Attempt(double score, LocalDate date, Duration duration, double minimumScoreToPass) {
 		this.score = new Score(score);
-		this.date = ensureValidDate(date);
+		// this.date = ensureValidDate(date);
+		this.date = date;
 		this.duration = ensureValidDuration(duration);
 		this.result = determineResult(new Score(minimumScoreToPass));
 		this.currentStatus = AttemptStatus.COMPLETED;
@@ -40,7 +41,8 @@ public class Attempt {
 
 	public Attempt(double score, LocalDate date, Duration duration, AttemptResult result, AttemptStatus currenStatus) {
 		this.score = new Score(score);
-		this.date = ensureValidDate(date);
+		// this.date = ensureValidDate(date);
+		this.date = date;
 		this.duration = ensureValidDuration(duration);
 		this.result = result;
 		this.currentStatus = currenStatus;

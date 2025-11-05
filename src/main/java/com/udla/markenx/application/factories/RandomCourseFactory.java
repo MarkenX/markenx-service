@@ -31,7 +31,7 @@ public class RandomCourseFactory {
   public Course createRandomCourse(LocalDate endDate) {
     Course course = new Course();
 
-    int studentCount = numberGenerator.positiveInteger(MAX_STUDENTS);
+    int studentCount = numberGenerator.positiveIntegerBetween(1, MAX_STUDENTS);
     for (int i = 0; i < studentCount; i++) {
       Student student = studentBuilder
           .reset()
@@ -41,8 +41,9 @@ public class RandomCourseFactory {
       course.addStudent(student);
     }
 
-    int taskCount = numberGenerator.positiveInteger(MAX_TASKS);
+    int taskCount = numberGenerator.positiveIntegerBetween(1, MAX_TASKS);
     for (int i = 0; i < taskCount; i++) {
+      // Task task = taskFactory.createRandomTaskWithAttempts(endDate);
       Task task;
       if (i % 2 == 0) {
         task = taskFactory.createRandomTask(endDate);

@@ -24,23 +24,27 @@ public class StudentService {
   public Page<TaskResponseDTO> getStudentTasks(long studentId, LocalDate startDate, LocalDate endDate,
       AssignmentStatus status, int page, int size) {
 
-    Pageable pageable = PageRequest.of(page, size);
-    if (startDate != null || endDate != null) {
-      RangeDate rangeDate = new RangeDate(startDate, endDate);
-      if (status != null) {
-        return taskRepository.getStudentTasksByDueDateAndStatus(studentId, rangeDate, status, pageable)
-            .map(TaskMapper::toResponseDto);
-      } else {
-        return taskRepository.getStudentTasksByDueDate(studentId, rangeDate, pageable)
-            .map(TaskMapper::toResponseDto);
-      }
-    } else if (status != null) {
-      return taskRepository.getStudentTasksByStatus(studentId, status, pageable)
-          .map(TaskMapper::toResponseDto);
-    } else {
-      return taskRepository.getTasksByStudentId(studentId, pageable)
-          .map(TaskMapper::toResponseDto);
-    }
+    // Pageable pageable = PageRequest.of(page, size);
+    // if (startDate != null || endDate != null) {
+    // RangeDate rangeDate = new RangeDate(startDate, endDate);
+    // if (status != null) {
+    // return taskRepository.getStudentTasksByDueDateAndStatus(studentId, rangeDate,
+    // status, pageable)
+    // .map(TaskMapper::toResponseDto);
+    // } else {
+    // return taskRepository.getStudentTasksByDueDate(studentId, rangeDate,
+    // pageable)
+    // .map(TaskMapper::toResponseDto);
+    // }
+    // } else if (status != null) {
+    // return taskRepository.getStudentTasksByStatus(studentId, status, pageable)
+    // .map(TaskMapper::toResponseDto);
+    // } else {
+    // return taskRepository.getTasksByStudentId(studentId, pageable)
+    // .map(TaskMapper::toResponseDto);
+    // }
+
+    return null;
 
   }
 }
