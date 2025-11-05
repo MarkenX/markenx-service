@@ -8,30 +8,31 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "persons")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class PersonJpaEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "person_id")
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "person_id")
+	private long id;
 
-    @Column(name = "person_firstname")
-    private String firstName;
+	@Column(name = "person_firstname")
+	private String firstName;
 
-    @Column(name = "person_lastname")
-    private String lastName;
+	@Column(name = "person_lastname")
+	private String lastName;
 
-    public PersonJpaEntity(String fistName, String lastName) {
-        this.firstName = fistName;
-        this.lastName = lastName;
-    }
+	public PersonJpaEntity(String fistName, String lastName) {
+		this.firstName = fistName;
+		this.lastName = lastName;
+	}
 }
