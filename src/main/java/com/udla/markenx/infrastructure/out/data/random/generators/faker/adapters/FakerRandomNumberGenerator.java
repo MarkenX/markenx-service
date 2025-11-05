@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.data.random.generators.faker;
+package com.udla.markenx.infrastructure.out.data.random.generators.faker.adapters;
 
 import org.springframework.stereotype.Component;
 

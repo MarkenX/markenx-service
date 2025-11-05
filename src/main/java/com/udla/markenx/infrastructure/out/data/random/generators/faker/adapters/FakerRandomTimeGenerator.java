@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.data.random.generators.faker;
+package com.udla.markenx.infrastructure.out.data.random.generators.faker.adapters;
 
 import com.github.javafaker.Faker;
 import com.udla.markenx.application.ports.out.data.random.generators.RandomTimeGeneratorPort;
