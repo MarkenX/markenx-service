@@ -1,0 +1,61 @@
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers;
+
+import java.util.List;
+
+import org.springframework.lang.NonNull;
+
+import com.udla.markenx.core.models.AcademicPeriod;
+import com.udla.markenx.core.models.Course;
+
+import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.UtilityClassInstantiationException;
+
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
+
+public final class AcademicPeriodMapper {
+
+  private AcademicPeriodMapper() {
+    throw new UtilityClassInstantiationException(getClass());
+  }
+
+  public static @NonNull AcademicPeriod toDomain(AcademicPeriodJpaEntity entity) {
+    if (entity == null) {
+      throw new DomainMappingException();
+    }
+
+    List<Course> courses = entity.getCourses().stream()
+        .map(CourseMapper::toDomain)
+        .toList();
+
+    AcademicPeriod domain = new AcademicPeriod(
+        entity.getId(),
+        entity.getStartDate(),
+        entity.getEndDate(),
+        entity.getLabel(),
+        courses);
+
+    return domain;
+  }
+
+  public static @NonNull AcademicPeriodJpaEntity toEntity(AcademicPeriod domain) {
+    if (domain == null) {
+      throw new EntityMappingException();
+    }
+
+    AcademicPeriodJpaEntity entity = new AcademicPeriodJpaEntity();
+    entity.setId(domain.getId());
+    entity.setStartDate(domain.getStartDate());
+    entity.setEndDate(domain.getEndDate());
+    entity.setLabel(domain.getLabel());
+
+    List<CourseJpaEntity> courses = domain.getCourses().stream()
+        .map(CourseMapper::toEntity)
+        .peek(e -> e.setAcademicPeriod(entity))
+        .toList();
+    entity.setCourses(courses);
+
+    return entity;
+  }
+}
