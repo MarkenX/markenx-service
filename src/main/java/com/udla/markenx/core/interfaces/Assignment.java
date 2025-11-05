@@ -5,11 +5,12 @@ import java.time.LocalDate;
 import lombok.Getter;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
+import com.udla.markenx.core.utils.validators.EntityValidator;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
 @Getter
 public abstract class Assignment {
-	private Long id;
+	private final Long id;
 	private String title;
 	private String summary;
 	private LocalDate dueDate;
@@ -18,15 +19,16 @@ public abstract class Assignment {
 	// #region Constructors
 
 	public Assignment(String title, String summary, LocalDate dueDate) {
-		this.title = title;
-		this.summary = summary;
+		this.id = null;
+		setTitle(title);
+		setSummary(summary);
 		setDueDate(dueDate);
 	}
 
-	public Assignment(long id, String title, String summary, LocalDate dueDate) {
-		this.id = id;
-		this.title = title;
-		this.summary = summary;
+	public Assignment(Long id, String title, String summary, LocalDate dueDate) {
+		this.id = EntityValidator.ensureValidId(getClass(), id);
+		setTitle(title);
+		setSummary(summary);
 		setDueDate(dueDate);
 	}
 
@@ -35,11 +37,11 @@ public abstract class Assignment {
 	// #region Setters
 
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = EntityValidator.ensureNotNullOrEmpty(getClass(), title, "title");
 	}
 
 	public void setSummary(String summary) {
-		this.summary = summary;
+		this.summary = EntityValidator.ensureNotNullOrEmpty(getClass(), summary, "summary");
 	}
 
 	public void setDueDate(LocalDate dueDate) {
