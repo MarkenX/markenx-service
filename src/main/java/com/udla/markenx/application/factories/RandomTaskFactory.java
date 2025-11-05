@@ -28,12 +28,14 @@ public class RandomTaskFactory {
   }
 
   public Task createRandomTask(LocalDate limitDueDate) {
+    int attemptCount = numberGenerator.positiveInteger(MAX_ATTEMPTS);
     LocalDate today = LocalDate.now();
     Task task = taskBuilder
         .reset()
         .randomTitle()
         .randomSummary()
         .randomDueDate(today, limitDueDate)
+        .randomMaxAttempts(attemptCount)
         .randomMinimumScoreToPass()
         .build();
     return task;
