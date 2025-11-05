@@ -2,9 +2,12 @@ package com.udla.markenx.application.builders;
 
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Component;
+
 import com.udla.markenx.application.ports.out.data.random.generators.RandomAcademicPeriodDataGeneratorPort;
 import com.udla.markenx.core.models.AcademicPeriod;
 
+@Component
 public class AcademicPeriodBuilder {
 
   private final RandomAcademicPeriodDataGeneratorPort randomGenerator;
