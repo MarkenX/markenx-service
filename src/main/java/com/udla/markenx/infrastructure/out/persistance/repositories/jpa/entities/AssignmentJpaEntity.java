@@ -4,65 +4,52 @@ import java.time.LocalDate;
 
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "assignments")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class AssignmentJpaEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "assignment_id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "assignment_id")
+	private Long id;
 
-    @Column(name = "assignment_title")
-    private String title;
+	@Column(name = "assignment_title")
+	private String title;
 
-    @Column(name = "assignment_summary")
-    private String summary;
+	@Column(name = "assignment_summary")
+	private String summary;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "assignment_current_status")
-    private AssignmentStatus currentStatus;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "assignment_current_status")
+	private AssignmentStatus currentStatus;
 
-    @Column(name = "assignment_duedate")
-    @Temporal(TemporalType.DATE)
-    private LocalDate dueDate;
+	@Column(name = "assignment_duedate")
+	@Temporal(TemporalType.DATE)
+	private LocalDate dueDate;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private StudentJpaEntity student;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "student_id")
+	private CourseJpaEntity course;
 
-    public AssignmentJpaEntity(
-            String title,
-            String summary,
-            AssignmentStatus currentStatus,
-            LocalDate dueDate,
-            StudentJpaEntity student) {
-        this.title = title;
-        this.summary = summary;
-        this.currentStatus = currentStatus;
-        this.dueDate = dueDate;
-        this.student = student;
-    }
+	public AssignmentJpaEntity(
+			String title,
+			String summary,
+			AssignmentStatus currentStatus,
+			LocalDate dueDate,
+			CourseJpaEntity student) {
+		this.title = title;
+		this.summary = summary;
+		this.currentStatus = currentStatus;
+		this.dueDate = dueDate;
+		this.course = student;
+	}
 }

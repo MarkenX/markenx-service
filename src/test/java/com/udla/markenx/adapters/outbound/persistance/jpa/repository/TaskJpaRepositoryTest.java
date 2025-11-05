@@ -159,7 +159,7 @@ class TaskJpaRepositoryTest {
 				TASK_STATUS,
 				PageRequest.of(0, 10));
 
-		assertThat("Task student ID should match", result.getContent().get(0).getStudent().getId(),
+		assertThat("Task student ID should match", result.getContent().get(0).getCourse().getId(),
 				equalTo(student.getId()));
 	}
 }
