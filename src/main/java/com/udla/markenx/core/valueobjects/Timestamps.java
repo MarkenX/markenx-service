@@ -2,6 +2,7 @@ package com.udla.markenx.core.valueobjects;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import lombok.Getter;
@@ -14,6 +15,12 @@ public class Timestamps {
   public Timestamps() {
     this.createdAt = Instant.now();
     this.updatedAt = this.createdAt;
+  }
+
+  public Timestamps(LocalDateTime createdAt, LocalDateTime updatedAt) {
+    ZoneId zone = ZoneId.systemDefault();
+    this.createdAt = createdAt.atZone(zone).toInstant();
+    this.updatedAt = updatedAt.atZone(zone).toInstant();
   }
 
   public void markUpdated() {
