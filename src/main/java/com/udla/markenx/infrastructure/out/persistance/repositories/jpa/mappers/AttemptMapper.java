@@ -1,21 +1,46 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers;
 
 import com.udla.markenx.core.models.Attempt;
+
+import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
 
-public class AttemptMapper {
+public final class AttemptMapper {
+
+  private AttemptMapper() {
+    throw new UtilityClassInstantiationException(getClass());
+  }
 
   public static Attempt toDomain(AttemptJpaEntity entity) {
-    if (entity == null)
-      return null;
+    if (entity == null) {
+      throw new DomainMappingException();
+    }
 
-    Attempt attempt = new Attempt(
+    Attempt domain = new Attempt(
         entity.getScore(),
         entity.getDate(),
         entity.getDuration(),
         entity.getResult(),
         entity.getCurrentStatus());
 
-    return attempt;
+    return domain;
+  }
+
+  public static AttemptJpaEntity toEntity(Attempt domain) {
+    if (domain == null) {
+      throw new EntityMappingException();
+    }
+
+    AttemptJpaEntity entity = new AttemptJpaEntity();
+    entity.setId(domain.getId());
+    entity.setScore(domain.getScore());
+    entity.setDate(domain.getDate());
+    entity.setDuration(domain.getDuration());
+    entity.setResult(domain.getResult());
+    entity.setCurrentStatus(domain.getCurrentStatus());
+
+    return entity;
   }
 }
