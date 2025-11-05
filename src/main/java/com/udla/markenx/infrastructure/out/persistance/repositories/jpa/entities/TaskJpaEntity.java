@@ -1,10 +1,16 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import lombok.EqualsAndHashCode;
@@ -12,11 +18,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "tasks")
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(name = "tasks")
 @EqualsAndHashCode(callSuper = true)
 public class TaskJpaEntity extends AssignmentJpaEntity {
 	@Id
@@ -32,4 +38,13 @@ public class TaskJpaEntity extends AssignmentJpaEntity {
 
 	@Column(name = "attempt_minimum_score_to_pass")
 	private double minimumScoreToPass;
+
+	@Column(name = "task_created_at")
+	private LocalDateTime createdAt;
+
+	@Column(name = "task_updated_at")
+	private LocalDateTime updatedAt;
+
+	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<AttemptJpaEntity> attempts = new ArrayList<>();
 }
