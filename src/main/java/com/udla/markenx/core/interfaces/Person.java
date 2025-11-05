@@ -6,11 +6,12 @@ import com.udla.markenx.core.utils.validators.EntityValidator;
 
 @Getter
 public class Person {
-	private long id;
+	private final Long id;
 	private final String firstName;
 	private final String lastName;
 
 	public Person(String firstName, String lastName) {
+		this.id = null;
 		this.firstName = EntityValidator.ensureNotNullOrEmpty(getClass(), firstName, "firstName");
 		this.lastName = EntityValidator.ensureNotNullOrEmpty(getClass(), lastName, "lastName");
 	}
