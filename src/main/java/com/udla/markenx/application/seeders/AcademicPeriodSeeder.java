@@ -28,7 +28,7 @@ public class AcademicPeriodSeeder implements CommandLineRunner {
 		System.out.println("Starting database seeding...");
 
 		AcademicPeriod period = factory.createRandomAcademicPeriod(null, null);
-		repository.createAcademicPeriod(period);
+		repository.save(period);
 
 		System.out.println("Database seeding complete!");
 	}
