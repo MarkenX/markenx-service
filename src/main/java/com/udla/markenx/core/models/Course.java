@@ -19,10 +19,10 @@ public class Course {
     this.students = new ArrayList<>();
   }
 
-  public Course(long id) {
+  public Course(long id, List<Assignment> assignments, List<Student> students) {
     this.id = id;
-    this.assignments = new ArrayList<>();
-    this.students = new ArrayList<>();
+    this.assignments = assignments;
+    this.students = students;
   }
 
   public boolean addAssignment(Assignment assignment) {

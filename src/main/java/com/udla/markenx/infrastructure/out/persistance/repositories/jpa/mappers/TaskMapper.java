@@ -28,7 +28,7 @@ public final class TaskMapper {
 				.map(AttemptMapper::toDomain)
 				.toList();
 
-		Task task = new Task(
+		Task domain = new Task(
 				entity.getId(),
 				entity.getTitle(),
 				entity.getSummary(),
@@ -40,7 +40,7 @@ public final class TaskMapper {
 				entity.getCreatedAt(),
 				entity.getUpdatedAt());
 
-		return task;
+		return domain;
 	}
 
 	public static @NonNull TaskJpaEntity toEntity(Task domain) {
@@ -61,7 +61,6 @@ public final class TaskMapper {
 				.map(AttemptMapper::toEntity)
 				.peek(e -> e.setTask(entity))
 				.toList();
-
 		entity.setAttempts(attempts);
 
 		return entity;
