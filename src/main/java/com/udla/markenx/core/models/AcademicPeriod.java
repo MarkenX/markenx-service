@@ -35,7 +35,7 @@ public class AcademicPeriod {
     this.startDate = ensureValidStartDate(startDate);
     this.endDate = ensureValidEndDate(endDate);
     ensureValidPeriod(startDate, endDate);
-    this.label = ensureValidLabel(label);
+    setLabel(label);
     this.courses = ensureValidCourses(courses);
   }
 
