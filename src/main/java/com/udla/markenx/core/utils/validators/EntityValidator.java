@@ -19,4 +19,16 @@ public final class EntityValidator {
     }
     return id;
   }
+
+  public static String ensureNotNullOrEmpty(Class<?> clazz, String value, String fieldName) {
+    if (value == null || value.trim().isEmpty()) {
+      throw new NullFieldException(clazz, fieldName);
+    }
+    String normalized = value.trim();
+    if (normalized.isEmpty()) {
+      throw new InvalidEntityException(clazz, fieldName, "no puede estar vacío");
+    }
+    return normalized;
+  }
+
 }
