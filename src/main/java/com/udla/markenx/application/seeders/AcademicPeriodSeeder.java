@@ -1,5 +1,7 @@
 package com.udla.markenx.application.seeders;
 
+import java.time.LocalDate;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -27,7 +29,9 @@ public class AcademicPeriodSeeder implements CommandLineRunner {
 	public void run(String... args) {
 		System.out.println("Starting database seeding...");
 
-		AcademicPeriod period = factory.createRandomAcademicPeriod(null, null);
+		LocalDate start = LocalDate.of(2025, 9, 1);
+		LocalDate end = LocalDate.of(2026, 2, 1);
+		AcademicPeriod period = factory.createRandomAcademicPeriod(start, end);
 		repository.save(period);
 
 		System.out.println("Database seeding complete!");
