@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
+import com.udla.markenx.core.exceptions.NullFieldException;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,19 +27,17 @@ public class RangeDate {
 
   private void validateNotNull(LocalDate startDate, LocalDate endDate) {
     if (startDate == null) {
-      throw new InvalidEntityException("RangeDate", "startDate",
-          "no puede ser nula");
+      throw new NullFieldException(getClass(), "startDate");
     }
 
     if (endDate == null) {
-      throw new InvalidEntityException("RangeDate", "endDate",
-          "no puede ser nula");
+      throw new NullFieldException(getClass(), "endDate");
     }
   }
 
   private void validateCoherence(LocalDate startDate, LocalDate endDate) {
     if (startDate.isAfter(endDate)) {
-      throw new InvalidEntityException("RangeDate", "dateRange",
+      throw new InvalidEntityException(getClass(), "dateRange",
           String.format("fecha de inicio (%s) no puede ser posterior a fecha de fin (%s)",
               startDate, endDate));
     }

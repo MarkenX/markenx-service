@@ -52,8 +52,7 @@ public abstract class Assignment {
 
 	private void validateDueDate(LocalDate dueDate) {
 		if (dueDate == null || !dueDate.isAfter(LocalDate.now())) {
-			throw new InvalidEntityException("Assignment", "dueDate",
-					"debe ser una fecha futura.");
+			throw new InvalidEntityException(getClass(), "dueDate", "debe ser una fecha futura.");
 		}
 	}
 

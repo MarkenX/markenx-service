@@ -5,17 +5,17 @@ public class InvalidEntityException extends DomainException {
   private final String entityName;
   private final String field;
 
-  public InvalidEntityException(String entityName, String field, String reason) {
+  public InvalidEntityException(Class<?> clazz, String field, String reason) {
     super(String.format("%s inválido. Campo '%s': %s",
-        entityName, field, reason));
-    this.entityName = entityName;
+        clazz.getSimpleName(), field, reason));
+    this.entityName = clazz.getSimpleName();
     this.field = field;
   }
 
-  public InvalidEntityException(String entityName, String reason) {
+  public InvalidEntityException(Class<?> clazz, String reason) {
     super(String.format("%s inválido: %s",
-        entityName, reason));
-    this.entityName = entityName;
+        clazz.getSimpleName(), reason));
+    this.entityName = clazz.getSimpleName();
     this.field = null;
   }
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
 import com.udla.markenx.core.exceptions.NullFieldException;
+import com.udla.markenx.core.utils.validators.EntityValidator;
 
 import lombok.Getter;
 
@@ -30,7 +31,7 @@ public class AcademicPeriod {
 
   public AcademicPeriod(Long id, LocalDate startDate, LocalDate endDate, String label,
       List<Course> courses) {
-    this.id = ensureValidId(id);
+    this.id = EntityValidator.ensureValidId(getClass(), id);
     this.startDate = ensureValidStartDate(startDate);
     this.endDate = ensureValidEndDate(endDate);
     ensureValidPeriod(startDate, endDate);
@@ -62,43 +63,36 @@ public class AcademicPeriod {
 
   // #region Validations
 
-  private long ensureValidId(Long id) {
-    if (id == null) {
-      throw new NullFieldException("AcademicPeriod", "id");
-    }
-    return id;
-  }
-
   private LocalDate ensureValidStartDate(LocalDate startDate) {
     if (startDate == null) {
-      throw new NullFieldException("AcademicPeriod", "startDate");
+      throw new NullFieldException(getClass(), "startDate");
     }
     return startDate;
   }
 
   private LocalDate ensureValidEndDate(LocalDate endDate) {
     if (endDate == null) {
-      throw new NullFieldException("AcademicPeriod", "endDate");
+      throw new NullFieldException(getClass(), "endDate");
     }
     return endDate;
   }
 
   private void ensureValidPeriod(LocalDate start, LocalDate end) {
     if (end.isBefore(start)) {
-      throw new InvalidEntityException("AcademicPeriod", "debe ser la fecha actual.");
+      throw new InvalidEntityException(getClass(), "debe ser la fecha actual.");
     }
   }
 
   private String ensureValidLabel(String label) {
     if (label == null) {
-      throw new NullFieldException("AcademicPeriod", "label");
+      throw new NullFieldException(getClass(), "label");
     }
     return label;
   }
 
   private List<Course> ensureValidCourses(List<Course> courses) {
     if (courses == null) {
-      throw new NullFieldException("AcademicPeriod", "label");
+      throw new NullFieldException(getClass(), "label");
     }
     return courses;
   }

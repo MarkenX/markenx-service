@@ -2,7 +2,8 @@ package com.udla.markenx.core.interfaces;
 
 import lombok.Getter;
 
-import com.udla.markenx.core.exceptions.InvalidEntityException;
+import com.udla.markenx.core.exceptions.NullFieldException;
+import com.udla.markenx.core.utils.validators.EntityValidator;
 
 @Getter
 public class Person {
@@ -15,33 +16,23 @@ public class Person {
 		this.lastName = validateAndNormalizeString(lastName, "lastName");
 	}
 
-	public Person(long id, String firstName, String lastName) {
-		validateId(id);
+	public Person(Long id, String firstName, String lastName) {
+		this.id = EntityValidator.ensureValidId(getClass(), id);
 		this.firstName = validateAndNormalizeString(firstName, "firstName");
 		this.lastName = validateAndNormalizeString(lastName, "lastName");
-		this.id = id;
 	}
 
 	// #region Validations
 
-	private void validateId(long id) {
-		if (id <= 0) {
-			throw new InvalidEntityException("Person", "id",
-					"debe ser mayor a 0");
-		}
-	}
-
 	private String validateAndNormalizeString(String value, String fieldName) {
 		if (value == null) {
-			throw new InvalidEntityException("Person", fieldName,
-					"no puede ser nulo");
+			throw new NullFieldException(getClass(), fieldName);
 		}
 
 		String normalized = value.trim();
 
 		if (normalized.isEmpty()) {
-			throw new InvalidEntityException("Person", fieldName,
-					"no puede estar vacío");
+			throw new NullFieldException(getClass(), fieldName);
 		}
 
 		return normalized;

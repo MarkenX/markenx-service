@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
-
+import com.udla.markenx.core.exceptions.NullFieldException;
 import com.udla.markenx.core.valueobjects.Score;
 import com.udla.markenx.core.valueobjects.enums.AttemptResult;
 import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
@@ -73,11 +73,10 @@ public class Attempt {
 	private LocalDate ensureValidDate(LocalDate date) {
 		LocalDate today = LocalDate.now();
 		if (date == null) {
-			throw new InvalidEntityException("Attempt", "date",
-					"no puede ser nula.");
+			throw new NullFieldException(getClass(), "date");
 		}
 		if (!date.isEqual(today)) {
-			throw new InvalidEntityException("Attempt", "date",
+			throw new InvalidEntityException(getClass(), "date",
 					"debe ser la fecha actual (" + today + ").");
 		}
 		return date;
@@ -85,11 +84,10 @@ public class Attempt {
 
 	private Duration ensureValidDuration(Duration duration) {
 		if (duration == null) {
-			throw new InvalidEntityException("Attempt", "duration",
-					"no puede ser nula.");
+			throw new NullFieldException(getClass(), "duration");
 		}
 		if (duration.isNegative() || duration.isZero()) {
-			throw new InvalidEntityException("Attempt", "duration",
+			throw new InvalidEntityException(getClass(), "duration",
 					"debe ser mayor que cero.");
 		}
 		return duration;

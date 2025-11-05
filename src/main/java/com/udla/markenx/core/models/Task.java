@@ -112,7 +112,7 @@ public class Task extends Assignment {
 
 	private int ensureValidMaxAttempts(int maxAttempts) {
 		if (maxAttempts <= MIN_ATTEMPT) {
-			throw new InvalidEntityException("Task", "maxAttempts",
+			throw new InvalidEntityException(getClass(), "maxAttempts",
 					"debe ser mayor a 0.");
 		}
 		return maxAttempts;
@@ -120,7 +120,7 @@ public class Task extends Assignment {
 
 	private int ensureValidActiveAttempt(int activeAttempt) {
 		if (activeAttempt < MIN_ATTEMPT || isOverMaxAttempts()) {
-			throw new InvalidEntityException("Task", "activeAttempt",
+			throw new InvalidEntityException(getClass(), "activeAttempt",
 					"debe ser mayor o igual a 0 y menor o igual a maxAttempts.");
 		}
 		return activeAttempt;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.udla.markenx.core.exceptions.NullFieldException;
 import com.udla.markenx.core.interfaces.Assignment;
+import com.udla.markenx.core.utils.validators.EntityValidator;
 
 import lombok.Getter;
 
@@ -23,7 +24,7 @@ public class Course {
   }
 
   public Course(Long id, List<Assignment> assignments, List<Student> students) {
-    this.id = ensureValidId(id);
+    this.id = EntityValidator.ensureValidId(getClass(), id);
     this.assignments = ensureValidAssignments(assignments);
     this.students = ensureValidStudents(students);
   }
@@ -32,23 +33,16 @@ public class Course {
 
   // #region Validations
 
-  private long ensureValidId(Long id) {
-    if (id == null) {
-      throw new NullFieldException("Course", "id");
-    }
-    return id;
-  }
-
   private List<Assignment> ensureValidAssignments(List<Assignment> assignments) {
     if (assignments == null) {
-      throw new NullFieldException("Course", "assignments");
+      throw new NullFieldException(getClass(), "assignments");
     }
     return assignments;
   }
 
   private List<Student> ensureValidStudents(List<Student> students) {
     if (students == null) {
-      throw new NullFieldException("Course", "students");
+      throw new NullFieldException(getClass(), "students");
     }
     return students;
   }
