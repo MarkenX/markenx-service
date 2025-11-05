@@ -4,7 +4,7 @@ services:
     container_name: mysql_db_dev
     restart: always
     env_file:
-      - .env.dev
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
       MYSQL_DATABASE: ${DB_NAME}
@@ -30,7 +30,7 @@ services:
       mysql:
         condition: service_healthy
     env_file:
-      - .env.dev
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: dev
     ports:
