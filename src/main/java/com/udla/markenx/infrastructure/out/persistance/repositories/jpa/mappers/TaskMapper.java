@@ -1,18 +1,32 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers;
 
+import java.util.List;
+
 import org.springframework.lang.NonNull;
 
+import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.Task;
+
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.UtilityClassInstantiationException;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 
-public class TaskMapper {
+public final class TaskMapper {
+
+	private TaskMapper() {
+		throw new UtilityClassInstantiationException(getClass());
+	}
 
 	public static @NonNull Task toDomain(TaskJpaEntity entity) {
 		if (entity == null) {
 			throw new DomainMappingException();
 		}
+
+		List<Attempt> attempts = entity.getAttempts().stream()
+				.map(AttemptMapper::toDomain)
+				.toList();
 
 		Task task = new Task(
 				entity.getId(),
@@ -21,7 +35,10 @@ public class TaskMapper {
 				entity.getDueDate(),
 				entity.getMaxAttempts(),
 				entity.getActiveAttempt(),
-				entity.getMinimumScoreToPass());
+				entity.getMinimumScoreToPass(),
+				attempts,
+				entity.getCreatedAt(),
+				entity.getUpdatedAt());
 
 		return task;
 	}
@@ -39,6 +56,13 @@ public class TaskMapper {
 		entity.setDueDate(domain.getDueDate());
 		entity.setMaxAttempts(domain.getMaxAttempts());
 		entity.setActiveAttempt(domain.getActiveAttempt());
+
+		List<AttemptJpaEntity> attempts = domain.getAttempts().stream()
+				.map(AttemptMapper::toEntity)
+				.peek(e -> e.setTask(entity))
+				.toList();
+
+		entity.setAttempts(attempts);
 
 		return entity;
 	}
