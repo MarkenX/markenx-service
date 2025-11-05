@@ -1,6 +1,7 @@
 package com.udla.markenx.core.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,13 +60,13 @@ public class Task extends Assignment {
 	}
 
 	public Task(long id, String title, String summary, LocalDate dueDate, int maxAttempts, int activeAttempt,
-			double minimumScoreToPass) {
+			double minimumScoreToPass, List<Attempt> attempts, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(title, summary, dueDate);
 		this.maxAttempts = ensureValidMaxAttempts(maxAttempts);
 		this.activeAttempt = ensureValidActiveAttempt(activeAttempt);
 		this.minimumScoreToPass = new Score(minimumScoreToPass);
-		this.attempts = new ArrayList<>();
-		this.timestamps = new Timestamps();
+		this.attempts = attempts;
+		this.timestamps = new Timestamps(createdAt, updatedAt);
 		updateStatus();
 	}
 
