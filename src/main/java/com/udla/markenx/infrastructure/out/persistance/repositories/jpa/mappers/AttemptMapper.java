@@ -1,5 +1,7 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers;
 
+import jakarta.validation.constraints.NotNull;
+
 import com.udla.markenx.core.models.Attempt;
 
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
@@ -13,7 +15,7 @@ public final class AttemptMapper {
     throw new UtilityClassInstantiationException(getClass());
   }
 
-  public static Attempt toDomain(AttemptJpaEntity entity) {
+  public static @NotNull Attempt toDomain(AttemptJpaEntity entity) {
     if (entity == null) {
       throw new DomainMappingException();
     }
@@ -28,7 +30,7 @@ public final class AttemptMapper {
     return domain;
   }
 
-  public static AttemptJpaEntity toEntity(Attempt domain) {
+  public static @NotNull AttemptJpaEntity toEntity(Attempt domain) {
     if (domain == null) {
       throw new EntityMappingException();
     }
