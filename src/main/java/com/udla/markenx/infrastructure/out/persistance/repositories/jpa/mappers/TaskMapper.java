@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.springframework.lang.NonNull;
 
+import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.Task;
 
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
-import com.udla.markenx.infrastructure.out.persistance.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 

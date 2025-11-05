@@ -1,4 +1,4 @@
-package com.udla.markenx.infrastructure.out.persistance.exceptions;
+package com.udla.markenx.core.exceptions;
 
 public class UtilityClassInstantiationException extends UnsupportedOperationException {
 

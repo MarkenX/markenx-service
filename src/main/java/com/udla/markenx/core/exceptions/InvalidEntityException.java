@@ -12,6 +12,13 @@ public class InvalidEntityException extends DomainException {
     this.field = field;
   }
 
+  public InvalidEntityException(String entityName, String reason) {
+    super(String.format("%s inválido: %s",
+        entityName, reason));
+    this.entityName = entityName;
+    this.field = null;
+  }
+
   public InvalidEntityException(String message) {
     super(message);
     this.entityName = null;

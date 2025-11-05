@@ -2,11 +2,11 @@ package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers
 
 import org.springframework.lang.NonNull;
 
+import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.core.models.Attempt;
 
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
-import com.udla.markenx.infrastructure.out.persistance.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
 
 public final class AttemptMapper {
