@@ -1,19 +1,38 @@
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.6
+    env_file:
+      - .env
+    container_name: keycloak
+    environment:
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://mysql:3306/keycloak_db
+      KC_DB_USERNAME: ${MYSQL_KEYCLOAK_USER}
+      KC_DB_PASSWORD: ${MYSQL_KEYCLOAK_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    ports:
+      - "7080:7080"
+      - "7443:7443"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - shared_network
+    command: ["start-dev", "--http-port=7080", "--https-port=7443"]
+
   mysql:
     image: mysql:8.0
-    container_name: mysql_db_dev
+    container_name: db
     restart: always
     env_file:
       - .env
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./init.final.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - shared_network
     healthcheck:
@@ -25,7 +44,7 @@ services:
 
   app:
     build: .
-    container_name: markenx_service_dev
+    container_name: service
     depends_on:
       mysql:
         condition: service_healthy
@@ -37,9 +56,6 @@ services:
       - "8082:8080"
     networks:
       - shared_network
-
-volumes:
-  mysql_data:
 
 networks:
   shared_network:
