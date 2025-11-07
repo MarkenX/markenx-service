@@ -19,11 +19,22 @@ public class StudentJpaEntity extends PersonJpaEntity {
 	@Column(name = "student_id")
 	private Long id;
 
+	@Column(name = "email", unique = true)
+	private String email;
+
+	@Column(name = "keycloak_user_id", unique = true)
+	private String keycloakUserId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id")
 	private CourseJpaEntity course;
 
 	public StudentJpaEntity(String firstName, String lastName) {
 		super(firstName, lastName);
+	}
+
+	public StudentJpaEntity(String firstName, String lastName, String email) {
+		super(firstName, lastName);
+		this.email = email;
 	}
 }

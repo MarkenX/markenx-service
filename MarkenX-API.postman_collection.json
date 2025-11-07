@@ -1,0 +1,270 @@
+{
+	"info": {
+		"_postman_id": "markenx-api-auto-refresh",
+		"name": "MarkenX API - Auto Refresh",
+		"description": "MarkenX Service API with automatic JWT token refresh",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-refresh token if expired or missing",
+					"const currentToken = pm.collectionVariables.get('access_token');",
+					"const tokenExpiry = pm.collectionVariables.get('token_expiry');",
+					"const now = Math.floor(Date.now() / 1000);",
+					"",
+					"// Check if token needs refresh (30 seconds buffer)",
+					"if (!currentToken || !tokenExpiry || now >= (tokenExpiry - 30)) {",
+					"    console.log('🔄 Refreshing token...');",
+					"    ",
+					"    const tokenRequest = {",
+					"        url: 'http://localhost:7080/realms/markenx/protocol/openid-connect/token',",
+					"        method: 'POST',",
+					"        header: {",
+					"            'Content-Type': 'application/x-www-form-urlencoded'",
+					"        },",
+					"        body: {",
+					"            mode: 'urlencoded',",
+					"            urlencoded: [",
+					"                { key: 'grant_type', value: 'password' },",
+					"                { key: 'client_id', value: 'markenx-admin-web' },",
+					"                { key: 'username', value: 'admin@markenx.com' },",
+					"                { key: 'password', value: 'admin123' },",
+					"                { key: 'scope', value: 'openid profile email' }",
+					"            ]",
+					"        }",
+					"    };",
+					"",
+					"    pm.sendRequest(tokenRequest, function (err, response) {",
+					"        if (err) {",
+					"            console.error('❌ Token refresh failed:', err);",
+					"            return;",
+					"        }",
+					"",
+					"        if (response.code === 200) {",
+					"            const jsonData = response.json();",
+					"            const newExpiry = Math.floor(Date.now() / 1000) + jsonData.expires_in;",
+					"",
+					"            pm.collectionVariables.set('access_token', jsonData.access_token);",
+					"            pm.collectionVariables.set('token_expiry', newExpiry);",
+					"            pm.collectionVariables.set('refresh_token', jsonData.refresh_token);",
+					"",
+					"            console.log('✅ Token refreshed! Expires in', jsonData.expires_in, 'seconds');",
+					"        } else {",
+					"            console.error('❌ Failed to get token. Status:', response.code);",
+					"        }",
+					"    });",
+					"} else {",
+					"    const timeLeft = tokenExpiry - now;",
+					"    console.log('✅ Token valid for', timeLeft, 'seconds');",
+					"}"
+				]
+			}
+		}
+	],
+	"item": [
+		{
+			"name": "Admin - Students",
+			"item": [
+				{
+					"name": "Get All Students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/markenx/admin/students?page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "markenx", "admin", "students"],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"description": "Page number (0-based)"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "Items per page"
+								}
+							]
+						},
+						"description": "Get paginated list of all students"
+					}
+				},
+				{
+					"name": "Get Student by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/markenx/admin/students/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "markenx", "admin", "students", "1"]
+						},
+						"description": "Get student details by ID"
+					}
+				},
+				{
+					"name": "Create Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"newstudent@example.com\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"password\": \"SecurePass123!\",\n  \"enrollmentCode\": \"STU2025A\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/markenx/admin/students",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "markenx", "admin", "students"]
+						},
+						"description": "Create a new student (admin only)"
+					}
+				},
+				{
+					"name": "Update Student",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"updated@example.com\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"enrollmentCode\": \"UPD2025A\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/markenx/admin/students/20",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "markenx", "admin", "students", "20"]
+						},
+						"description": "Update existing student (no password change)"
+					}
+				},
+				{
+					"name": "Delete Student",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/markenx/admin/students/22",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "markenx", "admin", "students", "22"]
+						},
+						"description": "Delete student by ID"
+					}
+				}
+			],
+			"description": "Admin endpoints for student management"
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Get Token (Manual)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "markenx-admin-web",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "admin@markenx.com",
+									"type": "text",
+									"description": "Use admin@markenx.com or student@markenx.com"
+								},
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "text",
+									"description": "admin123 or student123"
+								},
+								{
+									"key": "scope",
+									"value": "openid profile email",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:7080/realms/markenx/protocol/openid-connect/token",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "7080",
+							"path": ["realms", "markenx", "protocol", "openid-connect", "token"]
+						},
+						"description": "Manually get a token (for testing). Auto-refresh handles this automatically."
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints"
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token_expiry",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
