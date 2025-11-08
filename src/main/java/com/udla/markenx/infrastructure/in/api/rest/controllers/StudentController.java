@@ -22,8 +22,9 @@ import com.udla.markenx.application.dtos.mappers.StudentMapper;
 import com.udla.markenx.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
 import com.udla.markenx.application.ports.in.api.rest.controllers.StudentControllerPort;
+import com.udla.markenx.application.services.CourseService;
 import com.udla.markenx.application.services.StudentManagementService;
-import com.udla.markenx.application.services.StudentService;
+import com.udla.markenx.core.exceptions.ResourceNotFoundException;
 import com.udla.markenx.core.models.Student;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
@@ -32,14 +33,14 @@ import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 @Validated
 public class StudentController implements StudentControllerPort {
 
-  private final StudentService studentService;
   private final StudentManagementService studentManagementService;
+  private final CourseService courseService;
 
   public StudentController(
-      StudentService studentService,
-      StudentManagementService studentManagementService) {
-    this.studentService = studentService;
+      StudentManagementService studentManagementService,
+      CourseService courseService) {
     this.studentManagementService = studentManagementService;
+    this.courseService = courseService;
   }
 
   @Override
@@ -62,8 +63,19 @@ public class StudentController implements StudentControllerPort {
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
       @RequestParam(defaultValue = "0") @Min(0) int page,
       @RequestParam(defaultValue = "10") @Min(1) int size) {
-    Page<TaskResponseDTO> response = studentService.getStudentTasks(
-        studentId, startDate, endDate, status, page, size);
+
+    // Get student to retrieve their courseId
+    Student student = studentManagementService.getStudentById(studentId);
+
+    // Check if student is enrolled in a course
+    if (student.getCourseId() == null) {
+      throw new ResourceNotFoundException("Curso para el estudiante", studentId);
+    }
+
+    // Get tasks from the student's course using CourseService
+    Page<TaskResponseDTO> response = courseService.getCourseTasks(
+        student.getCourseId(), startDate, endDate, status, page, size);
+
     return ResponseEntity.ok(response);
   }
 }

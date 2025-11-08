@@ -34,6 +34,11 @@ public interface StudentControllerPort {
   /**
    * Retrieves tasks assigned to a specific student with filters.
    * 
+   * Implementation note: Tasks are retrieved from the student's enrolled course.
+   * This follows DDD design where Course is the aggregate root for
+   * assignments/tasks.
+   * The service layer resolves student -> course -> tasks.
+   * 
    * @param studentId the student ID
    * @param status    optional assignment status filter
    * @param startDate optional start date filter

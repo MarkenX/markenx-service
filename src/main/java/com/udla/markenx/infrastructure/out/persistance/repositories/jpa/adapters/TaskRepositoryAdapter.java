@@ -21,42 +21,39 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 		this.jpaRepository = jpaRepository;
 	}
 
-	// @Override
-	// public Page<Task> getTasksByStudentId(Long studentId, Pageable pageable) {
-	// return jpaRepository.findByStudentId(studentId, pageable)
-	// .map(TaskMapper::toDomain);
-	// }
+	@Override
+	public Page<Task> getTasksByCourseId(Long courseId, Pageable pageable) {
+		return jpaRepository.findByCourseId(courseId, pageable)
+				.map(TaskMapper::toDomain);
+	}
 
-	// @Override
-	// public Page<Task> getStudentTasksByDueDate(Long studentId, RangeDate
-	// rangeDate, Pageable pageable) {
-	// return jpaRepository
-	// .findByStudentIdAndDueDateBetween(studentId, rangeDate.getStartDate(),
-	// rangeDate.getEndDate(), pageable)
-	// .map(TaskMapper::toDomain);
-	// }
+	@Override
+	public Page<Task> getCourseTasksByDueDate(Long courseId, RangeDate rangeDate, Pageable pageable) {
+		return jpaRepository
+				.findByCourseIdAndDueDateBetween(courseId, rangeDate.getStartDate(),
+						rangeDate.getEndDate(), pageable)
+				.map(TaskMapper::toDomain);
+	}
 
-	// @Override
-	// public Page<Task> getStudentTasksByStatus(Long studentId, AssignmentStatus
-	// status, Pageable pageable) {
-	// return jpaRepository.findByStudentIdAndCurrentStatus(studentId, status,
-	// pageable)
-	// .map(TaskMapper::toDomain);
-	// }
+	@Override
+	public Page<Task> getCourseTasksByStatus(Long courseId, AssignmentStatus status, Pageable pageable) {
+		return jpaRepository.findByCourseIdAndCurrentStatus(courseId, status, pageable)
+				.map(TaskMapper::toDomain);
+	}
 
-	// @Override
-	// public Page<Task> getStudentTasksByDueDateAndStatus(Long studentId, RangeDate
-	// rangeDate,
-	// AssignmentStatus status, Pageable pageable) {
-	// return jpaRepository
-	// .findByStudentIdAndDueDateBetweenAndCurrentStatus(studentId,
-	// rangeDate.getStartDate(), rangeDate.getEndDate(),
-	// status, pageable)
-	// .map(TaskMapper::toDomain);
-	// }
+	@Override
+	public Page<Task> getCourseTasksByDueDateAndStatus(Long courseId, RangeDate rangeDate,
+			AssignmentStatus status, Pageable pageable) {
+		return jpaRepository
+				.findByCourseIdAndDueDateBetweenAndCurrentStatus(courseId,
+						rangeDate.getStartDate(), rangeDate.getEndDate(),
+						status, pageable)
+				.map(TaskMapper::toDomain);
+	}
 
-	// @Override
-	// public TaskJpaEntity createTask(Task task) {
-	// return jpaRepository.save(TaskMapper.toEntity(task));
-	// }
+	@Override
+	public Task createTask(Task task) {
+		TaskJpaEntity entity = jpaRepository.save(TaskMapper.toEntity(task));
+		return TaskMapper.toDomain(entity);
+	}
 }

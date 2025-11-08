@@ -35,13 +35,20 @@ public final class StudentMapper {
       throw new DomainMappingException();
     }
 
+    // Extract courseId if course relationship exists
+    Long courseId = null;
+    if (entity.getCourse() != null) {
+      courseId = entity.getCourse().getId();
+    }
+
     // Handle entities with email (new format)
     if (entity.getEmail() != null) {
       return new Student(
           entity.getId(),
           entity.getFirstName(),
           entity.getLastName(),
-          entity.getEmail());
+          entity.getEmail(),
+          courseId);
     } else {
       // Handle entities without email (legacy format)
       return new Student(

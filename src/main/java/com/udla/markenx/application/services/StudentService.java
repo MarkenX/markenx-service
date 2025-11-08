@@ -3,37 +3,27 @@ package com.udla.markenx.application.services;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.udla.markenx.application.dtos.mappers.TaskMapper;
 import com.udla.markenx.application.dtos.requests.BulkStudentImportDTO;
 import com.udla.markenx.application.dtos.requests.CreateStudentRequestDTO;
 import com.udla.markenx.application.dtos.responses.BulkImportResponseDTO;
-import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
-import com.udla.markenx.application.ports.out.persistance.repositories.TaskRepositoryPort;
 import com.udla.markenx.core.exceptions.BulkImportException;
 import com.udla.markenx.core.exceptions.InvalidEmailException;
-import com.udla.markenx.core.valueobjects.RangeDate;
-import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
 /**
  * Service for student domain operations.
  * 
  * Handles student-related business logic including:
- * - Getting student tasks
  * - Bulk importing students from CSV files
  */
 @Service
@@ -42,41 +32,10 @@ public class StudentService {
   private static final String UDLA_EMAIL_PATTERN = ".*@udla\\.edu\\.ec$";
   private static final Pattern EMAIL_PATTERN = Pattern.compile(UDLA_EMAIL_PATTERN);
 
-  private final TaskRepositoryPort taskRepository;
   private final StudentManagementService studentManagementService;
 
-  public StudentService(
-      TaskRepositoryPort taskRepository,
-      StudentManagementService studentManagementService) {
-    this.taskRepository = taskRepository;
+  public StudentService(StudentManagementService studentManagementService) {
     this.studentManagementService = studentManagementService;
-  }
-
-  public Page<TaskResponseDTO> getStudentTasks(long studentId, LocalDate startDate, LocalDate endDate,
-      AssignmentStatus status, int page, int size) {
-
-    // Pageable pageable = PageRequest.of(page, size);
-    // if (startDate != null || endDate != null) {
-    // RangeDate rangeDate = new RangeDate(startDate, endDate);
-    // if (status != null) {
-    // return taskRepository.getStudentTasksByDueDateAndStatus(studentId, rangeDate,
-    // status, pageable)
-    // .map(TaskMapper::toResponseDto);
-    // } else {
-    // return taskRepository.getStudentTasksByDueDate(studentId, rangeDate,
-    // pageable)
-    // .map(TaskMapper::toResponseDto);
-    // }
-    // } else if (status != null) {
-    // return taskRepository.getStudentTasksByStatus(studentId, status, pageable)
-    // .map(TaskMapper::toResponseDto);
-    // } else {
-    // return taskRepository.getTasksByStudentId(studentId, pageable)
-    // .map(TaskMapper::toResponseDto);
-    // }
-
-    return null;
-
   }
 
   /**
