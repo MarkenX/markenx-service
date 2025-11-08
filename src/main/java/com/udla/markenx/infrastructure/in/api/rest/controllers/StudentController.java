@@ -64,15 +64,12 @@ public class StudentController implements StudentControllerPort {
       @RequestParam(defaultValue = "0") @Min(0) int page,
       @RequestParam(defaultValue = "10") @Min(1) int size) {
 
-    // Get student to retrieve their courseId
     Student student = studentManagementService.getStudentById(studentId);
 
-    // Check if student is enrolled in a course
     if (student.getCourseId() == null) {
       throw new ResourceNotFoundException("Curso para el estudiante", studentId);
     }
 
-    // Get tasks from the student's course using CourseService
     Page<TaskResponseDTO> response = courseService.getCourseTasks(
         student.getCourseId(), startDate, endDate, status, page, size);
 
