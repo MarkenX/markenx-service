@@ -13,13 +13,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Base entity for persons in the system.
+ * 
+ * Extends AuditableEntity to automatically track:
+ * - Who created/modified the record (admin email)
+ * - When the record was created/modified
+ * 
+ * Audit fields only track admin actions since students can only view/upload
+ * data.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "persons")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class PersonJpaEntity {
+public class PersonJpaEntity extends AuditableEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "person_id")

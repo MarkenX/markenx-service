@@ -10,13 +10,20 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Base entity for assignments/tasks.
+ * 
+ * Extends AuditableEntity to automatically track admin CRUD operations:
+ * - Who created/modified the assignment (admin email)
+ * - When the assignment was created/modified
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "assignments")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class AssignmentJpaEntity {
+public class AssignmentJpaEntity extends AuditableEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "assignment_id")

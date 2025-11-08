@@ -15,10 +15,10 @@ import com.udla.markenx.application.ports.in.api.rest.controllers.AssignmentCont
 @RequestMapping("/api/markenx")
 public class AssignmentController implements AssignmentControllerPort {
 
+	@Override
 	@GetMapping("/assignments/status")
 	public ResponseEntity<List<AssignmentStatusResponseDTO>> getAssignmentStatus() {
 		List<AssignmentStatusResponseDTO> statusList = AssignmentStatusMapper.toDtoList();
-
 		return ResponseEntity.ok(statusList);
 	}
 }

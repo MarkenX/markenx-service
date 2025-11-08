@@ -21,21 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.udla.markenx.application.dtos.mappers.StudentMapper;
 import com.udla.markenx.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
+import com.udla.markenx.application.ports.in.api.rest.controllers.StudentControllerPort;
 import com.udla.markenx.application.services.StudentManagementService;
 import com.udla.markenx.application.services.StudentService;
 import com.udla.markenx.core.models.Student;
-
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
-/**
- * REST controller for student operations.
- * 
- * Provides endpoints for students to access their data and assigned tasks.
- */
 @RestController
 @RequestMapping("/api/markenx/students")
 @Validated
-public class StudentController {
+public class StudentController implements StudentControllerPort {
 
   private final StudentService studentService;
   private final StudentManagementService studentManagementService;
@@ -47,12 +42,7 @@ public class StudentController {
     this.studentManagementService = studentManagementService;
   }
 
-  /**
-   * Retrieves the profile of the currently authenticated student.
-   * 
-   * @param authentication the authentication object from JWT token
-   * @return ResponseEntity with student profile DTO
-   */
+  @Override
   @GetMapping("/me")
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
   public ResponseEntity<StudentResponseDTO> getCurrentProfile(Authentication authentication) {
@@ -62,17 +52,7 @@ public class StudentController {
     return ResponseEntity.ok(response);
   }
 
-  /**
-   * Retrieves tasks assigned to a specific student with filters.
-   * 
-   * @param studentId the student ID
-   * @param status    optional assignment status filter
-   * @param startDate optional start date filter
-   * @param endDate   optional end date filter
-   * @param page      page number (default 0)
-   * @param size      page size (default 10)
-   * @return ResponseEntity with page of task DTOs
-   */
+  @Override
   @GetMapping("/{studentId}/tasks")
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
   public ResponseEntity<Page<TaskResponseDTO>> getTasksByFilters(
@@ -82,7 +62,6 @@ public class StudentController {
       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
       @RequestParam(defaultValue = "0") @Min(0) int page,
       @RequestParam(defaultValue = "10") @Min(1) int size) {
-
     Page<TaskResponseDTO> response = studentService.getStudentTasks(
         studentId, startDate, endDate, status, page, size);
     return ResponseEntity.ok(response);
