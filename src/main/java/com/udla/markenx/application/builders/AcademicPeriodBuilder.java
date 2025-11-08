@@ -4,26 +4,21 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.application.ports.out.data.random.generators.RandomAcademicPeriodDataGeneratorPort;
 import com.udla.markenx.core.models.AcademicPeriod;
 
 @Component
 public class AcademicPeriodBuilder {
 
-  private final RandomAcademicPeriodDataGeneratorPort randomGenerator;
-
   private LocalDate startDate;
   private LocalDate endDate;
-  private String label;
-
-  public AcademicPeriodBuilder(RandomAcademicPeriodDataGeneratorPort randomGenerator) {
-    this.randomGenerator = randomGenerator;
-  }
+  private int year;
+  private int semesterNumber;
 
   public AcademicPeriodBuilder reset() {
     this.startDate = null;
     this.endDate = null;
-    this.label = null;
+    this.year = 0;
+    this.semesterNumber = 0;
     return this;
   }
 
@@ -37,12 +32,23 @@ public class AcademicPeriodBuilder {
     return this;
   }
 
-  public AcademicPeriodBuilder randomLabel() {
-    this.label = randomGenerator.label();
+  public AcademicPeriodBuilder setYear(int year) {
+    this.year = year;
+    return this;
+  }
+
+  public AcademicPeriodBuilder setSemesterNumber(int semesterNumber) {
+    this.semesterNumber = semesterNumber;
+    return this;
+  }
+
+  public AcademicPeriodBuilder randomDates() {
+    this.startDate = LocalDate.now().plusMonths((long) (Math.random() * 12));
+    this.endDate = this.startDate.plusMonths(6);
     return this;
   }
 
   public AcademicPeriod build() {
-    return new AcademicPeriod(startDate, endDate, label);
+    return new AcademicPeriod(startDate, endDate, year, semesterNumber);
   }
 }

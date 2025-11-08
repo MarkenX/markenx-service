@@ -14,33 +14,36 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "academic-period")
+@Table(name = "academic_periods", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "year", "semester_number" })
+})
 public class AcademicPeriodJpaEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "period_id")
   private Long id;
 
-  @Column(name = "period_startDate")
+  @Column(name = "period_start_date", nullable = false)
   @Temporal(TemporalType.DATE)
   private LocalDate startDate;
 
-  @Column(name = "period_endDate")
+  @Column(name = "period_end_date", nullable = false)
   @Temporal(TemporalType.DATE)
   private LocalDate endDate;
 
-  @Column(name = "period_label")
-  private String label;
+  @Column(name = "year", nullable = false)
+  private int year;
+
+  @Column(name = "semester_number", nullable = false)
+  private int semesterNumber;
 
   @OneToMany(mappedBy = "academicPeriod", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CourseJpaEntity> courses = new ArrayList<>();
 
-  public AcademicPeriodJpaEntity(
-      LocalDate startDate,
-      LocalDate endDate,
-      String label) {
+  public AcademicPeriodJpaEntity(LocalDate startDate, LocalDate endDate, int year, int semesterNumber) {
     this.startDate = startDate;
     this.endDate = endDate;
-    this.label = label;
+    this.year = year;
+    this.semesterNumber = semesterNumber;
   }
 }

@@ -27,11 +27,15 @@ public class RandomAcademicPeriodFactory {
   }
 
   public AcademicPeriod createRandomAcademicPeriod(LocalDate startDate, LocalDate endDate) {
+    int year = startDate.getYear();
+    int semesterNumber = startDate.getMonthValue() <= 6 ? 1 : 2;
+
     AcademicPeriod academicPeriod = academicPeriodBuilder
         .reset()
         .setStartDate(startDate)
         .setEndDate(endDate)
-        .randomLabel()
+        .setYear(year)
+        .setSemesterNumber(semesterNumber)
         .build();
 
     int courseCount = numberGenerator.positiveIntegerBetween(1, MAX_COURSES);
