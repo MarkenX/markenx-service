@@ -6,6 +6,7 @@ import java.util.List;
 import com.udla.markenx.core.exceptions.NullFieldException;
 import com.udla.markenx.core.interfaces.Assignment;
 import com.udla.markenx.core.utils.validators.EntityValidator;
+import com.udla.markenx.core.valueobjects.AuditInfo;
 
 import lombok.Getter;
 
@@ -14,6 +15,9 @@ public class Course {
   private final Long id;
   private final List<Assignment> assignments;
   private final List<Student> students;
+  private final AuditInfo timestamps;
+  private final Long academicPeriodId;
+  private final String label;
 
   // #region Constructors
 
@@ -21,12 +25,27 @@ public class Course {
     this.id = null;
     this.assignments = new ArrayList<>();
     this.students = new ArrayList<>();
+    this.timestamps = new AuditInfo();
+    this.academicPeriodId = null;
+    this.label = null;
   }
 
   public Course(Long id, List<Assignment> assignments, List<Student> students) {
+    this(id, assignments, students, null, null, new AuditInfo());
+  }
+
+  public Course(Long id, List<Assignment> assignments, List<Student> students, AuditInfo timestamps) {
+    this(id, assignments, students, null, null, timestamps);
+  }
+
+  public Course(Long id, List<Assignment> assignments, List<Student> students, Long academicPeriodId,
+      String label, AuditInfo timestamps) {
     this.id = EntityValidator.ensureValidId(getClass(), id);
     this.assignments = ensureValidAssignments(assignments);
     this.students = ensureValidStudents(students);
+    this.timestamps = timestamps == null ? new AuditInfo() : timestamps;
+    this.academicPeriodId = academicPeriodId;
+    this.label = label;
   }
 
   // #endregion Constructors

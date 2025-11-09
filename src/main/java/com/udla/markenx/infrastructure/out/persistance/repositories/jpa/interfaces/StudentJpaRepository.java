@@ -11,4 +11,7 @@ public interface StudentJpaRepository extends JpaRepository<StudentJpaEntity, Lo
   Optional<StudentJpaEntity> findByEmail(String email);
 
   boolean existsByEmail(String email);
+
+  org.springframework.data.domain.Page<StudentJpaEntity> findByCourseId(Long courseId,
+      org.springframework.data.domain.Pageable pageable);
 }

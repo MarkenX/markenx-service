@@ -53,6 +53,8 @@ public interface StudentRepositoryPort {
    */
   Page<Student> findAll(Pageable pageable);
 
+  Page<Student> findByCourseId(Long courseId, Pageable pageable);
+
   /**
    * Checks if a student exists by email.
    *

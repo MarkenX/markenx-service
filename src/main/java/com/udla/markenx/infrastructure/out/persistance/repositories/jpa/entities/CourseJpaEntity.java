@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "courses")
-public class CourseJpaEntity {
+public class CourseJpaEntity extends AuditableEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "course_id")
@@ -25,6 +25,9 @@ public class CourseJpaEntity {
 
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<StudentJpaEntity> students = new ArrayList<>();
+
+  @Column(name = "course_label")
+  private String label;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "period_id")

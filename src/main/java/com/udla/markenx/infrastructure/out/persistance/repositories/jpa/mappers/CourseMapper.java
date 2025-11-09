@@ -8,6 +8,7 @@ import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.core.interfaces.Assignment;
 
 import com.udla.markenx.core.models.Course;
+import com.udla.markenx.core.valueobjects.AuditInfo;
 import com.udla.markenx.core.models.Student;
 
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
@@ -57,8 +58,17 @@ public class CourseMapper {
         .map(StudentMapper::toDomain)
         .toList();
 
-    // Create domain model with all converted data
-    Course domain = new Course(entity.getId(), assignments, students);
+    // Create AuditInfo from entity audit fields
+    AuditInfo timestamps = new AuditInfo(entity.getCreatedBy(), entity.getCreatedAt(), entity.getLastModifiedAt());
+
+    // Extract academic period id if present
+    Long academicPeriodId = null;
+    if (entity.getAcademicPeriod() != null) {
+      academicPeriodId = entity.getAcademicPeriod().getId();
+    }
+
+    // Create domain model with all converted data and audit info
+    Course domain = new Course(entity.getId(), assignments, students, academicPeriodId, entity.getLabel(), timestamps);
 
     return domain;
   }
@@ -95,6 +105,16 @@ public class CourseMapper {
         .peek(e -> e.setCourse(entity))
         .toList();
     entity.setStudents(students);
+
+    // Map label
+    entity.setLabel(domain.getLabel());
+
+    // Map academic period id if present on domain
+    if (domain.getAcademicPeriodId() != null) {
+      com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity ap = new com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity();
+      ap.setId(domain.getAcademicPeriodId());
+      entity.setAcademicPeriod(ap);
+    }
 
     return entity;
   }

@@ -103,6 +103,12 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
         .map(StudentMapper::toDomain);
   }
 
+  @Override
+  public Page<Student> findByCourseId(Long courseId, Pageable pageable) {
+    return jpaRepository.findByCourseId(courseId, pageable)
+        .map(StudentMapper::toDomain);
+  }
+
   /**
    * Checks if a student exists with the given email.
    * 
