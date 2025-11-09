@@ -5,8 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.udla.markenx.application.dtos.requests.CreateStudentRequestDTO;
 import com.udla.markenx.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.application.dtos.responses.StudentResponseDTO;
@@ -29,14 +27,6 @@ public interface AdminControllerPort {
    * @return ResponseEntity with authentication debug information
    */
   ResponseEntity<String> debugAuth(Authentication authentication);
-
-  /**
-   * Creates a new student.
-   * 
-   * @param request DTO containing email, password, firstName, lastName
-   * @return ResponseEntity with created student DTO and HTTP 201 status
-   */
-  ResponseEntity<StudentResponseDTO> createStudent(@Valid CreateStudentRequestDTO request);
 
   /**
    * Retrieves all students with pagination.

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.udla.markenx.application.dtos.mappers.StudentMapper;
-import com.udla.markenx.application.dtos.requests.CreateStudentRequestDTO;
 import com.udla.markenx.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.application.dtos.responses.StudentResponseDTO;
@@ -46,14 +45,6 @@ public class AdminController implements AdminControllerPort {
     debug.append("Authorities: ").append(authentication.getAuthorities()).append("\n");
     debug.append("Details: ").append(authentication.getDetails()).append("\n");
     return ResponseEntity.ok(debug.toString());
-  }
-
-  @Override
-  @PostMapping("/students")
-  public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody CreateStudentRequestDTO request) {
-    Student student = studentManagementService.createStudent(request);
-    StudentResponseDTO response = StudentMapper.toDto(student);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @Override

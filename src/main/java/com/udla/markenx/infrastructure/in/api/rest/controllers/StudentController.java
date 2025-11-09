@@ -14,11 +14,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
 import com.udla.markenx.application.dtos.mappers.StudentMapper;
+import com.udla.markenx.application.dtos.requests.CreateStudentRequestDTO;
+import com.udla.markenx.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
 import com.udla.markenx.application.ports.in.api.rest.controllers.StudentControllerPort;
@@ -41,6 +48,14 @@ public class StudentController implements StudentControllerPort {
       CourseService courseService) {
     this.studentManagementService = studentManagementService;
     this.courseService = courseService;
+  }
+
+  @PostMapping
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody CreateStudentRequestDTO request) {
+    Student student = studentManagementService.createStudent(request);
+    StudentResponseDTO response = StudentMapper.toDto(student);
+    return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(response);
   }
 
   @Override
@@ -74,5 +89,30 @@ public class StudentController implements StudentControllerPort {
         student.getCourseId(), startDate, endDate, status, page, size);
 
     return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+  public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
+    Student student = studentManagementService.getStudentById(id);
+    StudentResponseDTO response = StudentMapper.toDto(student);
+    return ResponseEntity.ok(response);
+  }
+
+  @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<StudentResponseDTO> updateStudent(
+      @PathVariable Long id,
+      @Valid @RequestBody UpdateStudentRequestDTO request) {
+    Student student = studentManagementService.updateStudent(id, request);
+    StudentResponseDTO response = StudentMapper.toDto(student);
+    return ResponseEntity.ok(response);
+  }
+
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+    studentManagementService.deleteStudent(id);
+    return ResponseEntity.noContent().build();
   }
 }
