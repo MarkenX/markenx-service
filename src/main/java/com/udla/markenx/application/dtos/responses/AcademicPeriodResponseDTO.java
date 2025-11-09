@@ -15,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AcademicPeriodResponseDTO {
+  private long id;
   private LocalDate startDate;
   private LocalDate endDate;
   private int year;

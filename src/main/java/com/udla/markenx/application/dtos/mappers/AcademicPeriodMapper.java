@@ -24,6 +24,7 @@ public final class AcademicPeriodMapper {
     }
 
     return new AcademicPeriodResponseDTO(
+        domain.getId(),
         domain.getStartDate(),
         domain.getEndDate(),
         domain.getYear(),
