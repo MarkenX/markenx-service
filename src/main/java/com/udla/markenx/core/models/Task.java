@@ -8,7 +8,7 @@ import java.util.List;
 import com.udla.markenx.core.exceptions.InvalidEntityException;
 import com.udla.markenx.core.interfaces.Assignment;
 import com.udla.markenx.core.valueobjects.Score;
-import com.udla.markenx.core.valueobjects.Timestamps;
+import com.udla.markenx.core.valueobjects.AuditInfo;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class Task extends Assignment {
 	private int maxAttempts;
 	private Score minimumScoreToPass;
 	private final List<Attempt> attempts;
-	private final Timestamps timestamps;
+	private final AuditInfo timestamps;
 
 	// #region Constructors
 
@@ -33,7 +33,7 @@ public class Task extends Assignment {
 		this.activeAttempt = ensureValidActiveAttempt(MIN_ATTEMPT);
 		this.minimumScoreToPass = new Score(minimumScoreToPass);
 		this.attempts = new ArrayList<>();
-		this.timestamps = new Timestamps();
+		this.timestamps = new AuditInfo();
 		updateStatus();
 	}
 
@@ -44,7 +44,7 @@ public class Task extends Assignment {
 		this.activeAttempt = ensureValidActiveAttempt(activeAttempt);
 		this.minimumScoreToPass = new Score(minimumScoreToPass);
 		this.attempts = new ArrayList<>();
-		this.timestamps = new Timestamps();
+		this.timestamps = new AuditInfo();
 		updateStatus();
 	}
 
@@ -55,7 +55,7 @@ public class Task extends Assignment {
 		this.activeAttempt = ensureValidActiveAttempt(activeAttempt);
 		this.minimumScoreToPass = new Score(minimumScoreToPass);
 		this.attempts = attempts;
-		this.timestamps = new Timestamps(createdAt, updatedAt);
+		this.timestamps = new AuditInfo(createdAt, updatedAt);
 		updateStatus();
 	}
 

@@ -43,10 +43,8 @@ public class AcademicPeriodRepositoryAdapter implements AcademicPeriodRepository
       AcademicPeriodJpaEntity existingEntity = jpaRepository.findById(period.getId())
           .orElseThrow(() -> new PersistenceException("Período académico no encontrado"));
 
-      // Update mutable fields
       existingEntity.setStartDate(period.getStartDate());
       existingEntity.setEndDate(period.getEndDate());
-      // Year, semester, and label are immutable
 
       AcademicPeriodJpaEntity updated = jpaRepository.save(existingEntity);
       return AcademicPeriodMapper.toDomain(updated);

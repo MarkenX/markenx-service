@@ -7,7 +7,7 @@ public class Student extends Person {
 	private final String email;
 	private final Long courseId;
 
-	// Constructor for new students (without ID)
+	// Constructor for new students
 	public Student(String firstName, String lastName) {
 		super(firstName, lastName);
 		this.email = null;

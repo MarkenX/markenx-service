@@ -1,6 +1,5 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +37,6 @@ public class TaskJpaEntity extends AssignmentJpaEntity {
 
 	@Column(name = "attempt_minimum_score_to_pass")
 	private double minimumScoreToPass;
-
-	@Column(name = "task_created_at")
-	private LocalDateTime createdAt;
-
-	@Column(name = "task_updated_at")
-	private LocalDateTime updatedAt;
 
 	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AttemptJpaEntity> attempts = new ArrayList<>();

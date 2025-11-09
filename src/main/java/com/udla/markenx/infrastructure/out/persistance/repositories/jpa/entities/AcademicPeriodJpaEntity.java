@@ -10,6 +10,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * JPA entity for Academic Period persistence.
+ * 
+ * Extends AuditableEntity to automatically track admin CRUD operations:
+ * - createdBy: Email of admin who created the period
+ * - createdAt: Timestamp when period was created
+ * - lastModifiedBy: Email of admin who last modified the period
+ * - lastModifiedAt: Timestamp when period was last modified
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,7 +26,7 @@ import lombok.Setter;
 @Table(name = "academic_periods", uniqueConstraints = {
     @UniqueConstraint(columnNames = { "year", "semester_number" })
 })
-public class AcademicPeriodJpaEntity {
+public class AcademicPeriodJpaEntity extends AuditableEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "period_id")
