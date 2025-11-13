@@ -22,8 +22,10 @@ public class StudentBuilder {
   }
 
   public StudentBuilder reset() {
+    this.courseId = null;
     this.firstName = null;
     this.lastName = null;
+    this.email = null;
     return this;
   }
 
