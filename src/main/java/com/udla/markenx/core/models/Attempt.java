@@ -1,55 +1,67 @@
 package com.udla.markenx.core.models;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
+import com.udla.markenx.core.interfaces.DomainBaseModel;
 import com.udla.markenx.core.utils.validators.EntityValidator;
 import com.udla.markenx.core.valueobjects.Score;
 
 import com.udla.markenx.core.valueobjects.enums.AttemptResult;
 import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
+import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
-public class Attempt {
+public class Attempt extends DomainBaseModel {
 	private static final Class<Attempt> CLAZZ = Attempt.class;
+	private static final String PREFIX = "ATM";
 
-	private final Long id;
-	private final Long studentTaskId;
+	private final String code;
+	private final Long sequence;
+	private final String studentSequence;
+	private final String taskSequence;
+	private final Score taskMinScoreToPass;
 	private final Score score;
-	private final LocalDate submittedAt;
 	private final Duration timeSpent;
 	private final AttemptResult result;
-	private final AttemptStatus status;
+	private final AttemptStatus attemptStatus;
 
-	public Attempt(Long id, Long studentTaskId, double score, LocalDate submittedAt, Duration timeSpent,
-			AttemptResult result, AttemptStatus status) {
-		this.id = id;
-		this.studentTaskId = studentTaskId;
+	public Attempt(UUID id, String code, Long sequence, DomainBaseModelStatus status, String studentSequence,
+			String taskSequence, double taskMinScoreToPass, double score, Duration timeSpent, AttemptResult result,
+			AttemptStatus attemptStatus, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+		super(id, code, status, createdBy, createdAt, updatedAt);
+		this.sequence = sequence;
+		this.studentSequence = studentSequence;
+		this.taskMinScoreToPass = new Score(taskMinScoreToPass);
+		this.taskSequence = taskSequence;
 		this.score = new Score(score);
-		this.submittedAt = validateDate(submittedAt);
 		this.timeSpent = validateDuration(timeSpent);
-		this.result = result == null ? determineResult(new Score(0.0)) : result;
-		this.status = status == null ? AttemptStatus.COMPLETED : status;
+		this.attemptStatus = requireAttemptStatus(attemptStatus);
+		this.result = determineResult();
+		this.code = requireCode(code);
 	}
 
-	public Attempt(double score, LocalDate submittedAt, Duration timeSpent) {
-		this(null, null, score, submittedAt, timeSpent, null, null);
+	public Attempt(String studentSequence, String taskSequence, double taskMinScoreToPass, double score,
+			Duration timeSpent, AttemptStatus attemptStatus, String createdBy) {
+		super(createdBy);
+		this.sequence = null;
+		this.studentSequence = studentSequence;
+		this.taskSequence = taskSequence;
+		this.taskMinScoreToPass = new Score(taskMinScoreToPass);
+		this.score = new Score(score);
+		this.timeSpent = validateDuration(timeSpent);
+		this.attemptStatus = requireAttemptStatus(attemptStatus);
+		this.result = determineResult();
+		this.code = generateCode();
 	}
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public Long getStudentTaskId() {
-		return this.studentTaskId;
+	public String getCode() {
+		return this.code;
 	}
 
 	public double getScore() {
 		return this.score.value();
-	}
-
-	public LocalDate getSubmittedAt() {
-		return this.submittedAt;
 	}
 
 	public Duration getTimeSpent() {
@@ -60,24 +72,22 @@ public class Attempt {
 		return this.result;
 	}
 
-	public AttemptStatus getStatus() {
-		return this.status;
+	public AttemptStatus getAttemptStatus() {
+		return this.attemptStatus;
 	}
 
-	private AttemptResult determineResult(Score minimumScoreToPass) {
-		if (this.score.value() >= minimumScoreToPass.value()) {
+	private AttemptStatus requireAttemptStatus(AttemptStatus attemptStatus) {
+		return EntityValidator.ensureNotNull(CLAZZ, attemptStatus, "attemptStatus");
+	}
+
+	private AttemptResult determineResult() {
+		if (this.attemptStatus == AttemptStatus.INTERRUPTED) {
+			return null;
+		}
+		if (this.score.value() >= this.taskMinScoreToPass.value()) {
 			return AttemptResult.APPROVED;
 		}
 		return AttemptResult.DISAPPROVED;
-	}
-
-	private LocalDate validateDate(LocalDate submittedAt) {
-		LocalDate today = LocalDate.now();
-		EntityValidator.ensureNotNull(CLAZZ, submittedAt, "submittedAt");
-		if (!submittedAt.isEqual(today)) {
-			throw new InvalidEntityException(CLAZZ, "date", "debe ser la fecha actual (" + today + ").");
-		}
-		return submittedAt;
 	}
 
 	private Duration validateDuration(Duration timeSpent) {
@@ -90,5 +100,10 @@ public class Attempt {
 
 	public boolean isApproved() {
 		return this.result == AttemptResult.APPROVED;
+	}
+
+	@Override
+	protected String generateCode() {
+		return String.format("%s-%s-STD%s-%02d", PREFIX, taskSequence, studentSequence, sequence);
 	}
 }

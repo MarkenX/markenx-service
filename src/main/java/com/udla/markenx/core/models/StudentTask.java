@@ -39,6 +39,23 @@ public class StudentTask extends StudentAssignment<Task> {
     return this.attempts.size();
   }
 
+  public String getStudentSequence() {
+    String studentPart = "UNKWN";
+    if (student != null && student.getCode() != null) {
+      studentPart = student.getCode().replaceFirst("^STD-?", "");
+    }
+    return studentPart;
+  }
+
+  public String getTaskSequence() {
+    String taskPart = "UNKWN";
+    if (assignment != null && assignment.getCode() != null) {
+      String[] parts = assignment.getCode().split("-");
+      taskPart = parts.length > 0 ? parts[parts.length - 1] : "UNKWN";
+    }
+    return taskPart;
+  }
+
   public void addAttempt(Attempt attempt) {
     this.attempts.add(validateAttempt(attempt));
     updateStatus();
@@ -95,17 +112,8 @@ public class StudentTask extends StudentAssignment<Task> {
 
   @Override
   protected String generateCode() {
-    String taskPart = "UNKWN";
-    if (assignment != null && assignment.getCode() != null) {
-      String[] parts = assignment.getCode().split("-");
-      taskPart = parts.length > 0 ? parts[parts.length - 1] : "UNKWN";
-    }
-
-    String studentPart = "UNKWN";
-    if (student != null && student.getCode() != null) {
-      studentPart = student.getCode().replaceFirst("^STD-?", "");
-    }
-
+    String taskPart = getTaskSequence();
+    String studentPart = getStudentSequence();
     return String.format("%s-%s-STD%s", PREFIX, taskPart, studentPart);
   }
 }

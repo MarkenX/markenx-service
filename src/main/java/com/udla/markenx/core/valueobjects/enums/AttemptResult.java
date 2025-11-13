@@ -2,7 +2,8 @@ package com.udla.markenx.core.valueobjects.enums;
 
 public enum AttemptResult {
   APPROVED("Aprobado"),
-  DISAPPROVED("Reprobado");
+  DISAPPROVED("Reprobado"),
+  UNKNOWN("Desconocido");
 
   private final String label;
 
