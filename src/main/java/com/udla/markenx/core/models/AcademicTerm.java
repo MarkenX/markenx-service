@@ -47,6 +47,17 @@ public class AcademicTerm extends DomainBaseModel {
     this.code = generateCode();
   }
 
+  public AcademicTerm(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear) {
+    super();
+    this.startOfTerm = requireStartOfTerm(startOfTerm);
+    this.endOfTerm = requireEndOfTerm(endOfTerm);
+    validateChronology(this.startOfTerm, this.endOfTerm);
+    this.academicYear = validateAcademicYear(academicYear);
+    this.termNumber = determineTermNumber(this.startOfTerm);
+    this.assignedCourses = new ArrayList<>();
+    this.code = generateCode();
+  }
+
   public String getCode() {
     return this.code;
   }
