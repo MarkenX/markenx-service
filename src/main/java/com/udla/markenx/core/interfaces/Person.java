@@ -23,6 +23,12 @@ public abstract class Person extends DomainBaseModel {
 		this.lastName = EntityValidator.ensureNotNullOrEmpty(getClass(), lastName, "lastName");
 	}
 
+	public Person(String firstName, String lastName) {
+		super();
+		this.firstName = EntityValidator.ensureNotNullOrEmpty(getClass(), firstName, "firstName");
+		this.lastName = EntityValidator.ensureNotNullOrEmpty(getClass(), lastName, "lastName");
+	}
+
 	public String getFirstName() {
 		return this.firstName;
 	}

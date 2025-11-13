@@ -33,8 +33,17 @@ public class Student extends Person {
 		this.code = requireCode(code);
 	}
 
-	public Student(UUID id, UUID courseId, String firstName, String lastName, String email, String createdBy) {
+	public Student(UUID courseId, String firstName, String lastName, String email, String createdBy) {
 		super(firstName, lastName, createdBy);
+		this.sequence = null;
+		this.courseId = courseId;
+		this.email = validateEmail(email);
+		this.assignedTaks = new ArrayList<>();
+		this.code = generateCode();
+	}
+
+	public Student(UUID courseId, String firstName, String lastName, String email) {
+		super(firstName, lastName);
 		this.sequence = null;
 		this.courseId = courseId;
 		this.email = validateEmail(email);

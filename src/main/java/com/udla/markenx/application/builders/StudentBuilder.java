@@ -1,8 +1,9 @@
 package com.udla.markenx.application.builders;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.application.ports.out.data.generators.EntityIdGenerator;
 import com.udla.markenx.application.ports.out.data.generators.random.RandomStudentDataGeneratorPort;
 import com.udla.markenx.core.models.Student;
 
@@ -10,31 +11,39 @@ import com.udla.markenx.core.models.Student;
 public class StudentBuilder {
 
   private final RandomStudentDataGeneratorPort randomGenerator;
-  private final EntityIdGenerator idGenerator;
 
-  private Long id;
+  private UUID courseId;
   private String firstName;
   private String lastName;
+  private String email;
 
-  public StudentBuilder(RandomStudentDataGeneratorPort randomGenerator, EntityIdGenerator idGenerator) {
+  public StudentBuilder(RandomStudentDataGeneratorPort randomGenerator) {
     this.randomGenerator = randomGenerator;
-    this.idGenerator = idGenerator;
   }
 
   public StudentBuilder reset() {
     this.firstName = null;
     this.lastName = null;
-    this.id = null;
     return this;
   }
 
-  public StudentBuilder setId(long id) {
-    this.id = id;
+  public StudentBuilder setCourseId(UUID courseId) {
+    this.courseId = courseId;
     return this;
   }
 
-  public StudentBuilder generateId() {
-    this.id = idGenerator.nextId();
+  public StudentBuilder setFirstName(String firstName) {
+    this.firstName = firstName;
+    return this;
+  }
+
+  public StudentBuilder setLastName(String lastName) {
+    this.lastName = lastName;
+    return this;
+  }
+
+  public StudentBuilder setEmail(String email) {
+    this.email = email;
     return this;
   }
 
@@ -48,7 +57,12 @@ public class StudentBuilder {
     return this;
   }
 
+  public StudentBuilder randomEmail() {
+    this.email = randomGenerator.email();
+    return this;
+  }
+
   public Student build() {
-    return new Student(id, firstName, lastName);
+    return new Student(courseId, firstName, lastName, email);
   }
 }
