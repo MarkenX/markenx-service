@@ -8,9 +8,6 @@ import com.udla.markenx.application.ports.out.persistance.repositories.StudentRe
 import com.udla.markenx.core.exceptions.DomainException;
 import com.udla.markenx.core.models.Student;
 
-/**
- * Use case for updating student information.
- */
 @Service
 public class UpdateStudentUseCase {
 
@@ -20,29 +17,17 @@ public class UpdateStudentUseCase {
     this.studentRepository = studentRepository;
   }
 
-  /**
-   * Updates student information (firstName, lastName, email).
-   * 
-   * @param id      the student ID
-   * @param request DTO containing updated student data
-   * @return the updated student domain model
-   * @throws StudentNotFoundException    if student not found
-   * @throws EmailAlreadyExistsException if new email is already in use
-   */
   @Transactional
   public Student execute(Long id, UpdateStudentRequestDTO request) {
-    // Find existing student
     Student existingStudent = studentRepository.findById(id)
         .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
 
-    // Check if email is being changed and if new email already exists
     if (!existingStudent.getEmail().equals(request.email())) {
       if (studentRepository.existsByEmail(request.email())) {
         throw new EmailAlreadyExistsException("Email already in use: " + request.email());
       }
     }
 
-    // Create updated student (domain model handles validation)
     Student updatedStudent = new Student(
         id,
         request.firstName(),

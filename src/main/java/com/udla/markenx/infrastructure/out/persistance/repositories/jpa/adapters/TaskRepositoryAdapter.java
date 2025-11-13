@@ -12,6 +12,7 @@ import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.TaskMapper;
+import java.util.Optional;
 
 @Repository
 public class TaskRepositoryAdapter implements TaskRepositoryPort {
@@ -55,5 +56,12 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	public Task createTask(Task task) {
 		TaskJpaEntity entity = jpaRepository.save(TaskMapper.toEntity(task));
 		return TaskMapper.toDomain(entity);
+	}
+
+	@Override
+	public Task getTaskById(Long taskId) {
+		Optional<TaskJpaEntity> opt = jpaRepository.findById(taskId);
+		return opt.map(TaskMapper::toDomain)
+				.orElseThrow(() -> new IllegalArgumentException("Task not found with id: " + taskId));
 	}
 }

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.udla.markenx.core.models.AcademicPeriod;
+import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 
 /**
@@ -17,22 +17,22 @@ public interface AcademicPeriodRepositoryPort {
   /**
    * Saves a new academic period.
    */
-  AcademicPeriod save(AcademicPeriod period);
+  AcademicTerm save(AcademicTerm period);
 
   /**
    * Updates an existing academic period.
    */
-  AcademicPeriod update(AcademicPeriod period);
+  AcademicTerm update(AcademicTerm period);
 
   /**
    * Finds an academic period by ID.
    */
-  Optional<AcademicPeriod> findById(Long id);
+  Optional<AcademicTerm> findById(Long id);
 
   /**
    * Finds all academic periods with pagination.
    */
-  Page<AcademicPeriod> findAll(Pageable pageable);
+  Page<AcademicTerm> findAll(Pageable pageable);
 
   /**
    * Deletes an academic period by ID.
@@ -52,7 +52,7 @@ public interface AcademicPeriodRepositoryPort {
   /**
    * Finds all academic periods (for overlap validation).
    */
-  List<AcademicPeriod> findAllPeriods();
+  List<AcademicTerm> findAllPeriods();
 
   /**
    * Counts the number of courses in an academic period.

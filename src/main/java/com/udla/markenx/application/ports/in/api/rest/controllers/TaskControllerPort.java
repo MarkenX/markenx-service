@@ -22,4 +22,10 @@ public interface TaskControllerPort {
    * @return ResponseEntity with page of attempt DTOs
    */
   ResponseEntity<Page<AttemptResponseDTO>> getTaskAttempts(Long taskId, int page, int size);
+
+  ResponseEntity<Page<AttemptResponseDTO>> getTaskAttemptsByStudent(Long taskId, Long studentId, int page,
+      int size);
+
+  ResponseEntity<AttemptResponseDTO> createAttempt(Long taskId, Long studentId,
+      com.udla.markenx.application.dtos.requests.AttemptRequestDTO request);
 }

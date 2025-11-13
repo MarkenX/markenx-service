@@ -1,70 +1,59 @@
 package com.udla.markenx.application.factories;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.application.builders.AttemptBuilder;
-import com.udla.markenx.application.builders.TaskBuilder;
-import com.udla.markenx.application.ports.out.data.random.generators.RandomNumberGeneratorPort;
-import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.Task;
+
+import com.udla.markenx.application.builders.TaskBuilder;
+import com.udla.markenx.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
 
 @Component
 public class RandomTaskFactory {
   private static final int MAX_ATTEMPTS = 10;
 
   private final TaskBuilder taskBuilder;
-  private final AttemptBuilder attemptBuilder;
   private final RandomNumberGeneratorPort numberGenerator;
 
   public RandomTaskFactory(
       TaskBuilder taskBuilder,
-      AttemptBuilder attemptBuilder,
       RandomNumberGeneratorPort numberGenerator) {
     this.taskBuilder = taskBuilder;
-    this.attemptBuilder = attemptBuilder;
     this.numberGenerator = numberGenerator;
   }
 
   public Task createRandomTask(LocalDate limitDueDate) {
-    int attemptCount = numberGenerator.positiveIntegerBetween(1, MAX_ATTEMPTS);
+    int maxAttemptCount = numberGenerator.positiveIntegerBetween(1, MAX_ATTEMPTS);
     LocalDate tomorrow = LocalDate.now().plusDays(1);
     Task task = taskBuilder
         .reset()
-        .randomTitle()
-        .randomSummary()
-        .randomDueDate(tomorrow, limitDueDate)
-        .randomMaxAttempts(attemptCount)
-        .randomMinimumScoreToPass()
+        .generateId()
+        .generateRandomTitle()
+        .generateRandomSummary()
+        .generateRandomDueDate(tomorrow, limitDueDate)
+        .generateRandomMaxAttempts(maxAttemptCount)
+        .generateRandomMinimumScoreToPass()
         .build();
     return task;
   }
 
-  public Task createRandomTaskWithAttempts(LocalDate limitDueDate) {
-    int attemptCount = numberGenerator.positiveIntegerBetween(1, MAX_ATTEMPTS);
-    LocalDate tomorrow = LocalDate.now().plusDays(1);
-    Task task = taskBuilder
-        .reset()
-        .randomTitle()
-        .randomSummary()
-        .randomDueDate(tomorrow, limitDueDate)
-        .randomMaxAttempts(attemptCount)
-        .randomActiveAttempt()
-        .randomMinimumScoreToPass()
-        .build();
+  public List<Task> createRandomTasks(int count, LocalDate limitDueDate) {
+    List<Task> tasks = new ArrayList<>();
+    for (int i = 0; i < count; i++) {
+      tasks.add(createRandomTask(limitDueDate));
+    }
+    return tasks;
+  }
 
-    for (int i = 0; i < attemptCount; i++) {
-      Attempt attempt = attemptBuilder
-          .reset()
-          .setMinimumScoreToPass(task.getMinimumScoreToPass())
-          .randomDate(task.getCreatedDate(), task.getDueDate())
-          .randomScore()
-          .randomDuration()
-          .build();
-      task.addAttempt(attempt);
+  public List<Task> createRandomTasksUpTo(int maxTasks, LocalDate endDate) {
+    if (maxTasks <= 0) {
+      throw new IllegalArgumentException("El límite debe ser mayor que cero");
     }
 
-    return task;
+    int count = numberGenerator.positiveIntegerBetween(1, maxTasks);
+    return createRandomTasks(count, endDate);
   }
 }

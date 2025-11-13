@@ -2,7 +2,7 @@ package com.udla.markenx.application.dtos.mappers;
 
 import com.udla.markenx.application.dtos.responses.AcademicPeriodResponseDTO;
 import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
-import com.udla.markenx.core.models.AcademicPeriod;
+import com.udla.markenx.core.models.AcademicTerm;
 
 /**
  * Mapper for converting AcademicPeriod domain models to DTOs.
@@ -18,16 +18,16 @@ public final class AcademicPeriodMapper {
   /**
    * Converts domain model to response DTO.
    */
-  public static AcademicPeriodResponseDTO toResponseDto(AcademicPeriod domain) {
+  public static AcademicPeriodResponseDTO toResponseDto(AcademicTerm domain) {
     if (domain == null) {
       return null;
     }
 
     return new AcademicPeriodResponseDTO(
         domain.getId(),
-        domain.getStartDate(),
-        domain.getEndDate(),
-        domain.getYear(),
+        domain.getStartOfTerm(),
+        domain.getEndOfTerm(),
+        domain.getAcademicYear(),
         domain.getLabel());
   }
 }

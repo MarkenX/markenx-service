@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
 
 public interface AttemptJpaRepository extends JpaRepository<AttemptJpaEntity, Long> {
-  Page<AttemptJpaEntity> findByTaskId(Long taskId, Pageable pageable);
+  Page<AttemptJpaEntity> findByStudentAssignmentId(Long studentAssignmentId, Pageable pageable);
+
+  Page<AttemptJpaEntity> findByStudentAssignment_Assignment_Id(Long assignmentId, Pageable pageable);
 }

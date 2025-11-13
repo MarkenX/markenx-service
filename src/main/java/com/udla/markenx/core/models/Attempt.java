@@ -4,61 +4,65 @@ import java.time.Duration;
 import java.time.LocalDate;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
-import com.udla.markenx.core.exceptions.NullFieldException;
+import com.udla.markenx.core.utils.validators.EntityValidator;
 import com.udla.markenx.core.valueobjects.Score;
+
 import com.udla.markenx.core.valueobjects.enums.AttemptResult;
 import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
 
-import lombok.Getter;
-
-@Getter
 public class Attempt {
-	private Long id;
+	private static final Class<Attempt> CLAZZ = Attempt.class;
+
+	private final Long id;
+	private final Long studentTaskId;
 	private final Score score;
-	private final LocalDate date;
-	private final Duration duration;
+	private final LocalDate submittedAt;
+	private final Duration timeSpent;
 	private final AttemptResult result;
-	private final AttemptStatus currentStatus;
+	private final AttemptStatus status;
 
-	// #region Constructors
-
-	public Attempt(LocalDate date) {
-		this.score = null;
-		this.date = ensureValidDate(date);
-		this.duration = null;
-		this.result = null;
-		this.currentStatus = AttemptStatus.INTERRUPTED;
-	}
-
-	public Attempt(double score, LocalDate date, Duration duration, double minimumScoreToPass) {
+	public Attempt(Long id, Long studentTaskId, double score, LocalDate submittedAt, Duration timeSpent,
+			AttemptResult result, AttemptStatus status) {
+		this.id = id;
+		this.studentTaskId = studentTaskId;
 		this.score = new Score(score);
-		// this.date = ensureValidDate(date);
-		this.date = date;
-		this.duration = ensureValidDuration(duration);
-		this.result = determineResult(new Score(minimumScoreToPass));
-		this.currentStatus = AttemptStatus.COMPLETED;
+		this.submittedAt = validateDate(submittedAt);
+		this.timeSpent = validateDuration(timeSpent);
+		this.result = result == null ? determineResult(new Score(0.0)) : result;
+		this.status = status == null ? AttemptStatus.COMPLETED : status;
 	}
 
-	public Attempt(double score, LocalDate date, Duration duration, AttemptResult result, AttemptStatus currenStatus) {
-		this.score = new Score(score);
-		// this.date = ensureValidDate(date);
-		this.date = date;
-		this.duration = ensureValidDuration(duration);
-		this.result = result;
-		this.currentStatus = currenStatus;
+	public Attempt(double score, LocalDate submittedAt, Duration timeSpent) {
+		this(null, null, score, submittedAt, timeSpent, null, null);
 	}
 
-	// #endregion Constructors
+	public Long getId() {
+		return this.id;
+	}
 
-	// #region Getters
+	public Long getStudentTaskId() {
+		return this.studentTaskId;
+	}
 
 	public double getScore() {
 		return this.score.value();
 	}
 
-	// #endregion
+	public LocalDate getSubmittedAt() {
+		return this.submittedAt;
+	}
 
-	// #region Setters
+	public Duration getTimeSpent() {
+		return this.timeSpent;
+	}
+
+	public AttemptResult getResult() {
+		return this.result;
+	}
+
+	public AttemptStatus getStatus() {
+		return this.status;
+	}
 
 	private AttemptResult determineResult(Score minimumScoreToPass) {
 		if (this.score.value() >= minimumScoreToPass.value()) {
@@ -66,34 +70,23 @@ public class Attempt {
 		}
 		return AttemptResult.DISAPPROVED;
 	}
-	// #endregion Setters
 
-	// #region Validations
-
-	private LocalDate ensureValidDate(LocalDate date) {
+	private LocalDate validateDate(LocalDate submittedAt) {
 		LocalDate today = LocalDate.now();
-		if (date == null) {
-			throw new NullFieldException(getClass(), "date");
+		EntityValidator.ensureNotNull(CLAZZ, submittedAt, "submittedAt");
+		if (!submittedAt.isEqual(today)) {
+			throw new InvalidEntityException(CLAZZ, "date", "debe ser la fecha actual (" + today + ").");
 		}
-		if (!date.isEqual(today)) {
-			throw new InvalidEntityException(getClass(), "date",
-					"debe ser la fecha actual (" + today + ").");
-		}
-		return date;
+		return submittedAt;
 	}
 
-	private Duration ensureValidDuration(Duration duration) {
-		if (duration == null) {
-			throw new NullFieldException(getClass(), "duration");
+	private Duration validateDuration(Duration timeSpent) {
+		EntityValidator.ensureNotNull(CLAZZ, timeSpent, "timeSpent");
+		if (timeSpent.isNegative() || timeSpent.isZero()) {
+			throw new InvalidEntityException(CLAZZ, "duration", "debe ser mayor que cero.");
 		}
-		if (duration.isNegative() || duration.isZero()) {
-			throw new InvalidEntityException(getClass(), "duration",
-					"debe ser mayor que cero.");
-		}
-		return duration;
+		return timeSpent;
 	}
-
-	// #endregion Validations
 
 	public boolean isApproved() {
 		return this.result == AttemptResult.APPROVED;

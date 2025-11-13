@@ -87,7 +87,7 @@ public class CourseService {
     // set academicPeriodId and label if provided by rebuilding domain object
     if (academicPeriodId != null || label != null) {
       course = new Course(null, course.getAssignments(), course.getStudents(), academicPeriodId, label,
-          course.getTimestamps());
+          course.getAuditInfo());
     }
 
     return courseRepository.save(course);
@@ -103,7 +103,7 @@ public class CourseService {
 
     // Create updated course domain preserving assignments/students and timestamps
     Course updated = new Course(existing.getId(), existing.getAssignments(), existing.getStudents(), academicPeriodId,
-        label == null ? existing.getLabel() : label, existing.getTimestamps());
+        label == null ? existing.getName() : label, existing.getAuditInfo());
 
     return courseRepository.update(updated);
   }

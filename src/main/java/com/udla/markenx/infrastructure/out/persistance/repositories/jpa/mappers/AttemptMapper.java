@@ -20,12 +20,19 @@ public final class AttemptMapper {
       throw new DomainMappingException();
     }
 
+    Long studentAssignmentId = null;
+    if (entity.getStudentAssignment() != null) {
+      studentAssignmentId = entity.getStudentAssignment().getId();
+    }
+
     Attempt domain = new Attempt(
+        entity.getId(),
         entity.getScore(),
         entity.getDate(),
         entity.getDuration(),
         entity.getResult(),
-        entity.getCurrentStatus());
+        entity.getCurrentStatus(),
+        studentAssignmentId);
 
     return domain;
   }
@@ -38,10 +45,10 @@ public final class AttemptMapper {
     AttemptJpaEntity entity = new AttemptJpaEntity();
     entity.setId(domain.getId());
     entity.setScore(domain.getScore());
-    entity.setDate(domain.getDate());
-    entity.setDuration(domain.getDuration());
+    entity.setDate(domain.getSubmittedAt());
+    entity.setDuration(domain.getTimeSpent());
     entity.setResult(domain.getResult());
-    entity.setCurrentStatus(domain.getCurrentStatus());
+    entity.setCurrentStatus(domain.getStatus());
 
     return entity;
   }

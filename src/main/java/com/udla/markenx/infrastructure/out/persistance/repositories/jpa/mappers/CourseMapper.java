@@ -89,6 +89,14 @@ public class CourseMapper {
     CourseJpaEntity entity = new CourseJpaEntity();
     entity.setId(domain.getId());
 
+    // Convert all students and set bidirectional relationship first so
+    // assignments mapping can refer to the persisted student entities.
+    List<StudentJpaEntity> students = domain.getStudents().stream()
+        .map(student -> StudentMapper.toEntity(student, null))
+        .peek(e -> e.setCourse(entity))
+        .toList();
+    entity.setStudents(students);
+
     // Convert all assignments and set bidirectional relationship
     List<AssignmentJpaEntity> assignments = domain.getAssignments().stream()
         .map(AssignmentMapper::toEntity)
@@ -96,23 +104,54 @@ public class CourseMapper {
         .toList();
     entity.setAssignments(assignments);
 
-    // Convert all students and set bidirectional relationship
-    // Note: Students from domain don't have Keycloak ID (pure domain model)
-    // so we pass null for keycloakUserId. This is typically used for read
-    // operations.
-    List<StudentJpaEntity> students = domain.getStudents().stream()
-        .map(student -> StudentMapper.toEntity(student, null))
-        .peek(e -> e.setCourse(entity))
-        .toList();
-    entity.setStudents(students);
+    // For tasks, ensure each attempt's student reference is the corresponding
+    // StudentJpaEntity instance mapped above (match by first+last name or email)
+    if (entity.getAssignments() != null && !entity.getAssignments().isEmpty() && entity.getStudents() != null) {
+      // We rely on the stream ordering to be identical between domain assignments
+      // and the produced entity assignments. Iterate by index and, for each task
+      // assignment, match each domain attempt's student to the corresponding
+      // StudentJpaEntity previously created above.
+      for (int i = 0; i < domain.getAssignments().size(); i++) {
+        Assignment domainAssignment = domain.getAssignments().get(i);
+        AssignmentJpaEntity entityAssignment = entity.getAssignments().get(i);
+        if (domainAssignment instanceof com.udla.markenx.core.models.Task
+            && entityAssignment instanceof com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity) {
+          com.udla.markenx.core.models.Task domainTask = (com.udla.markenx.core.models.Task) domainAssignment;
+          com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity taskEntity = (com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity) entityAssignment;
+
+          // For each attempt in the domain task, find the corresponding AttemptJpaEntity
+          // by index
+          for (int j = 0; j < domainTask.getAttempts().size() && j < taskEntity.getAttempts().size(); j++) {
+            com.udla.markenx.core.models.Attempt domainAttempt = domainTask.getAttempts().get(j);
+            com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity attemptEntity = taskEntity
+                .getAttempts().get(j);
+
+            Long domainStudentId = domainAttempt.getStudentId();
+            if (domainStudentId != null) {
+              com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity match = null;
+              for (com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity s : entity
+                  .getStudents()) {
+                if (s.getId() != null && s.getId().equals(domainStudentId)) {
+                  match = s;
+                  break;
+                }
+              }
+              if (match != null) {
+                attemptEntity.setStudent(match);
+              }
+            }
+          }
+        }
+      }
+    }
 
     // Map label
-    entity.setLabel(domain.getLabel());
+    entity.setLabel(domain.getName());
 
     // Map academic period id if present on domain
-    if (domain.getAcademicPeriodId() != null) {
+    if (domain.getAcademicTermId() != null) {
       com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity ap = new com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity();
-      ap.setId(domain.getAcademicPeriodId());
+      ap.setId(domain.getAcademicTermId());
       entity.setAcademicPeriod(ap);
     }
 

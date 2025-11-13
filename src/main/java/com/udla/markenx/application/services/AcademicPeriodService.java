@@ -13,7 +13,7 @@ import com.udla.markenx.core.exceptions.InvalidEntityException;
 import com.udla.markenx.core.exceptions.MaxPeriodsPerYearExceededException;
 import com.udla.markenx.core.exceptions.PeriodHasCoursesException;
 import com.udla.markenx.core.exceptions.ResourceNotFoundException;
-import com.udla.markenx.core.models.AcademicPeriod;
+import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 import com.udla.markenx.core.services.AcademicPeriodDomainService;
 
@@ -33,9 +33,9 @@ public class AcademicPeriodService {
    * Creates a new academic period with automatic semester number assignment.
    */
   @Transactional
-  public AcademicPeriod createAcademicPeriod(LocalDate startDate, LocalDate endDate, int year) {
+  public AcademicTerm createAcademicPeriod(LocalDate startDate, LocalDate endDate, int year) {
     // Validate dates using domain service
-    AcademicPeriodDomainService.validatePeriodDates(startDate, endDate);
+    AcademicPeriodDomainService.validateTermDates(startDate, endDate);
 
     // Check if we already have 2 periods for this year
     long periodsInYear = periodRepository.countByYear(year);
@@ -44,8 +44,8 @@ public class AcademicPeriodService {
     }
 
     // Get existing periods for this year to determine semester number
-    List<AcademicPeriod> existingPeriodsInYear = periodRepository.findAllPeriods().stream()
-        .filter(p -> p.getYear() == year)
+    List<AcademicTerm> existingPeriodsInYear = periodRepository.findAllPeriods().stream()
+        .filter(p -> p.getAcademicYear() == year)
         .toList();
 
     // Determine semester number using domain service
@@ -54,16 +54,16 @@ public class AcademicPeriodService {
     // Check if this year/semester combination already exists
     if (periodRepository.existsByYearAndSemesterNumber(year, semesterNumber)) {
       throw new InvalidEntityException(
-          AcademicPeriod.class,
+          AcademicTerm.class,
           String.format("Ya existe un período para el %s semestre del año %d",
               semesterNumber == 1 ? "primer" : "segundo", year));
     }
 
     // Create domain object (this validates dates and year match)
-    AcademicPeriod newPeriod = new AcademicPeriod(startDate, endDate, year, semesterNumber);
+    AcademicTerm newPeriod = new AcademicTerm(startDate, endDate, year, semesterNumber);
 
     // Check for overlaps with existing periods using domain service
-    List<AcademicPeriod> allPeriods = periodRepository.findAllPeriods();
+    List<AcademicTerm> allPeriods = periodRepository.findAllPeriods();
     AcademicPeriodDomainService.validateNoOverlaps(newPeriod, allPeriods, null);
 
     // Save and return
@@ -74,31 +74,31 @@ public class AcademicPeriodService {
    * Updates an existing academic period (dates and year can be updated).
    */
   @Transactional
-  public AcademicPeriod updateAcademicPeriod(Long id, LocalDate startDate, LocalDate endDate, Integer year) {
+  public AcademicTerm updateAcademicPeriod(Long id, LocalDate startDate, LocalDate endDate, Integer year) {
     // Find existing period
-    AcademicPeriod existing = periodRepository.findById(id)
+    AcademicTerm existing = periodRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
 
     // Validate new dates using domain service
     if (startDate != null && endDate != null) {
-      AcademicPeriodDomainService.validatePeriodDates(startDate, endDate);
+      AcademicPeriodDomainService.validateTermDates(startDate, endDate);
     }
 
     // Update dates
     if (startDate != null) {
-      existing.setStartDate(startDate);
+      existing.setStartOfTerm(startDate);
     }
     if (endDate != null) {
-      existing.setEndDate(endDate);
+      existing.setEndOfTerm(endDate);
     }
 
     // Update year if provided
     if (year != null) {
-      existing.setYear(year);
+      existing.setAcademicYear(year);
     }
 
     // Check for overlaps (excluding this period) using domain service
-    List<AcademicPeriod> allPeriods = periodRepository.findAllPeriods();
+    List<AcademicTerm> allPeriods = periodRepository.findAllPeriods();
     AcademicPeriodDomainService.validateNoOverlaps(existing, allPeriods, id);
 
     // Save and return
@@ -108,7 +108,7 @@ public class AcademicPeriodService {
   /**
    * Retrieves an academic period by ID.
    */
-  public AcademicPeriod getAcademicPeriodById(Long id) {
+  public AcademicTerm getAcademicPeriodById(Long id) {
     return periodRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
   }
@@ -116,7 +116,7 @@ public class AcademicPeriodService {
   /**
    * Retrieves all academic periods with pagination.
    */
-  public Page<AcademicPeriod> getAllAcademicPeriods(Pageable pageable) {
+  public Page<AcademicTerm> getAllAcademicPeriods(Pageable pageable) {
     return periodRepository.findAll(pageable);
   }
 

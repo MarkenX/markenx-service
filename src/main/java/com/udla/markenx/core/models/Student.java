@@ -1,52 +1,46 @@
 package com.udla.markenx.core.models;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
+
+import com.udla.markenx.core.exceptions.InvalidEmailException;
 import com.udla.markenx.core.interfaces.Person;
 import com.udla.markenx.core.utils.validators.EntityValidator;
+import com.udla.markenx.core.valueobjects.AuditInfo;
 
 public class Student extends Person {
-	private final String email;
+	private static final Class<Student> CLAZZ = Student.class;
+
+	private final Long id;
 	private final Long courseId;
+	private final String email;
+	private final List<StudentTask> assignedTaks;
+	private final AuditInfo auditInfo;
 
-	// Constructor for new students
-	public Student(String firstName, String lastName) {
-		super(firstName, lastName);
-		this.email = null;
-		this.courseId = null;
+	private Student(Long id, Long courseId, String firstName, String LastName, String email,
+			List<StudentTask> assignedTasks, AuditInfo auditInfo) {
+		super(firstName, LastName);
+		this.id = id;
+		this.courseId = courseId;
+		this.email = validateEmail(email);
+		this.assignedTaks = requireStudentTasks(assignedTasks);
+		this.auditInfo = requireAuditInfo(auditInfo);
 	}
 
-	// Constructor for new students with email
+	public Student(Long id, Long courseId, String firstName, String lastName, String email, List<StudentTask> tasks,
+			String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+		this(id, courseId, firstName, lastName, email, tasks, new AuditInfo(createdBy, createdAt, updatedAt));
+	}
+
 	public Student(String firstName, String lastName, String email) {
-		super(firstName, lastName);
-		this.email = validateEmail(email);
-		this.courseId = null;
+		this(null, null, firstName, lastName, email, new ArrayList<>(), new AuditInfo());
 	}
 
-	// Constructor for new students with email and courseId
-	public Student(String firstName, String lastName, String email, Long courseId) {
-		super(firstName, lastName);
-		this.email = validateEmail(email);
-		this.courseId = courseId;
-	}
-
-	// Constructor for existing students (with ID)
-	public Student(Long id, String firstName, String lastName) {
-		super(id, firstName, lastName);
-		this.email = null;
-		this.courseId = null;
-	}
-
-	// Constructor for existing students with email
-	public Student(Long id, String firstName, String lastName, String email) {
-		super(id, firstName, lastName);
-		this.email = validateEmail(email);
-		this.courseId = null;
-	}
-
-	// Constructor for existing students with email and courseId
-	public Student(Long id, String firstName, String lastName, String email, Long courseId) {
-		super(id, firstName, lastName);
-		this.email = validateEmail(email);
-		this.courseId = courseId;
+	public Long getId() {
+		return this.id;
 	}
 
 	public String getEmail() {
@@ -57,10 +51,40 @@ public class Student extends Person {
 		return courseId;
 	}
 
+	public String getCreatedBy() {
+		return this.auditInfo.getCreatedBy();
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return this.auditInfo.getCreatedDateTime();
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return this.auditInfo.getUpdatedDateTime();
+	}
+
+	public List<StudentTask> getAssignedTaks() {
+		return List.copyOf(this.assignedTaks);
+	}
+
 	private String validateEmail(String email) {
-		if (email == null) {
-			return null;
+		String validatedEmail = EntityValidator.ensureNotNullOrEmpty(CLAZZ, email, "email");
+		EmailValidator validator = new EmailValidator();
+		if (!validator.isValid(validatedEmail, null)) {
+			throw new InvalidEmailException("El formato del correo electrónico no es válido:" + validatedEmail);
 		}
-		return EntityValidator.ensureNotNullOrEmpty(getClass(), email, "email");
+		return validatedEmail;
+	}
+
+	private List<StudentTask> requireStudentTasks(List<StudentTask> tasks) {
+		return EntityValidator.ensureNotNull(CLAZZ, assignedTaks, "assignedTaks");
+	}
+
+	private AuditInfo requireAuditInfo(AuditInfo auditInfo) {
+		return EntityValidator.ensureNotNull(CLAZZ, auditInfo, "auditInfo");
+	}
+
+	public void markUpdated() {
+		this.auditInfo.markUpdated();
 	}
 }

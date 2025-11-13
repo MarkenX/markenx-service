@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 
 import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
-import com.udla.markenx.core.models.AcademicPeriod;
+import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
@@ -19,7 +19,7 @@ public final class AcademicPeriodMapper {
     throw new UtilityClassInstantiationException(getClass());
   }
 
-  public static @NonNull AcademicPeriod toDomain(AcademicPeriodJpaEntity entity) {
+  public static @NonNull AcademicTerm toDomain(AcademicPeriodJpaEntity entity) {
     if (entity == null) {
       throw new DomainMappingException();
     }
@@ -30,7 +30,7 @@ public final class AcademicPeriodMapper {
             .toList()
         : List.of();
 
-    AcademicPeriod domain = new AcademicPeriod(
+    AcademicTerm domain = new AcademicTerm(
         entity.getId(),
         entity.getStartDate(),
         entity.getEndDate(),
@@ -41,20 +41,20 @@ public final class AcademicPeriodMapper {
     return domain;
   }
 
-  public static @NonNull AcademicPeriodJpaEntity toEntity(AcademicPeriod domain) {
+  public static @NonNull AcademicPeriodJpaEntity toEntity(AcademicTerm domain) {
     if (domain == null) {
       throw new EntityMappingException();
     }
 
     AcademicPeriodJpaEntity entity = new AcademicPeriodJpaEntity();
     entity.setId(domain.getId());
-    entity.setStartDate(domain.getStartDate());
-    entity.setEndDate(domain.getEndDate());
-    entity.setYear(domain.getYear());
-    entity.setSemesterNumber(domain.getSemesterNumber());
+    entity.setStartDate(domain.getStartOfTerm());
+    entity.setEndDate(domain.getEndOfTerm());
+    entity.setYear(domain.getAcademicYear());
+    entity.setSemesterNumber(domain.getTermNumber());
 
-    if (domain.getCourses() != null) {
-      List<CourseJpaEntity> courses = domain.getCourses().stream()
+    if (domain.getAssignedCourses() != null) {
+      List<CourseJpaEntity> courses = domain.getAssignedCourses().stream()
           .map(CourseMapper::toEntity)
           .peek(e -> e.setAcademicPeriod(entity))
           .toList();

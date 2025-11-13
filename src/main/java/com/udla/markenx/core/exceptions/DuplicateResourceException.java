@@ -1,13 +1,5 @@
 package com.udla.markenx.core.exceptions;
 
-/**
- * Exception thrown when a duplicate resource is detected.
- * 
- * Used for:
- * - Duplicate email in student creation
- * - Duplicate enrollment code
- * - Duplicate Keycloak user ID
- */
 public class DuplicateResourceException extends DomainException {
 
   public DuplicateResourceException(String message) {

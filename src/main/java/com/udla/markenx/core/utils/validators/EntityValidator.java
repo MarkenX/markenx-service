@@ -20,6 +20,16 @@ public final class EntityValidator {
     return id;
   }
 
+  public static <T> T ensureNotNull(
+      Class<?> clazz,
+      T value,
+      String fieldName) {
+    if (value == null) {
+      throw new NullFieldException(clazz, fieldName);
+    }
+    return value;
+  }
+
   public static String ensureNotNullOrEmpty(Class<?> clazz, String value, String fieldName) {
     if (value == null || value.trim().isEmpty()) {
       throw new NullFieldException(clazz, fieldName);

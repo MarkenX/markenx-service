@@ -24,7 +24,7 @@ import com.udla.markenx.application.dtos.requests.UpdateAcademicPeriodRequestDTO
 import com.udla.markenx.application.dtos.responses.AcademicPeriodResponseDTO;
 import com.udla.markenx.application.ports.in.api.rest.controllers.AcademicPeriodControllerPort;
 import com.udla.markenx.application.services.AcademicPeriodService;
-import com.udla.markenx.core.models.AcademicPeriod;
+import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 
 import jakarta.validation.Valid;
@@ -53,7 +53,7 @@ public class AcademicPeriodController implements AcademicPeriodControllerPort {
   public ResponseEntity<AcademicPeriodResponseDTO> createAcademicPeriod(
       @Valid @RequestBody CreateAcademicPeriodRequestDTO request) {
 
-    AcademicPeriod created = academicPeriodService.createAcademicPeriod(
+    AcademicTerm created = academicPeriodService.createAcademicPeriod(
         request.getStartDate(),
         request.getEndDate(),
         request.getYear());
@@ -68,7 +68,7 @@ public class AcademicPeriodController implements AcademicPeriodControllerPort {
       @PathVariable @Positive(message = "El ID del período debe ser positivo") Long id,
       @Valid @RequestBody UpdateAcademicPeriodRequestDTO request) {
 
-    AcademicPeriod updated = academicPeriodService.updateAcademicPeriod(
+    AcademicTerm updated = academicPeriodService.updateAcademicPeriod(
         id,
         request.getStartDate(),
         request.getEndDate(),
@@ -83,7 +83,7 @@ public class AcademicPeriodController implements AcademicPeriodControllerPort {
   public ResponseEntity<AcademicPeriodResponseDTO> getAcademicPeriodById(
       @PathVariable @Positive(message = "El ID del período debe ser positivo") Long id) {
 
-    AcademicPeriod period = academicPeriodService.getAcademicPeriodById(id);
+    AcademicTerm period = academicPeriodService.getAcademicPeriodById(id);
     AcademicPeriodResponseDTO response = AcademicPeriodMapper.toResponseDto(period);
     return ResponseEntity.ok(response);
   }
@@ -94,7 +94,7 @@ public class AcademicPeriodController implements AcademicPeriodControllerPort {
       @RequestParam(defaultValue = "0") @Min(0) int page,
       @RequestParam(defaultValue = "10") @Min(1) int size) {
 
-    Page<AcademicPeriod> periods = academicPeriodService.getAllAcademicPeriods(
+    Page<AcademicTerm> periods = academicPeriodService.getAllAcademicPeriods(
         PageRequest.of(page, size));
 
     Page<AcademicPeriodResponseDTO> response = periods.map(AcademicPeriodMapper::toResponseDto);

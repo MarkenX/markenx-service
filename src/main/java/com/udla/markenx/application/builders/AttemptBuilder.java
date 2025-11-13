@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.application.ports.out.data.random.generators.RandomAttemptDataGeneratorPort;
+import com.udla.markenx.application.ports.out.data.generators.random.RandomAttemptDataGeneratorPort;
 import com.udla.markenx.core.models.Attempt;
 
 @Component
@@ -17,12 +17,14 @@ public class AttemptBuilder {
   private LocalDate date;
   private Duration duration;
   private double minimumScoreToPass;
+  private Long studentAssignmentId;
 
   public AttemptBuilder reset() {
     this.score = 0.0;
     this.date = null;
     this.duration = null;
     this.minimumScoreToPass = 0.0;
+    this.studentAssignmentId = null;
     return this;
   }
 
@@ -32,6 +34,11 @@ public class AttemptBuilder {
 
   public AttemptBuilder setMinimumScoreToPass(double value) {
     this.minimumScoreToPass = value;
+    return this;
+  }
+
+  public AttemptBuilder setStudentAssignmentId(Long studentAssignmentId) {
+    this.studentAssignmentId = studentAssignmentId;
     return this;
   }
 
@@ -51,6 +58,11 @@ public class AttemptBuilder {
   }
 
   public Attempt build() {
-    return new Attempt(score, date, duration, minimumScoreToPass);
+    return new Attempt(
+        score,
+        date,
+        duration,
+        minimumScoreToPass,
+        studentAssignmentId);
   }
 }

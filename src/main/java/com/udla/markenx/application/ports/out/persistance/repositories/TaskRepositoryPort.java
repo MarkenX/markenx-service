@@ -19,4 +19,6 @@ public interface TaskRepositoryPort {
 			Pageable pageable);
 
 	Task createTask(Task task);
+
+	Task getTaskById(Long taskId);
 }

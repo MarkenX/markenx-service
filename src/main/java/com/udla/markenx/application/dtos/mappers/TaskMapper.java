@@ -13,8 +13,6 @@ public class TaskMapper {
 				task.getTitle(),
 				task.getSummary(),
 				task.getDueDate(),
-				task.getCurrentStatus(),
-				task.getActiveAttempt(),
 				task.getMaxAttempts());
 
 		return dto;

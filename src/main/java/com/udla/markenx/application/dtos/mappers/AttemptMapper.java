@@ -11,8 +11,8 @@ public class AttemptMapper {
     AttemptResponseDTO dto = new AttemptResponseDTO(
         attempt.getId(),
         attempt.getScore(),
-        attempt.getDate(),
-        attempt.getDuration());
+        attempt.getSubmittedAt(),
+        attempt.getTimeSpent());
 
     return dto;
   }

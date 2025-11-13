@@ -1,7 +1,6 @@
 package com.udla.markenx.core.valueobjects.enums;
 
 public enum AttemptStatus {
-  IN_PROGRESS("En progreso"),
   COMPLETED("Completado"),
   INTERRUPTED("Interrumpido");
 

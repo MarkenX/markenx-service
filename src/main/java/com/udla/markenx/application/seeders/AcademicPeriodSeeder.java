@@ -6,8 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.core.models.AcademicPeriod;
-
+import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.application.factories.RandomAcademicPeriodFactory;
 import com.udla.markenx.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
 
@@ -31,7 +30,7 @@ public class AcademicPeriodSeeder implements CommandLineRunner {
 
 		LocalDate start = LocalDate.of(2025, 9, 1);
 		LocalDate end = LocalDate.of(2026, 2, 1);
-		AcademicPeriod period = factory.createRandomAcademicPeriod(start, end);
+		AcademicTerm period = factory.createRandomAcademicPeriod(start, end);
 		repository.save(period);
 
 		System.out.println("Database seeding complete!");

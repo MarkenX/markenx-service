@@ -51,6 +51,6 @@ public class AttemptJpaEntity {
 	private AttemptStatus currentStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "task_id")
-	private TaskJpaEntity task;
+	@JoinColumn(name = "student_assignment_id")
+	private StudentAssignmentJpaEntity studentAssignment;
 }

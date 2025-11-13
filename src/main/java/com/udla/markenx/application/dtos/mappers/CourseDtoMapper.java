@@ -13,15 +13,13 @@ public class CourseDtoMapper {
     dto.setId(course.getId());
     dto.setAssignmentsCount(course.getAssignments().size());
     dto.setStudentsCount(course.getStudents().size());
-    dto.setAcademicPeriodId(course.getAcademicPeriodId());
-    dto.setLabel(course.getLabel());
+    dto.setAcademicPeriodId(course.getAcademicTermId());
+    dto.setLabel(course.getName());
 
-    if (course.getTimestamps() != null) {
-      dto.setCreatedBy(course.getTimestamps().getCreatedBy());
-      dto.setCreatedAt(course.getTimestamps().getCreatedDateTime());
-      dto.setLastModifiedBy(course.getTimestamps().getLastModifiedBy());
-      dto.setLastModifiedAt(course.getTimestamps().getUpdatedDateTime());
-    }
+    dto.setCreatedBy(course.getCreatedBy());
+    dto.setCreatedAt(course.getCreatedAt());
+    dto.setLastModifiedBy(course.getLastModifiedBy());
+    dto.setLastModifiedAt(course.getUpdatedAt());
 
     return dto;
   }

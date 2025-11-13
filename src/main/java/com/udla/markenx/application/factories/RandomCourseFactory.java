@@ -1,11 +1,10 @@
 package com.udla.markenx.application.factories;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.application.builders.StudentBuilder;
-import com.udla.markenx.application.ports.out.data.random.generators.RandomNumberGeneratorPort;
 import com.udla.markenx.core.models.Course;
 import com.udla.markenx.core.models.Student;
 import com.udla.markenx.core.models.Task;
@@ -15,43 +14,26 @@ public class RandomCourseFactory {
   private static final int MAX_STUDENTS = 30;
   private static final int MAX_TASKS = 30;
 
-  private final StudentBuilder studentBuilder;
+  private final RandomStudentFactory studentFactory;
   private final RandomTaskFactory taskFactory;
-  private final RandomNumberGeneratorPort numberGenerator;
 
   public RandomCourseFactory(
-      StudentBuilder studentBuilder,
-      RandomTaskFactory taskFactory,
-      RandomNumberGeneratorPort numberGenerator) {
-    this.studentBuilder = studentBuilder;
+      RandomStudentFactory studentFactory,
+      RandomTaskFactory taskFactory) {
+    this.studentFactory = studentFactory;
     this.taskFactory = taskFactory;
-    this.numberGenerator = numberGenerator;
   }
 
   public Course createRandomCourse(LocalDate endDate) {
     Course course = new Course();
 
-    int studentCount = numberGenerator.positiveIntegerBetween(1, MAX_STUDENTS);
-    for (int i = 0; i < studentCount; i++) {
-      Student student = studentBuilder
-          .reset()
-          .randomFirstName()
-          .randomLastName()
-          .build();
-      course.addStudent(student);
-    }
+    List<Student> students = studentFactory
+        .createRandomStudentsUpTo(MAX_STUDENTS);
+    course.addStudents(students);
 
-    int taskCount = numberGenerator.positiveIntegerBetween(1, MAX_TASKS);
-    for (int i = 0; i < taskCount; i++) {
-      // Task task = taskFactory.createRandomTaskWithAttempts(endDate);
-      Task task;
-      if (i % 2 == 0) {
-        task = taskFactory.createRandomTask(endDate);
-      } else {
-        task = taskFactory.createRandomTaskWithAttempts(endDate);
-      }
-      course.addAssignment(task);
-    }
+    List<Task> tasks = taskFactory
+        .createRandomTasksUpTo(MAX_TASKS, endDate);
+    course.addAssignments(tasks);
 
     return course;
   }
