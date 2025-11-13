@@ -5,45 +5,42 @@ import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
+import com.udla.markenx.core.interfaces.DomainBaseModel;
 import com.udla.markenx.core.utils.validators.EntityValidator;
-import com.udla.markenx.core.valueobjects.AuditInfo;
+import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
-public class AcademicTerm {
+public class AcademicTerm extends DomainBaseModel {
   private static final Class<AcademicTerm> CLAZZ = AcademicTerm.class;
 
-  private final Long id;
   private LocalDate startOfTerm;
   private LocalDate endOfTerm;
   private int academicYear;
   private int termNumber;
   private final List<Course> assignedCourses;
-  private final AuditInfo auditInfo;
 
-  private AcademicTerm(Long id, LocalDate startOfTerm, LocalDate endOfTerm, int academicYear,
-      List<Course> assignedCourses, AuditInfo auditInfo) {
-    this.id = id;
+  public AcademicTerm(UUID id, String code, DomainBaseModelStatus status, LocalDate startOfTerm, LocalDate endOfTerm,
+      int academicYear, List<Course> assignedCourses, String createdBy, LocalDateTime createdAt,
+      LocalDateTime updatedAt) {
+    super(id, code, status, createdBy, createdAt, updatedAt);
     this.startOfTerm = requireStartOfTerm(startOfTerm);
     this.endOfTerm = requireEndOfTerm(endOfTerm);
     validateChronology(this.startOfTerm, this.endOfTerm);
     this.academicYear = validateAcademicYear(academicYear);
     this.termNumber = determineTermNumber(this.startOfTerm);
     this.assignedCourses = requireAssignedCourses(assignedCourses);
-    this.auditInfo = requireAuditInfo(auditInfo);
   }
 
-  public AcademicTerm(Long id, LocalDate startOfTerm, LocalDate endOfTerm, int academicYear,
-      List<Course> assignedCourses, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-    this(id, startOfTerm, endOfTerm, academicYear, assignedCourses, new AuditInfo(createdBy, createdAt, updatedAt));
-  }
-
-  public AcademicTerm(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear) {
-    this(null, startOfTerm, endOfTerm, academicYear, new ArrayList<>(), new AuditInfo());
-  }
-
-  public Long getId() {
-    return this.id;
+  public AcademicTerm(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear, String createdBy) {
+    super(createdBy);
+    this.startOfTerm = requireStartOfTerm(startOfTerm);
+    this.endOfTerm = requireEndOfTerm(endOfTerm);
+    validateChronology(this.startOfTerm, this.endOfTerm);
+    this.academicYear = validateAcademicYear(academicYear);
+    this.termNumber = determineTermNumber(this.startOfTerm);
+    this.assignedCourses = new ArrayList<>();
   }
 
   public LocalDate getStartOfTerm() {
@@ -65,18 +62,6 @@ public class AcademicTerm {
   public String getLabel() {
     String semesterLabel = this.termNumber == 1 ? "1er Semestre" : "2do Semestre";
     return String.format("%s - %d", semesterLabel, this.academicYear);
-  }
-
-  public String getCreatedBy() {
-    return this.auditInfo.getCreatedBy();
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return this.auditInfo.getCreatedDateTime();
-  }
-
-  public LocalDateTime getUpdatedAt() {
-    return this.auditInfo.getUpdatedDateTime();
   }
 
   public void setStartOfTerm(LocalDate startDate) {
@@ -158,11 +143,9 @@ public class AcademicTerm {
     return this.assignedCourses.add(course);
   }
 
-  private AuditInfo requireAuditInfo(AuditInfo auditInfo) {
-    return EntityValidator.ensureNotNull(CLAZZ, auditInfo, "auditInfo");
-  }
-
-  public void markUpdated() {
-    this.auditInfo.markUpdated();
+  @Override
+  protected String generateCode() {
+    int term = determineTermNumber(startOfTerm);
+    return String.format("AT-%d-%02d", academicYear, term);
   }
 }
