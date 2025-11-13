@@ -9,39 +9,45 @@ import com.udla.markenx.core.models.AcademicTerm;
 @Component
 public class AcademicTermBuilder {
 
-  private LocalDate startDate;
-  private LocalDate endDate;
-  private int year;
+  private LocalDate startOfTerm;
+  private LocalDate endOfTerm;
+  private int academicYear;
 
   public AcademicTermBuilder reset() {
-    this.startDate = null;
-    this.endDate = null;
-    this.year = 0;
+    this.startOfTerm = null;
+    this.endOfTerm = null;
+    this.academicYear = -1;
     return this;
   }
 
-  public AcademicTermBuilder setStartDate(LocalDate startDate) {
-    this.startDate = startDate;
+  public AcademicTermBuilder setStartOfTerm(LocalDate startDate) {
+    this.startOfTerm = startDate;
     return this;
   }
 
-  public AcademicTermBuilder setEndDate(LocalDate endDate) {
-    this.endDate = endDate;
+  public AcademicTermBuilder setEndOfTerm(LocalDate endDate) {
+    this.endOfTerm = endDate;
     return this;
   }
 
-  public AcademicTermBuilder setYear(int year) {
-    this.year = year;
+  public AcademicTermBuilder setAcademicYear(int year) {
+    this.academicYear = year;
     return this;
   }
 
-  public AcademicTermBuilder randomDates() {
-    this.startDate = LocalDate.now().plusMonths((long) (Math.random() * 12));
-    this.endDate = this.startDate.plusMonths(6);
+  public AcademicTermBuilder randomStartOfTerm() {
+    this.startOfTerm = LocalDate.now().plusMonths((long) (Math.random() * 12));
+    return this;
+  }
+
+  public AcademicTermBuilder randomEndOfTerm() {
+    if (startOfTerm != null) {
+      this.endOfTerm = this.startOfTerm.plusMonths(6);
+    }
     return this;
   }
 
   public AcademicTerm build() {
-    return new AcademicTerm(startDate, endDate, year);
+    return new AcademicTerm(startOfTerm, endOfTerm, academicYear);
   }
 }
