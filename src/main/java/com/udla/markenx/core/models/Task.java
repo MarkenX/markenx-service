@@ -47,6 +47,11 @@ public class Task extends Assignment {
 		this.code = generateCode();
 	}
 
+	@Override
+	public String getCode() {
+		return this.code;
+	}
+
 	public UUID getCourseId() {
 		return courseId;
 	}

@@ -32,6 +32,8 @@ public abstract class Assignment extends DomainBaseModel {
 		setDueDate(dueDate);
 	}
 
+	public abstract String getCode();
+
 	public void setTitle(String title) {
 		this.title = EntityValidator.ensureNotNullOrEmpty(getClass(), title, "title");
 	}

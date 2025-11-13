@@ -1,31 +1,34 @@
 package com.udla.markenx.core.interfaces;
 
-import java.util.Objects;
-import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-public abstract class StudentAssignment<A extends Assignment> {
-  private final Long id;
-  private final Long studentId;
+import com.udla.markenx.core.models.Student;
+import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
+
+public abstract class StudentAssignment<A extends Assignment> extends DomainBaseModel {
+  protected final Student student;
   protected final A assignment;
   protected AssignmentStatus currentStatus;
 
-  public StudentAssignment(Long id, A assignment, Long studentId) {
-    this.id = id;
+  public StudentAssignment(UUID id, String code, DomainBaseModelStatus status, A assignment,
+      Student student, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    super(id, code, status, createdBy, createdAt, updatedAt);
     this.assignment = assignment;
-    this.studentId = studentId;
+    this.student = student;
     this.currentStatus = AssignmentStatus.NOT_STARTED;
   }
 
-  public StudentAssignment(A assignment, Long studentId) {
-    this(null, assignment, studentId);
+  public StudentAssignment(A assignment, Student student, String createdBy) {
+    super(createdBy);
+    this.assignment = assignment;
+    this.student = student;
+    this.currentStatus = AssignmentStatus.NOT_STARTED;
   }
 
-  public Long getId() {
-    return id;
-  }
-
-  public Long getStudentId() {
-    return studentId;
+  public Student getStudent() {
+    return student;
   }
 
   public A getAssignment() {
@@ -38,23 +41,6 @@ public abstract class StudentAssignment<A extends Assignment> {
 
   public void setCurrentStatus(AssignmentStatus currentStatus) {
     this.currentStatus = currentStatus;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (o == null || getClass() != o.getClass())
-      return false;
-    StudentAssignment<?> that = (StudentAssignment<?>) o;
-    return Objects.equals(id, that.id)
-        && Objects.equals(studentId, that.studentId)
-        && Objects.equals(assignment, that.assignment);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, studentId, assignment);
   }
 
   public abstract void updateStatus();

@@ -1,31 +1,38 @@
 package com.udla.markenx.core.models;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
 import com.udla.markenx.core.interfaces.StudentAssignment;
 import com.udla.markenx.core.utils.validators.EntityValidator;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
+import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
 public class StudentTask extends StudentAssignment<Task> {
   private static final Class<StudentTask> CLAZZ = StudentTask.class;
+  private static final String PREFIX = "STT";
 
-  private final Long id;
+  private final String code;
   private final List<Attempt> attempts;
 
-  public StudentTask(Long id, Task task, Long studentId, List<Attempt> attempts) {
-    super(task, studentId);
-    this.id = id;
+  public StudentTask(UUID id, String code, DomainBaseModelStatus status, Student student, Task task,
+      List<Attempt> attempts, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    super(id, code, status, task, student, createdBy, createdAt, updatedAt);
     this.attempts = requireAttempts(attempts);
+    this.code = requireCode(code);
   }
 
-  public StudentTask() {
-    this(null, null, null, new ArrayList<>());
+  public StudentTask(Student student, Task task, String createdBy) {
+    super(task, student, createdBy);
+    this.attempts = new ArrayList<>();
+    this.code = generateCode();
   }
 
-  public Long getId() {
-    return this.id;
+  public String getCode() {
+    return this.code;
   }
 
   public int getActiveAttempt() {
@@ -86,4 +93,19 @@ public class StudentTask extends StudentAssignment<Task> {
     this.currentStatus = AssignmentStatus.IN_PROGRESS;
   }
 
+  @Override
+  protected String generateCode() {
+    String taskPart = "UNKWN";
+    if (assignment != null && assignment.getCode() != null) {
+      String[] parts = assignment.getCode().split("-");
+      taskPart = parts.length > 0 ? parts[parts.length - 1] : "UNKWN";
+    }
+
+    String studentPart = "UNKWN";
+    if (student != null && student.getCode() != null) {
+      studentPart = student.getCode().replaceFirst("^STD-?", "");
+    }
+
+    return String.format("%s-%s-STD%s", PREFIX, taskPart, studentPart);
+  }
 }
