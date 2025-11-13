@@ -2,50 +2,52 @@ package com.udla.markenx.core.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
 import com.udla.markenx.core.interfaces.Assignment;
-import com.udla.markenx.core.utils.validators.EntityValidator;
 import com.udla.markenx.core.valueobjects.Score;
-import com.udla.markenx.core.valueobjects.AuditInfo;
+import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class Task extends Assignment {
 	private static final Class<Task> CLAZZ = Task.class;
+	private static final String PREFIX = "TSK";
 	private static final int MIN_ATTEMPT = 0;
 
-	private final Long id;
-	private final Long courseId;
+	private final String code;
+	private final Long sequence;
+	private final UUID courseId;
+	private final int academicTermYear;
 	private int maxAttempts;
-	private Score minimumScoreToPass;
-	private final AuditInfo auditInfo;
+	private Score minScoreToPass;
 
-	private Task(Long id, Long courseId, String title, String summary, LocalDate dueDate, int maxAttempts, double score,
-			AuditInfo auditInfo) {
-		super(title, summary, dueDate);
-		this.id = id;
+	private Task(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, int academicTermYear,
+			String title, String summary, LocalDate dueDate, int maxAttempts, double minScoreToPass, String createdBy,
+			LocalDateTime createdAt, LocalDateTime updatedAt) {
+		super(courseId, code, sequence, status, title, summary, dueDate, createdBy, createdAt, updatedAt);
+		this.sequence = sequence;
 		this.courseId = courseId;
+		this.academicTermYear = academicTermYear;
 		this.maxAttempts = validateMaxAttempts(maxAttempts);
-		this.minimumScoreToPass = new Score(score);
-		this.auditInfo = requireAuditInfo(auditInfo);
+		this.minScoreToPass = new Score(minScoreToPass);
+		this.code = requireCode(code);
 	}
 
-	public Task(Long id, Long courseId, String title, String summary, LocalDate dueDate, int maxAttempts, double score,
-			String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-		this(id, courseId, title, summary, dueDate, maxAttempts, score, new AuditInfo(createdBy, createdAt, updatedAt));
+	public Task(UUID courseId, int academicTermYear, String title, String summary, LocalDate dueDate, int maxAttempts,
+			double minScoreToPass, String createdBy) {
+		super(title, summary, dueDate, createdBy);
+		this.sequence = null;
+		this.courseId = courseId;
+		this.academicTermYear = academicTermYear;
+		this.maxAttempts = validateMaxAttempts(maxAttempts);
+		this.minScoreToPass = new Score(minScoreToPass);
+		this.code = generateCode();
 	}
 
-	public Task(String title, String summary, LocalDate dueDate, int maxAttempts, double score) {
-		this(null, null, title, summary, dueDate, maxAttempts, score, new AuditInfo());
-	}
-
-	public Long getId() {
-		return this.id;
-	}
-
-	public Long getCourseId() {
+	public UUID getCourseId() {
 		return courseId;
 	}
 
@@ -53,20 +55,8 @@ public class Task extends Assignment {
 		return this.maxAttempts;
 	}
 
-	public double getMinimumScoreToPass() {
-		return this.minimumScoreToPass.value();
-	}
-
-	public String getCreatedBy() {
-		return this.auditInfo.getCreatedBy();
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return this.auditInfo.getCreatedDateTime();
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return this.auditInfo.getUpdatedDateTime();
+	public double getMinScoreToPass() {
+		return this.minScoreToPass.value();
 	}
 
 	public void setMaxAttempts(int maxAttempts) {
@@ -74,7 +64,7 @@ public class Task extends Assignment {
 	}
 
 	public void setMinimumScoreToPass(double minimumScoreToPass) {
-		this.minimumScoreToPass = new Score(minimumScoreToPass);
+		this.minScoreToPass = new Score(minimumScoreToPass);
 	}
 
 	private int validateMaxAttempts(int maxAttempts) {
@@ -84,11 +74,8 @@ public class Task extends Assignment {
 		return maxAttempts;
 	}
 
-	private AuditInfo requireAuditInfo(AuditInfo auditInfo) {
-		return EntityValidator.ensureNotNull(CLAZZ, auditInfo, "auditInfo");
-	}
-
-	public void markUpdated() {
-		this.auditInfo.markUpdated();
+	@Override
+	protected String generateCode() {
+		return String.format("%s-%d-%04d", PREFIX, academicTermYear, sequence);
 	}
 }

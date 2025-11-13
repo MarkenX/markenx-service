@@ -1,28 +1,35 @@
 package com.udla.markenx.core.interfaces;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import lombok.Getter;
 
 import com.udla.markenx.core.exceptions.InvalidEntityException;
 import com.udla.markenx.core.utils.validators.EntityValidator;
+import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
 @Getter
-public abstract class Assignment {
-	private final Long id;
+public abstract class Assignment extends DomainBaseModel {
+
 	private String title;
 	private String summary;
 	private LocalDate dueDate;
 
-	public Assignment(Long id, String title, String summary, LocalDate dueDate) {
-		this.id = id;
+	public Assignment(UUID id, String code, Long sequence, DomainBaseModelStatus status, String title, String summary,
+			LocalDate dueDate, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+		super(id, code, status, createdBy, createdAt, updatedAt);
 		setTitle(title);
 		setSummary(summary);
 		setDueDate(dueDate);
 	}
 
-	public Assignment(String title, String summary, LocalDate dueDate) {
-		this(null, title, summary, dueDate);
+	public Assignment(String title, String summary, LocalDate dueDate, String createdBy) {
+		super(createdBy);
+		setTitle(title);
+		setSummary(summary);
+		setDueDate(dueDate);
 	}
 
 	public void setTitle(String title) {
