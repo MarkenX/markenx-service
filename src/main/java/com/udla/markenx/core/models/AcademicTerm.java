@@ -14,7 +14,9 @@ import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
 public class AcademicTerm extends DomainBaseModel {
   private static final Class<AcademicTerm> CLAZZ = AcademicTerm.class;
+  private static final String PREFIX = "AT";
 
+  private final String code;
   private LocalDate startOfTerm;
   private LocalDate endOfTerm;
   private int academicYear;
@@ -31,6 +33,7 @@ public class AcademicTerm extends DomainBaseModel {
     this.academicYear = validateAcademicYear(academicYear);
     this.termNumber = determineTermNumber(this.startOfTerm);
     this.assignedCourses = requireAssignedCourses(assignedCourses);
+    this.code = requireCode(code);
   }
 
   public AcademicTerm(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear, String createdBy) {
@@ -41,6 +44,11 @@ public class AcademicTerm extends DomainBaseModel {
     this.academicYear = validateAcademicYear(academicYear);
     this.termNumber = determineTermNumber(this.startOfTerm);
     this.assignedCourses = new ArrayList<>();
+    this.code = generateCode();
+  }
+
+  public String getCode() {
+    return this.code;
   }
 
   public LocalDate getStartOfTerm() {
@@ -146,6 +154,6 @@ public class AcademicTerm extends DomainBaseModel {
   @Override
   protected String generateCode() {
     int term = determineTermNumber(startOfTerm);
-    return String.format("AT-%d-%02d", academicYear, term);
+    return String.format("%s-%d-%02d", PREFIX, academicYear, term);
   }
 }

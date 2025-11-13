@@ -3,46 +3,54 @@ package com.udla.markenx.core.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.udla.markenx.core.interfaces.Assignment;
+import com.udla.markenx.core.interfaces.DomainBaseModel;
 import com.udla.markenx.core.utils.validators.EntityValidator;
-import com.udla.markenx.core.valueobjects.AuditInfo;
+import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
-public class Course {
+public class Course extends DomainBaseModel {
   private static final Class<Course> CLAZZ = Course.class;
+  private static final String PREFIX = "CRS";
 
-  private final Long id;
-  private final Long academicTermId;
   private String name;
+  private final String code;
+  private final Long sequence;
+  private final UUID academicTermId;
+  private final int academicTermYear;
   private final List<Student> students;
   private final List<Assignment> assignments;
-  private final AuditInfo auditInfo;
 
-  private Course(Long id, Long academicTermId, String name, List<Student> students,
-      List<Assignment> assignments, AuditInfo auditInfo) {
-    this.id = id;
+  public Course(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID academicTermId,
+      int academicTermYear, String name, List<Student> students, List<Assignment> assignments, String createdBy,
+      LocalDateTime createdAt, LocalDateTime updatedAt) {
+    super(id, code, status, createdBy, createdAt, updatedAt);
+    this.sequence = sequence;
     this.academicTermId = academicTermId;
-    this.name = requireName(name);
+    this.academicTermYear = academicTermYear;
+    setName(name);
     this.students = requireStudents(students);
     this.assignments = requireAssignments(assignments);
-    this.auditInfo = requireAuditInfo(auditInfo);
+    this.code = requireCode(code);
   }
 
-  public Course(Long id, Long academicTermId, String name, List<Student> students,
-      List<Assignment> assignments,
-      String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-    this(id, academicTermId, name, students, assignments, new AuditInfo(createdBy, createdAt, updatedAt));
+  public Course(UUID academicTermId, int academicTermYear, String name, String createdBy) {
+    super(createdBy);
+    this.sequence = null;
+    this.academicTermId = academicTermId;
+    this.academicTermYear = academicTermYear;
+    setName(name);
+    this.students = new ArrayList<>();
+    this.assignments = new ArrayList<>();
+    this.code = generateCode();
   }
 
-  public Course(String name) {
-    this(null, null, name, new ArrayList<>(), new ArrayList<>(), new AuditInfo());
+  public String getCode() {
+    return this.code;
   }
 
-  public Long getId() {
-    return this.id;
-  }
-
-  public Long getAcademicTermId() {
+  public UUID getAcademicTermId() {
     return this.academicTermId;
   }
 
@@ -56,18 +64,6 @@ public class Course {
 
   public List<Assignment> getAssignments() {
     return List.copyOf(this.assignments);
-  }
-
-  public String getCreatedBy() {
-    return this.auditInfo.getCreatedBy();
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return this.auditInfo.getCreatedDateTime();
-  }
-
-  public LocalDateTime getUpdatedAt() {
-    return this.auditInfo.getUpdatedDateTime();
   }
 
   public void setName(String name) {
@@ -90,10 +86,6 @@ public class Course {
     return EntityValidator.ensureNotNull(CLAZZ, student, "student");
   }
 
-  private AuditInfo requireAuditInfo(AuditInfo auditInfo) {
-    return EntityValidator.ensureNotNull(CLAZZ, auditInfo, "auditInfo");
-  }
-
   private Assignment requireAssignment(Assignment assignment) {
     return EntityValidator.ensureNotNull(CLAZZ, assignment, "assignment");
   }
@@ -114,7 +106,8 @@ public class Course {
     this.students.addAll(requireStudents(students));
   }
 
-  public void markUpdated() {
-    this.auditInfo.markUpdated();
+  @Override
+  protected String generateCode() {
+    return String.format("%s-%d-%04d", PREFIX, academicTermYear, sequence);
   }
 }

@@ -10,38 +10,30 @@ import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 public abstract class DomainBaseModel {
 
   private final UUID id;
-  private final String code;
   private DomainBaseModelStatus status;
   private final AuditInfo auditInfo;
 
   public DomainBaseModel(UUID id, String code, DomainBaseModelStatus status, String createdBy, LocalDateTime createdAt,
       LocalDateTime updatedAt) {
     this.id = requireId(id);
-    this.code = requireCode(code);
     this.status = requireStatus(status);
     this.auditInfo = requireAuditInfo(new AuditInfo(createdBy, createdAt, updatedAt));
   }
 
   public DomainBaseModel(String createdBy) {
     this.id = UUID.randomUUID();
-    this.code = generateCode();
     this.status = DomainBaseModelStatus.ENABLED;
     this.auditInfo = new AuditInfo(createdBy);
   }
 
   public DomainBaseModel() {
     this.id = UUID.randomUUID();
-    this.code = generateCode();
     this.status = DomainBaseModelStatus.ENABLED;
     this.auditInfo = new AuditInfo();
   }
 
   public UUID getId() {
     return this.id;
-  }
-
-  public String getCode() {
-    return this.code;
   }
 
   public DomainBaseModelStatus getStatus() {
@@ -64,7 +56,7 @@ public abstract class DomainBaseModel {
     return EntityValidator.ensureNotNull(getClass(), id, "id");
   }
 
-  private String requireCode(String code) {
+  protected String requireCode(String code) {
     return EntityValidator.ensureNotNullOrEmpty(getClass(), code, "code");
   }
 
