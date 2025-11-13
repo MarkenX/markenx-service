@@ -46,6 +46,17 @@ public class Course extends DomainBaseModel {
     this.code = generateCode();
   }
 
+  public Course(UUID academicTermId, int academicTermYear, String name) {
+    super();
+    this.sequence = null;
+    this.academicTermId = academicTermId;
+    this.academicTermYear = academicTermYear;
+    setName(name);
+    this.students = new ArrayList<>();
+    this.assignments = new ArrayList<>();
+    this.code = generateCode();
+  }
+
   public String getCode() {
     return this.code;
   }

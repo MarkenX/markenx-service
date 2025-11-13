@@ -126,7 +126,7 @@ public class CourseMapper {
             com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity attemptEntity = taskEntity
                 .getAttempts().get(j);
 
-            Long domainStudentId = domainAttempt.getStudentId();
+            Long domainStudentId = domainAttempt.getStudent();
             if (domainStudentId != null) {
               com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity match = null;
               for (com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity s : entity

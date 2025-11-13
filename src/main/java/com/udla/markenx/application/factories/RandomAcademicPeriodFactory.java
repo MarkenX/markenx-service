@@ -32,9 +32,9 @@ public class RandomAcademicPeriodFactory {
 
     AcademicTerm academicPeriod = academicPeriodBuilder
         .reset()
-        .setStartDate(startDate)
-        .setEndDate(endDate)
-        .setYear(year)
+        .setStartOfTerm(startDate)
+        .setEndOfTerm(endDate)
+        .setAcademicYear(year)
         .setSemesterNumber(semesterNumber)
         .build();
 

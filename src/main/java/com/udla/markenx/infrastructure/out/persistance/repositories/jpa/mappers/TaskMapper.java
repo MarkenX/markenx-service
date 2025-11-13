@@ -56,7 +56,7 @@ public final class TaskMapper {
 		entity.setDueDate(domain.getDueDate());
 		entity.setMaxAttempts(domain.getMaxAttempts());
 		entity.setActiveAttempt(domain.getActiveAttempt());
-		entity.setMinimumScoreToPass(domain.getMinimumScoreToPass());
+		entity.setMinimumScoreToPass(domain.getMinScoreToPass());
 		entity.setCreatedAt(domain.getCreatedDateTime());
 		entity.setLastModifiedAt(domain.getUpdatedDateTime());
 

@@ -52,10 +52,10 @@ public class StudentAssignmentRepositoryAdapter implements StudentAssignmentRepo
       throw new IllegalArgumentException("StudentAssignment cannot be null");
     }
     java.util.Objects.requireNonNull(studentAssignment.getAssignmentId(), "Assignment id cannot be null");
-    java.util.Objects.requireNonNull(studentAssignment.getStudentId(), "Student id cannot be null");
+    java.util.Objects.requireNonNull(studentAssignment.getStudent(), "Student id cannot be null");
 
     Long assignmentId = studentAssignment.getAssignmentId();
-    Long studentId = studentAssignment.getStudentId();
+    Long studentId = studentAssignment.getStudent();
 
     com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity assignmentEntity = assignmentJpaRepository
         .findById(assignmentId)

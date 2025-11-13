@@ -58,7 +58,7 @@ public class TaskService {
 		}
 
 		com.udla.markenx.core.models.Task task = taskRepository.getTaskById(taskId);
-		double minScore = task.getMinimumScoreToPass();
+		double minScore = task.getMinScoreToPass();
 
 		// get or create student-assignment
 		StudentAssignment sa = studentAssignmentRepository.getByAssignmentIdAndStudentId(taskId, studentId);

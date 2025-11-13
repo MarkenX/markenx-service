@@ -42,7 +42,7 @@ public class RandomAttemptFactory {
 
     Attempt attempt = attemptBuilder
         .reset()
-        .setMinimumScoreToPass(task.getMinimumScoreToPass())
+        .setMinimumScoreToPass(task.getMinScoreToPass())
         .randomDate(task.getCreatedDate(), task.getDueDate())
         .randomScore()
         .randomDuration()
