@@ -3,64 +3,55 @@ package com.udla.markenx.core.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 
 import com.udla.markenx.core.exceptions.InvalidEmailException;
 import com.udla.markenx.core.interfaces.Person;
 import com.udla.markenx.core.utils.validators.EntityValidator;
-import com.udla.markenx.core.valueobjects.AuditInfo;
+import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
 public class Student extends Person {
 	private static final Class<Student> CLAZZ = Student.class;
+	private static final String PREFIX = "STD";
 
-	private final Long id;
-	private final Long courseId;
+	private final String code;
+	private final Long sequence;
+	private final UUID courseId;
 	private final String email;
 	private final List<StudentTask> assignedTaks;
-	private final AuditInfo auditInfo;
 
-	private Student(Long id, Long courseId, String firstName, String LastName, String email,
-			List<StudentTask> assignedTasks, AuditInfo auditInfo) {
-		super(firstName, LastName);
-		this.id = id;
+	private Student(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, String firstName,
+			String lastName, String email, List<StudentTask> assignedTasks, String createdBy, LocalDateTime createdAt,
+			LocalDateTime updatedAt) {
+		super(id, code, status, firstName, lastName, createdBy, createdAt, updatedAt);
+		this.sequence = sequence;
 		this.courseId = courseId;
 		this.email = validateEmail(email);
 		this.assignedTaks = requireStudentTasks(assignedTasks);
-		this.auditInfo = requireAuditInfo(auditInfo);
+		this.code = requireCode(code);
 	}
 
-	public Student(Long id, Long courseId, String firstName, String lastName, String email, List<StudentTask> tasks,
-			String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-		this(id, courseId, firstName, lastName, email, tasks, new AuditInfo(createdBy, createdAt, updatedAt));
+	public Student(UUID id, UUID courseId, String firstName, String lastName, String email, String createdBy) {
+		super(firstName, lastName, createdBy);
+		this.sequence = null;
+		this.courseId = courseId;
+		this.email = validateEmail(email);
+		this.assignedTaks = new ArrayList<>();
+		this.code = generateCode();
 	}
 
-	public Student(String firstName, String lastName, String email) {
-		this(null, null, firstName, lastName, email, new ArrayList<>(), new AuditInfo());
-	}
-
-	public Long getId() {
-		return this.id;
+	public String getCode() {
+		return this.code;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public Long getCourseId() {
+	public UUID getCourseId() {
 		return courseId;
-	}
-
-	public String getCreatedBy() {
-		return this.auditInfo.getCreatedBy();
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return this.auditInfo.getCreatedDateTime();
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return this.auditInfo.getUpdatedDateTime();
 	}
 
 	public List<StudentTask> getAssignedTaks() {
@@ -80,11 +71,8 @@ public class Student extends Person {
 		return EntityValidator.ensureNotNull(CLAZZ, assignedTaks, "assignedTaks");
 	}
 
-	private AuditInfo requireAuditInfo(AuditInfo auditInfo) {
-		return EntityValidator.ensureNotNull(CLAZZ, auditInfo, "auditInfo");
-	}
-
-	public void markUpdated() {
-		this.auditInfo.markUpdated();
+	@Override
+	protected String generateCode() {
+		return String.format("%s-%06d", PREFIX, sequence);
 	}
 }
