@@ -10,15 +10,15 @@ public final class StudentMapper {
     throw new UtilityClassInstantiationException(getClass());
   }
 
-  public static StudentResponseDTO toDto(Student student) {
-    if (student == null) {
+  public static StudentResponseDTO toDto(Student domain) {
+    if (domain == null) {
       return null;
     }
 
     return new StudentResponseDTO(
-        student.getId(),
-        student.getFirstName(),
-        student.getLastName(),
-        student.getEmail());
+        domain.getCode(),
+        domain.getFirstName(),
+        domain.getLastName(),
+        domain.getEmail());
   }
 }
