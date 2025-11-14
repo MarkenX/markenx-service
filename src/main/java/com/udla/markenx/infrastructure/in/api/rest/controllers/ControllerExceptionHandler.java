@@ -19,8 +19,6 @@ import com.udla.markenx.core.exceptions.BulkImportException;
 import com.udla.markenx.core.exceptions.DuplicateResourceException;
 import com.udla.markenx.core.exceptions.InvalidEmailException;
 import com.udla.markenx.core.exceptions.InvalidEntityException;
-import com.udla.markenx.core.exceptions.MaxPeriodsPerYearExceededException;
-import com.udla.markenx.core.exceptions.OverlappingPeriodsException;
 import com.udla.markenx.core.exceptions.PeriodHasCoursesException;
 import com.udla.markenx.core.exceptions.ResourceNotFoundException;
 
@@ -107,18 +105,19 @@ public class ControllerExceptionHandler implements ControllerExceptionHandlerPor
     return ResponseEntity.badRequest().body(error);
   }
 
-  @ExceptionHandler(OverlappingPeriodsException.class)
-  public ResponseEntity<ErrorResponseDTO> handleOverlappingPeriods(OverlappingPeriodsException ex) {
-    ErrorResponseDTO error = new ErrorResponseDTO(ex.getMessage());
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-  }
+  // @ExceptionHandler(OverlappingPeriodsException.class)
+  // public ResponseEntity<ErrorResponseDTO>
+  // handleOverlappingPeriods(OverlappingPeriodsException ex) {
+  // ErrorResponseDTO error = new ErrorResponseDTO(ex.getMessage());
+  // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  // }
 
-  @ExceptionHandler(MaxPeriodsPerYearExceededException.class)
-  public ResponseEntity<ErrorResponseDTO> handleMaxPeriodsPerYearExceeded(
-      MaxPeriodsPerYearExceededException ex) {
-    ErrorResponseDTO error = new ErrorResponseDTO(ex.getMessage());
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-  }
+  // @ExceptionHandler(MaxPeriodsPerYearExceededException.class)
+  // public ResponseEntity<ErrorResponseDTO> handleMaxPeriodsPerYearExceeded(
+  // MaxPeriodsPerYearExceededException ex) {
+  // ErrorResponseDTO error = new ErrorResponseDTO(ex.getMessage());
+  // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  // }
 
   @ExceptionHandler(PeriodHasCoursesException.class)
   public ResponseEntity<ErrorResponseDTO> handlePeriodHasCourses(PeriodHasCoursesException ex) {
