@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 
@@ -68,7 +67,7 @@ public final class AcademicTermMapper {
 
     if (domain.getAssignedCourses() != null) {
       List<CourseJpaEntity> courses = domain.getAssignedCourses().stream()
-          .map(CourseMapper::toEntity)
+          .map(courseMapper::toEntity)
           .peek(e -> e.setAcademicTerm(entity))
           .toList();
       entity.setAssignedCourses(courses);
