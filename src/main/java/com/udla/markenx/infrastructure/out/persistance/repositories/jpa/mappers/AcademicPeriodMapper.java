@@ -24,19 +24,23 @@ public final class AcademicPeriodMapper {
       throw new DomainMappingException();
     }
 
-    List<Course> courses = entity.getCourses() != null
-        ? entity.getCourses().stream()
+    List<Course> courses = entity.getAssignedCourses() != null
+        ? entity.getAssignedCourses().stream()
             .map(CourseMapper::toDomain)
             .toList()
         : List.of();
 
     AcademicTerm domain = new AcademicTerm(
-        entity.getId(),
-        entity.getStartDate(),
-        entity.getEndDate(),
-        entity.getYear(),
-        entity.getTermNumber(),
-        courses);
+        entity.getPublicId(),
+        entity.getCode(),
+        entity.getStatus(),
+        entity.getStartOfTerm(),
+        entity.getEndOfTerm(),
+        entity.getAcademicYear(),
+        courses,
+        entity.getCreatedBy(),
+        entity.getCreatedAt(),
+        entity.getUpdatedAt());
 
     return domain;
   }
@@ -47,10 +51,13 @@ public final class AcademicPeriodMapper {
     }
 
     AcademicTermJpaEntity entity = new AcademicTermJpaEntity();
-    entity.setId(domain.getId());
-    entity.setStartDate(domain.getStartOfTerm());
-    entity.setEndDate(domain.getEndOfTerm());
-    entity.setYear(domain.getAcademicYear());
+
+    entity.setPublicId(domain.getId());
+    entity.setCode(domain.getCode());
+    entity.setStatus(domain.getStatus());
+    entity.setStartOfTerm(domain.getStartOfTerm());
+    entity.setEndOfTerm(domain.getEndOfTerm());
+    entity.setAcademicYear(domain.getAcademicYear());
     entity.setTermNumber(domain.getTermNumber());
 
     if (domain.getAssignedCourses() != null) {
@@ -58,7 +65,7 @@ public final class AcademicPeriodMapper {
           .map(CourseMapper::toEntity)
           .peek(e -> e.setAcademicPeriod(entity))
           .toList();
-      entity.setCourses(courses);
+      entity.setAssignedCourses(courses);
     }
 
     return entity;

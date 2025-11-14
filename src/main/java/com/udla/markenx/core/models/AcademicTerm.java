@@ -74,6 +74,10 @@ public class AcademicTerm extends DomainBaseModel {
     return this.academicYear;
   }
 
+  public int getTermNumber() {
+    return this.termNumber;
+  }
+
   public List<Course> getAssignedCourses() {
     return List.copyOf(this.assignedCourses);
   }
