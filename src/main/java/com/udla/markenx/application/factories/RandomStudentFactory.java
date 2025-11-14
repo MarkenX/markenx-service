@@ -2,6 +2,7 @@ package com.udla.markenx.application.factories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -21,29 +22,30 @@ public class RandomStudentFactory {
     this.numberGenerator = numberGenerator;
   }
 
-  public Student createRandomStudent() {
+  public Student createRandomStudent(UUID courseId) {
     return studentBuilder
         .reset()
-        .generateId()
+        .setCourseId(courseId)
         .randomFirstName()
         .randomLastName()
+        .randomEmail()
         .build();
   }
 
-  public List<Student> createRandomStudents(int count) {
+  public List<Student> createRandomStudents(UUID courseId, int count) {
     List<Student> students = new ArrayList<>();
     for (int i = 0; i < count; i++) {
-      students.add(createRandomStudent());
+      students.add(createRandomStudent(courseId));
     }
     return students;
   }
 
-  public List<Student> createRandomStudentsUpTo(int maxCount) {
+  public List<Student> createRandomStudentsUpTo(UUID courseId, int maxCount) {
     if (maxCount <= 0) {
       throw new IllegalArgumentException("El límite debe ser mayor que cero");
     }
 
     int count = numberGenerator.positiveIntegerBetween(1, maxCount);
-    return createRandomStudents(count);
+    return createRandomStudents(courseId, count);
   }
 }

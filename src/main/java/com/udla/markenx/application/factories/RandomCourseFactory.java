@@ -38,7 +38,7 @@ public class RandomCourseFactory {
         .build();
 
     List<Student> students = studentFactory
-        .createRandomStudentsUpTo(MAX_STUDENTS);
+        .createRandomStudentsUpTo(course.getId(), MAX_STUDENTS);
     course.addStudents(students);
 
     List<Task> tasks = taskFactory
