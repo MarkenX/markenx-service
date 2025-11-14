@@ -12,47 +12,45 @@ import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.CourseJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.CourseMapper;
 
-/**
- * JPA adapter implementing course repository operations.
- */
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 @Repository
+@RequiredArgsConstructor
 public class CourseRepositoryAdapter implements CourseRepositoryPort {
 
   private final CourseJpaRepository jpaRepository;
-
-  public CourseRepositoryAdapter(CourseJpaRepository jpaRepository) {
-    this.jpaRepository = jpaRepository;
-  }
+  private final CourseMapper mapper;
 
   @Override
   public Course save(Course course) {
-    CourseJpaEntity entity = CourseMapper.toEntity(course);
+    CourseJpaEntity entity = mapper.toEntity(course);
     CourseJpaEntity saved = jpaRepository.save(entity);
-    return CourseMapper.toDomain(saved);
+    return mapper.toDomain(saved);
   }
 
   @Override
   public Course update(Course course) {
-    // Ensure exists
     jpaRepository.findById(course.getId())
         .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + course.getId()));
-    CourseJpaEntity entity = CourseMapper.toEntity(course);
+    CourseJpaEntity entity = mapper.toEntity(course);
     CourseJpaEntity saved = jpaRepository.save(entity);
-    return CourseMapper.toDomain(saved);
+    return mapper.toDomain(saved);
   }
 
   @Override
   public Optional<Course> findById(Long id) {
-    return jpaRepository.findById(id).map(CourseMapper::toDomain);
+    // return jpaRepository.findById(id).map(mapper::toDomain);
+    return null;
   }
 
   @Override
   public Page<Course> findAll(Pageable pageable) {
-    return jpaRepository.findAll(pageable).map(CourseMapper::toDomain);
+    return jpaRepository.findAll(pageable).map(mapper::toDomain);
   }
 
   @Override
   public void deleteById(Long id) {
-    jpaRepository.deleteById(id);
+    // jpaRepository.deleteById(id);
   }
 }
