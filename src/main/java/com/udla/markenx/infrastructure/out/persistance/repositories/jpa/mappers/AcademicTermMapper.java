@@ -3,6 +3,7 @@ package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers
 import java.util.List;
 
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.core.models.AcademicTerm;
@@ -13,20 +14,22 @@ import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingE
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
 public final class AcademicTermMapper {
 
-  private AcademicTermMapper() {
-    throw new UtilityClassInstantiationException(getClass());
-  }
+  private final CourseMapper courseMapper;
 
-  public static @NonNull AcademicTerm toDomain(AcademicTermJpaEntity entity) {
+  public @NonNull AcademicTerm toDomain(AcademicTermJpaEntity entity) {
     if (entity == null) {
       throw new DomainMappingException();
     }
 
     List<Course> courses = entity.getAssignedCourses() != null
         ? entity.getAssignedCourses().stream()
-            .map(CourseMapper::toDomain)
+            .map(courseMapper::toDomain)
             .toList()
         : List.of();
 
@@ -45,7 +48,7 @@ public final class AcademicTermMapper {
     return domain;
   }
 
-  public static @NonNull AcademicTermJpaEntity toEntity(AcademicTerm domain) {
+  public @NonNull AcademicTermJpaEntity toEntity(AcademicTerm domain) {
     if (domain == null) {
       throw new EntityMappingException();
     }
