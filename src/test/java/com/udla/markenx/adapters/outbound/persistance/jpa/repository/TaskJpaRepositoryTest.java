@@ -46,18 +46,18 @@ class TaskJpaRepositoryTest {
 
 	private StudentJpaEntity student;
 
-	@BeforeEach
-	void setUp() {
-		student = studentJpaRepository.save(new StudentJpaEntity("John", "Doe"));
-		TaskJpaEntity task = new TaskJpaEntity();
-		task.setTitle(TASK_TITLE);
-		task.setSummary(TASK_SUMMARY);
-		task.setDueDate(DUE_DATE);
-		task.setCurrentStatus(TASK_STATUS);
-		task.setActiveAttempt(TASK_ACTIVE_ATTEMPT);
-		task.setMaxAttempts(TASK_MAX_ATTEMPTS);
-		taskJpaRepository.save(task);
-	}
+	// @BeforeEach
+	// void setUp() {
+	// student = studentJpaRepository.save(new StudentJpaEntity("John", "Doe"));
+	// TaskJpaEntity task = new TaskJpaEntity();
+	// task.setTitle(TASK_TITLE);
+	// task.setSummary(TASK_SUMMARY);
+	// task.setDueDate(DUE_DATE);
+	// task.setCurrentStatus(TASK_STATUS);
+	// task.setActiveAttempt(TASK_ACTIVE_ATTEMPT);
+	// task.setMaxAttempts(TASK_MAX_ATTEMPTS);
+	// taskJpaRepository.save(task);
+	// }
 
 	// @Test
 	// @DisplayName("Returns non-null page when searching by student ID and
