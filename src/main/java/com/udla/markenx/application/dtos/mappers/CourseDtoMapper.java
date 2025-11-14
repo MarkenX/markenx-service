@@ -17,9 +17,9 @@ public class CourseDtoMapper {
     dto.setLabel(course.getName());
 
     dto.setCreatedBy(course.getCreatedBy());
-    dto.setCreatedAt(course.getCreatedAt());
+    dto.setCreatedAt(course.getCreatedAtDateTime());
     dto.setLastModifiedBy(course.getLastModifiedBy());
-    dto.setLastModifiedAt(course.getUpdatedAt());
+    dto.setLastModifiedAt(course.getUpdatedAtDateTime());
 
     return dto;
   }

@@ -67,6 +67,10 @@ public class StudentTask extends StudentAssignment<Task> {
     updateStatus();
   }
 
+  public void addAttempts(List<Attempt> attempts) {
+    this.attempts.addAll(attempts);
+  }
+
   private boolean isNotStarted() {
     return getActiveAttempt() == 0;
   }

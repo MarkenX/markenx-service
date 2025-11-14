@@ -1,5 +1,6 @@
 package com.udla.markenx.core.interfaces;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -44,11 +45,19 @@ public abstract class DomainBaseModel {
     return this.auditInfo.getCreatedBy();
   }
 
-  public LocalDateTime getCreatedAt() {
+  public LocalDate getCreatedAtDate() {
+    return this.auditInfo.getCreatedDate();
+  }
+
+  public LocalDateTime getCreatedAtDateTime() {
     return this.auditInfo.getCreatedDateTime();
   }
 
-  public LocalDateTime getUpdatedAt() {
+  public LocalDate getUpdatedAtDate() {
+    return this.auditInfo.getUpdatedDate();
+  }
+
+  public LocalDateTime getUpdatedAtDateTime() {
     return this.auditInfo.getUpdatedDateTime();
   }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.Student;
 import com.udla.markenx.core.models.StudentTask;
 import com.udla.markenx.core.models.Task;
@@ -14,22 +15,29 @@ import com.udla.markenx.application.ports.out.data.generators.random.RandomNumbe
 
 @Component
 public class RandomStudentTaskFactory {
+  private static final int MAX_ATTEMPTS = 10;
+
   private final StudentTaskBuilder builder;
   private final RandomNumberGeneratorPort numberGenerator;
+  private final RandomAttemptFactory attemptFactory;
 
   public RandomStudentTaskFactory(
       StudentTaskBuilder builder,
-      RandomNumberGeneratorPort numberGenerator) {
+      RandomNumberGeneratorPort numberGenerator,
+      RandomAttemptFactory attemptFactory) {
     this.builder = builder;
     this.numberGenerator = numberGenerator;
+    this.attemptFactory = attemptFactory;
   }
 
   public StudentTask createRandomStudentTask(Task task, Student student) {
-    return builder
-        .reset()
-        .setTask(task)
-        .setStudent(student)
-        .build();
+    StudentTask studentTask = builder.reset().setTask(task).setStudent(student).build();
+
+    List<Attempt> attempts = attemptFactory.createRandomAttemptsUpTo(studentTask, task.getMinScoreToPass(),
+        MAX_ATTEMPTS);
+    studentTask.addAttempts(attempts);
+
+    return studentTask;
   }
 
   public List<StudentTask> createRandomStudentTasks(int count, List<Task> tasks, List<Student> students) {
