@@ -23,7 +23,7 @@ import com.udla.markenx.application.dtos.requests.CreateAcademicPeriodRequestDTO
 import com.udla.markenx.application.dtos.requests.UpdateAcademicPeriodRequestDTO;
 import com.udla.markenx.application.dtos.responses.AcademicPeriodResponseDTO;
 import com.udla.markenx.application.ports.in.api.rest.controllers.AcademicPeriodControllerPort;
-import com.udla.markenx.application.services.AcademicPeriodService;
+import com.udla.markenx.application.services.AcademicTermService;
 import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 
@@ -42,9 +42,9 @@ import jakarta.validation.constraints.Positive;
 @PreAuthorize("hasRole('ADMIN')")
 public class AcademicPeriodController implements AcademicPeriodControllerPort {
 
-  private final AcademicPeriodService academicPeriodService;
+  private final AcademicTermService academicPeriodService;
 
-  public AcademicPeriodController(AcademicPeriodService academicPeriodService) {
+  public AcademicPeriodController(AcademicTermService academicPeriodService) {
     this.academicPeriodService = academicPeriodService;
   }
 

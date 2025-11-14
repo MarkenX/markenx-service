@@ -10,57 +10,42 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
 import com.udla.markenx.core.exceptions.InvalidEntityException;
-import com.udla.markenx.core.exceptions.MaxPeriodsPerYearExceededException;
 import com.udla.markenx.core.exceptions.PeriodHasCoursesException;
 import com.udla.markenx.core.exceptions.ResourceNotFoundException;
 import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 import com.udla.markenx.core.services.AcademicPeriodDomainService;
 
-/**
- * Service for Academic Period operations.
- */
 @Service
-public class AcademicPeriodService {
+public class AcademicTermService {
 
   private final AcademicPeriodRepositoryPort periodRepository;
 
-  public AcademicPeriodService(AcademicPeriodRepositoryPort periodRepository) {
+  public AcademicTermService(AcademicPeriodRepositoryPort periodRepository) {
     this.periodRepository = periodRepository;
   }
 
-  /**
-   * Creates a new academic period with automatic semester number assignment.
-   */
   @Transactional
-  public AcademicTerm createAcademicPeriod(LocalDate startDate, LocalDate endDate, int year) {
-    // Validate dates using domain service
-    AcademicPeriodDomainService.validateTermDates(startDate, endDate);
+  public AcademicTerm createAcademicPeriod(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear) {
+    AcademicPeriodDomainService.validateTermDates(startOfTerm, endOfTerm);
 
-    // Check if we already have 2 periods for this year
-    long periodsInYear = periodRepository.countByYear(year);
-    if (periodsInYear >= 2) {
-      throw new MaxPeriodsPerYearExceededException(year);
-    }
-
-    // Get existing periods for this year to determine semester number
     List<AcademicTerm> existingPeriodsInYear = periodRepository.findAllPeriods().stream()
-        .filter(p -> p.getAcademicYear() == year)
+        .filter(p -> p.getAcademicYear() == academicYear)
         .toList();
 
     // Determine semester number using domain service
-    int semesterNumber = AcademicPeriodDomainService.determineSemesterNumber(existingPeriodsInYear, startDate);
+    int termNumber = AcademicPeriodDomainService.determineSemesterNumber(existingPeriodsInYear, startOfTerm);
 
     // Check if this year/semester combination already exists
-    if (periodRepository.existsByYearAndSemesterNumber(year, semesterNumber)) {
+    if (periodRepository.existsByYearAndSemesterNumber(academicYear, termNumber)) {
       throw new InvalidEntityException(
           AcademicTerm.class,
           String.format("Ya existe un período para el %s semestre del año %d",
-              semesterNumber == 1 ? "primer" : "segundo", year));
+              termNumber == 1 ? "primer" : "segundo", academicYear));
     }
 
     // Create domain object (this validates dates and year match)
-    AcademicTerm newPeriod = new AcademicTerm(startDate, endDate, year, semesterNumber);
+    AcademicTerm newPeriod = new AcademicTerm(startOfTerm, endOfTerm, academicYear, "");
 
     // Check for overlaps with existing periods using domain service
     List<AcademicTerm> allPeriods = periodRepository.findAllPeriods();
