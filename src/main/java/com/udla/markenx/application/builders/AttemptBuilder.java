@@ -1,6 +1,7 @@
 package com.udla.markenx.application.builders;
 
 import java.time.Duration;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -14,14 +15,16 @@ public class AttemptBuilder {
 
   private final RandomAttemptDataGeneratorPort randomGenerator;
 
-  private String studentSequence;
-  private String taskSequence;
+  private UUID studentTaskId;
+  private Long studentSequence;
+  private Long taskSequence;
   private double taskMinScoreToPass;
   private double score;
   private Duration timeSpent;
   private AttemptStatus attemptStatus;
 
   public AttemptBuilder reset() {
+    this.studentTaskId = null;
     this.studentSequence = null;
     this.taskSequence = null;
     this.taskMinScoreToPass = -1;
@@ -35,18 +38,23 @@ public class AttemptBuilder {
     this.randomGenerator = randomGenerator;
   }
 
-  public AttemptBuilder setStudentSequence(String studentSequence) {
+  public AttemptBuilder setStudentSequence(Long studentSequence) {
     this.studentSequence = studentSequence;
     return this;
   }
 
-  public AttemptBuilder setTaskSequence(String taskSequence) {
+  public AttemptBuilder setTaskSequence(Long taskSequence) {
     this.taskSequence = taskSequence;
     return this;
   }
 
   public AttemptBuilder setTaskMinSocreToPass(double taskMinScoreToPass) {
     this.taskMinScoreToPass = taskMinScoreToPass;
+    return this;
+  }
+
+  public AttemptBuilder setStudentTaskId(UUID studentTaskId) {
+    this.studentTaskId = studentTaskId;
     return this;
   }
 
@@ -76,6 +84,7 @@ public class AttemptBuilder {
   }
 
   public Attempt build() {
-    return new Attempt(studentSequence, taskSequence, taskMinScoreToPass, score, timeSpent, attemptStatus);
+    return new Attempt(studentSequence, taskSequence, taskMinScoreToPass, score, timeSpent,
+        attemptStatus, studentTaskId);
   }
 }

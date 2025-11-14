@@ -26,8 +26,8 @@ public class RandomAttemptFactory {
   public Attempt createRandomAttempt(StudentTask studentTask, double minScoreToPass) {
     Attempt attempt = attemptBuilder
         .reset()
-        .setStudentSequence(studentTask.getStudentSequence())
-        .setTaskSequence(studentTask.getTaskSequence())
+        .setStudentSequence(studentTask.getStudent().getSequence())
+        .setTaskSequence(studentTask.getAssignment().getSequence())
         .setTaskMinSocreToPass(minScoreToPass)
         .randomScore()
         .randomDuration()

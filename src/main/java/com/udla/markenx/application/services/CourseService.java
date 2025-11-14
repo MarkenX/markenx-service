@@ -1,6 +1,7 @@
 package com.udla.markenx.application.services;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -78,7 +79,7 @@ public class CourseService {
 
   // ---- New course management methods ----
 
-  public Course createCourse(Long academicPeriodId, String label) {
+  public Course createCourse(UUID academicPeriodId, String label) {
     if (academicPeriodId != null && periodRepository.findById(academicPeriodId).isEmpty()) {
       throw new ResourceNotFoundException("Período académico", academicPeriodId);
     }
@@ -95,33 +96,36 @@ public class CourseService {
     return courseRepository.save(course);
   }
 
-  public Course updateCourse(Long id, Long academicPeriodId, String label) {
-    Course existing = courseRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
+  // public Course updateCourse(Long id, Long academicPeriodId, String label) {
+  // Course existing = courseRepository.findById(id)
+  // .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
 
-    if (academicPeriodId != null && periodRepository.findById(academicPeriodId).isEmpty()) {
-      throw new ResourceNotFoundException("Período académico", academicPeriodId);
-    }
+  // if (academicPeriodId != null &&
+  // periodRepository.findById(academicPeriodId).isEmpty()) {
+  // throw new ResourceNotFoundException("Período académico", academicPeriodId);
+  // }
 
-    // Create updated course domain preserving assignments/students and timestamps
-    // Course updated = new Course(existing.getId(), existing.getAssignments(),
-    // existing.getStudents(), academicPeriodId,
-    // label == null ? existing.getName() : label, existing.getAuditInfo());
+  // // Create updated course domain preserving assignments/students and
+  // timestamps
+  // // Course updated = new Course(existing.getId(), existing.getAssignments(),
+  // // existing.getStudents(), academicPeriodId,
+  // // label == null ? existing.getName() : label, existing.getAuditInfo());
 
-    Course updated = null;
-    return courseRepository.update(updated);
-  }
+  // Course updated = null;
+  // return courseRepository.update(updated);
+  // }
 
-  public void deleteCourse(Long id) {
-    Course course = courseRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Course not found: " + id));
+  // public void deleteCourse(Long id) {
+  // Course course = courseRepository.findById(id)
+  // .orElseThrow(() -> new IllegalArgumentException("Course not found: " + id));
 
-    if (!course.getAssignments().isEmpty() || !course.getStudents().isEmpty()) {
-      throw new IllegalStateException("Cannot delete course with assignments or students");
-    }
+  // if (!course.getAssignments().isEmpty() || !course.getStudents().isEmpty()) {
+  // throw new IllegalStateException("Cannot delete course with assignments or
+  // students");
+  // }
 
-    courseRepository.deleteById(id);
-  }
+  // courseRepository.deleteById(id);
+  // }
 
   public Page<Course> getAllCourseIds(int page, int size) {
     return courseRepository.findAll(PageRequest.of(page, size));

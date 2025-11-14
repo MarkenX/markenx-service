@@ -68,28 +68,31 @@ public class StudentController implements StudentControllerPort {
     return ResponseEntity.ok(response);
   }
 
-  @Override
-  @GetMapping("/{studentId}/tasks")
-  @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  public ResponseEntity<Page<TaskResponseDTO>> getTasksByFilters(
-      @PathVariable @Positive(message = "El ID del estudiante debe ser positivo") Long studentId,
-      @RequestParam(required = false) AssignmentStatus status,
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-      @RequestParam(defaultValue = "0") @Min(0) int page,
-      @RequestParam(defaultValue = "10") @Min(1) int size) {
+  // @Override
+  // @GetMapping("/{studentId}/tasks")
+  // @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+  // public ResponseEntity<Page<TaskResponseDTO>> getTasksByFilters(
+  // @PathVariable @Positive(message = "El ID del estudiante debe ser positivo")
+  // Long studentId,
+  // @RequestParam(required = false) AssignmentStatus status,
+  // @RequestParam(required = false) @DateTimeFormat(iso =
+  // DateTimeFormat.ISO.DATE) LocalDate startDate,
+  // @RequestParam(required = false) @DateTimeFormat(iso =
+  // DateTimeFormat.ISO.DATE) LocalDate endDate,
+  // @RequestParam(defaultValue = "0") @Min(0) int page,
+  // @RequestParam(defaultValue = "10") @Min(1) int size) {
 
-    Student student = studentManagementService.getStudentById(studentId);
+  // Student student = studentManagementService.getStudentById(studentId);
 
-    if (student.getCourseId() == null) {
-      throw new ResourceNotFoundException("Curso para el estudiante", studentId);
-    }
+  // if (student.getCourseId() == null) {
+  // throw new ResourceNotFoundException("Curso para el estudiante", studentId);
+  // }
 
-    Page<TaskResponseDTO> response = courseService.getCourseTasks(
-        student.getCourseId(), startDate, endDate, status, page, size);
+  // Page<TaskResponseDTO> response = courseService.getCourseTasks(
+  // student.getCourseId(), startDate, endDate, status, page, size);
 
-    return ResponseEntity.ok(response);
-  }
+  // return ResponseEntity.ok(response);
+  // }
 
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")

@@ -60,8 +60,8 @@ public class Attempt extends DomainBaseModel {
 		this.code = generateCode();
 	}
 
-	public Attempt(UUID studentTaskId, Long studentSequence, Long taskSequence, double taskMinScoreToPass, double score,
-			Duration timeSpent, AttemptStatus attemptStatus) {
+	public Attempt(Long studentSequence, Long taskSequence, double taskMinScoreToPass, double score,
+			Duration timeSpent, AttemptStatus attemptStatus, UUID studentTaskId) {
 		super();
 		this.sequence = null;
 		this.studentTaskId = studentTaskId;

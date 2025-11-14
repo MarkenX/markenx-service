@@ -23,6 +23,7 @@ import com.udla.markenx.application.dtos.responses.CourseResponseDTO;
 import com.udla.markenx.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.application.ports.in.api.rest.controllers.CourseControllerPort;
 import com.udla.markenx.application.services.CourseService;
+import com.udla.markenx.core.models.Course;
 import com.udla.markenx.core.models.Student;
 
 import jakarta.validation.Valid;
@@ -45,14 +46,15 @@ public class CourseController implements CourseControllerPort {
     this.courseService = courseService;
   }
 
-  @Override
-  @PostMapping
-  public ResponseEntity<CourseResponseDTO> createCourse(@Valid @RequestBody CreateCourseRequestDTO request) {
-    com.udla.markenx.core.models.Course created = courseService.createCourse(request.getAcademicPeriodId(),
-        request.getLabel());
-    CourseResponseDTO response = CourseDtoMapper.toResponseDto(created);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
-  }
+  // @Override
+  // @PostMapping
+  // public ResponseEntity<CourseResponseDTO> createCourse(@Valid @RequestBody
+  // CreateCourseRequestDTO request) {
+  // Course created = courseService.createCourse(request.getAcademicPeriodId(),
+  // request.getLabel());
+  // CourseResponseDTO response = CourseDtoMapper.toResponseDto(created);
+  // return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  // }
 
   @Override
   @PutMapping("/{id}")
