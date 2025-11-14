@@ -41,6 +41,10 @@ public class StudentTask extends StudentAssignment<Task> {
     return this.code;
   }
 
+  public List<Attempt> getAttempts() {
+    return List.copyOf(attempts);
+  }
+
   public int getActiveAttempt() {
     return this.attempts.size();
   }

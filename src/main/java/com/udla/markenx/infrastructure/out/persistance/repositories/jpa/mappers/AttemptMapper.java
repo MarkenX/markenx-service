@@ -1,6 +1,7 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers;
 
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
 import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.core.models.Attempt;
@@ -9,13 +10,13 @@ import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingE
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
 
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
 public final class AttemptMapper {
 
-  private AttemptMapper() {
-    throw new UtilityClassInstantiationException(getClass());
-  }
-
-  public static @NonNull Attempt toDomain(AttemptJpaEntity entity) {
+  public @NonNull Attempt toDomain(AttemptJpaEntity entity) {
     if (entity == null) {
       throw new DomainMappingException();
     }
@@ -37,7 +38,7 @@ public final class AttemptMapper {
     return domain;
   }
 
-  public static @NonNull AttemptJpaEntity toEntity(Attempt domain) {
+  public @NonNull AttemptJpaEntity toEntity(Attempt domain) {
     if (domain == null) {
       throw new EntityMappingException();
     }
