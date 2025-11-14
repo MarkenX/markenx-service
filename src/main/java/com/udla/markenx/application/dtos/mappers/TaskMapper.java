@@ -4,16 +4,17 @@ import com.udla.markenx.application.dtos.responses.TaskResponseDTO;
 import com.udla.markenx.core.models.Task;
 
 public class TaskMapper {
-	public static TaskResponseDTO toResponseDto(Task task) {
-		if (task == null)
+	public static TaskResponseDTO toResponseDto(Task domain) {
+		if (domain == null)
 			return null;
 
 		TaskResponseDTO dto = new TaskResponseDTO(
-				task.getId(),
-				task.getTitle(),
-				task.getSummary(),
-				task.getDueDate(),
-				task.getMaxAttempts());
+				domain.getCode(),
+				domain.getTitle(),
+				domain.getSummary(),
+				domain.getDueDate(),
+				domain.getMaxAttempts(),
+				domain.getMinScoreToPass());
 
 		return dto;
 	}

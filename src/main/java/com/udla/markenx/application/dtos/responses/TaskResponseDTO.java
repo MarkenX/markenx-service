@@ -3,9 +3,10 @@ package com.udla.markenx.application.dtos.responses;
 import java.time.LocalDate;
 
 public record TaskResponseDTO(
-		Long id,
+		String code,
 		String title,
 		String summary,
 		LocalDate dueDate,
-		int maxAttempts) {
+		int maxAttempts,
+		double minScoreToPass) {
 }
