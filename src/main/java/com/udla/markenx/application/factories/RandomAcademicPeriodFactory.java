@@ -26,16 +26,14 @@ public class RandomAcademicPeriodFactory {
     this.academicPeriodBuilder = academicPeriodBuilder;
   }
 
-  public AcademicTerm createRandomAcademicPeriod(LocalDate startDate, LocalDate endDate) {
-    int year = startDate.getYear();
-    int semesterNumber = startDate.getMonthValue() <= 6 ? 1 : 2;
+  public AcademicTerm createRandomAcademicPeriod(LocalDate startOfTerm, LocalDate endOfTerm) {
+    int academicYear = startOfTerm.getYear();
 
     AcademicTerm academicPeriod = academicPeriodBuilder
         .reset()
-        .setStartOfTerm(startDate)
-        .setEndOfTerm(endDate)
-        .setAcademicYear(year)
-        .setSemesterNumber(semesterNumber)
+        .setStartOfTerm(startOfTerm)
+        .setEndOfTerm(endOfTerm)
+        .setAcademicYear(academicYear)
         .build();
 
     int courseCount = numberGenerator.positiveIntegerBetween(1, MAX_COURSES);
