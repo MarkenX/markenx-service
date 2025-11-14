@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AuditJpaEntity;
 
-public interface AuditJpaRepository extends JpaRepository<AuditJpaEntity, Long> {
+public interface AuditJpaRepository extends JpaRepository<AuditJpaEntity, UUID> {
   List<AuditJpaEntity> findByTargetEntityIdOrderByPerformedAtAsc(UUID entityId);
 }

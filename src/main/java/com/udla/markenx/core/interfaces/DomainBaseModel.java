@@ -3,6 +3,9 @@ package com.udla.markenx.core.interfaces;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.Objects;
+
+import org.springframework.lang.NonNull;
 
 import com.udla.markenx.core.utils.validators.EntityValidator;
 import com.udla.markenx.core.valueobjects.AuditInfo;
@@ -33,8 +36,8 @@ public abstract class DomainBaseModel {
     this.auditInfo = new AuditInfo();
   }
 
-  public UUID getId() {
-    return this.id;
+  public @NonNull UUID getId() {
+    return Objects.requireNonNull(this.id);
   }
 
   public DomainBaseModelStatus getStatus() {
