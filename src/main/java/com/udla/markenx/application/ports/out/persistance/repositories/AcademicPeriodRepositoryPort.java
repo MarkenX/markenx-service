@@ -2,6 +2,7 @@ package com.udla.markenx.application.ports.out.persistance.repositories;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ public interface AcademicPeriodRepositoryPort {
   /**
    * Finds an academic period by ID.
    */
-  Optional<AcademicTerm> findById(Long id);
+  Optional<AcademicTerm> findById(UUID id);
 
   /**
    * Finds all academic periods with pagination.
@@ -37,7 +38,7 @@ public interface AcademicPeriodRepositoryPort {
   /**
    * Deletes an academic period by ID.
    */
-  void deleteById(Long id);
+  void deleteById(UUID id);
 
   /**
    * Checks if an academic period exists for a given year and semester.
@@ -57,10 +58,10 @@ public interface AcademicPeriodRepositoryPort {
   /**
    * Counts the number of courses in an academic period.
    */
-  int countCoursesByPeriodId(Long periodId);
+  int countCoursesByPeriodId(UUID periodId);
 
   /**
    * Finds all courses for a specific academic period.
    */
-  List<Course> findCoursesByPeriodId(Long periodId);
+  List<Course> findCoursesByPeriodId(UUID periodId);
 }

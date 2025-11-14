@@ -2,6 +2,7 @@ package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.adapter
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -12,24 +13,23 @@ import com.udla.markenx.application.ports.out.persistance.repositories.AcademicP
 import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicPeriodJpaRepository;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicTermJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.AcademicPeriodMapper;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.CourseMapper;
 
 import jakarta.persistence.PersistenceException;
 
 @Repository
-public class AcademicPeriodRepositoryAdapter implements AcademicPeriodRepositoryPort {
-  private final AcademicPeriodJpaRepository jpaRepository;
+public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPort {
+  private final AcademicTermJpaRepository jpaRepository;
 
-  public AcademicPeriodRepositoryAdapter(AcademicPeriodJpaRepository jpaRepository) {
+  public AcademicTermRepositoryAdapter(AcademicTermJpaRepository jpaRepository) {
     this.jpaRepository = jpaRepository;
   }
 
   @Override
-  public AcademicTerm save(AcademicTerm period) {
+  public AcademicTerm save(AcademicTerm newAcademicTerm) {
     try {
-      AcademicTermJpaEntity entity = AcademicPeriodMapper.toEntity(period);
+      AcademicTermJpaEntity entity = AcademicPeriodMapper.toEntity(newAcademicTerm);
       AcademicTermJpaEntity saved = jpaRepository.save(entity);
       return AcademicPeriodMapper.toDomain(saved);
     } catch (DataAccessException e) {
@@ -38,13 +38,13 @@ public class AcademicPeriodRepositoryAdapter implements AcademicPeriodRepository
   }
 
   @Override
-  public AcademicTerm update(AcademicTerm period) {
+  public AcademicTerm update(AcademicTerm existingAcademicTerm) {
     try {
-      AcademicTermJpaEntity existingEntity = jpaRepository.findById(period.getId())
+      AcademicTermJpaEntity existingEntity = jpaRepository.findById(existingAcademicTerm.getId())
           .orElseThrow(() -> new PersistenceException("Período académico no encontrado"));
 
-      existingEntity.setStartDate(period.getStartOfTerm());
-      existingEntity.setEndDate(period.getEndOfTerm());
+      existingEntity.setStartOfTerm(existingAcademicTerm.getStartOfTerm());
+      existingEntity.setEndOfTerm(existingAcademicTerm.getEndOfTerm());
 
       AcademicTermJpaEntity updated = jpaRepository.save(existingEntity);
       return AcademicPeriodMapper.toDomain(updated);
@@ -54,7 +54,7 @@ public class AcademicPeriodRepositoryAdapter implements AcademicPeriodRepository
   }
 
   @Override
-  public Optional<AcademicTerm> findById(Long id) {
+  public Optional<AcademicTerm> findById(UUID id) {
     return jpaRepository.findById(id)
         .map(AcademicPeriodMapper::toDomain);
   }
@@ -66,7 +66,7 @@ public class AcademicPeriodRepositoryAdapter implements AcademicPeriodRepository
   }
 
   @Override
-  public void deleteById(Long id) {
+  public void deleteById(UUID id) {
     jpaRepository.deleteById(id);
   }
 
@@ -88,18 +88,20 @@ public class AcademicPeriodRepositoryAdapter implements AcademicPeriodRepository
   }
 
   @Override
-  public int countCoursesByPeriodId(Long periodId) {
-    return jpaRepository.findById(periodId)
-        .map(entity -> entity.getCourses() != null ? entity.getCourses().size() : 0)
-        .orElse(0);
+  public int countCoursesByPeriodId(UUID periodId) {
+    // return jpaRepository.findById(periodId)
+    // .map(entity -> entity.getCourses() != null ? entity.getCourses().size() : 0)
+    // .orElse(0);
+    return 0;
   }
 
   @Override
-  public List<Course> findCoursesByPeriodId(Long periodId) {
-    return jpaRepository.findById(periodId)
-        .map(entity -> entity.getCourses().stream()
-            .map(CourseMapper::toDomain)
-            .toList())
-        .orElse(List.of());
+  public List<Course> findCoursesByPeriodId(UUID periodId) {
+    // return jpaRepository.findById(periodId)
+    // .map(entity -> entity.getCourses().stream()
+    // .map(CourseMapper::toDomain)
+    // .toList())
+    // .orElse(List.of());
+    return null;
   }
 }
