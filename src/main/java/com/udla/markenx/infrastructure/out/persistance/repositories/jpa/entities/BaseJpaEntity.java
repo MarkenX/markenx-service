@@ -3,13 +3,7 @@ package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entitie
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import lombok.Getter;
@@ -20,7 +14,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseJpaEntity {
 
   @Column(name = "public_id", nullable = false, unique = true, updatable = false)
@@ -29,16 +22,13 @@ public abstract class BaseJpaEntity {
   @Column(name = "code", nullable = false, unique = true)
   private String code;
 
-  @CreatedBy
-  @Column(name = "created_by", updatable = false)
+  @Column(name = "created_by", nullable = false, updatable = false)
   private String createdBy;
 
-  @CreatedDate
-  @Column(name = "created_at", updatable = false)
+  @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
-  @LastModifiedDate
-  @Column(name = "updated_at")
+  @Column(name = "updated_at", nullable = false)
   private LocalDateTime updatedAt;
 
   @PrePersist

@@ -59,6 +59,9 @@ public final class AcademicTermMapper {
     entity.setEndOfTerm(domain.getEndOfTerm());
     entity.setAcademicYear(domain.getAcademicYear());
     entity.setTermNumber(domain.getTermNumber());
+    entity.setCreatedBy(domain.getCreatedBy());
+    entity.setCreatedAt(domain.getCreatedAtDateTime());
+    entity.setUpdatedAt(domain.getUpdatedAtDateTime());
 
     if (domain.getAssignedCourses() != null) {
       List<CourseJpaEntity> courses = domain.getAssignedCourses().stream()
