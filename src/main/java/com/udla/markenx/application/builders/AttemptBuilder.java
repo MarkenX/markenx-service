@@ -1,30 +1,33 @@
 package com.udla.markenx.application.builders;
 
 import java.time.Duration;
-import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.application.ports.out.data.generators.random.RandomAttemptDataGeneratorPort;
 import com.udla.markenx.core.models.Attempt;
+import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
+
+import com.udla.markenx.application.ports.out.data.generators.random.RandomAttemptDataGeneratorPort;
 
 @Component
 public class AttemptBuilder {
 
   private final RandomAttemptDataGeneratorPort randomGenerator;
 
+  private String studentSequence;
+  private String taskSequence;
+  private double taskMinScoreToPass;
   private double score;
-  private LocalDate date;
-  private Duration duration;
-  private double minimumScoreToPass;
-  private Long studentAssignmentId;
+  private Duration timeSpent;
+  private AttemptStatus attemptStatus;
 
   public AttemptBuilder reset() {
-    this.score = 0.0;
-    this.date = null;
-    this.duration = null;
-    this.minimumScoreToPass = 0.0;
-    this.studentAssignmentId = null;
+    this.studentSequence = null;
+    this.taskSequence = null;
+    this.taskMinScoreToPass = -1;
+    this.score = -1;
+    this.timeSpent = null;
+    this.attemptStatus = null;
     return this;
   }
 
@@ -32,13 +35,33 @@ public class AttemptBuilder {
     this.randomGenerator = randomGenerator;
   }
 
-  public AttemptBuilder setMinimumScoreToPass(double value) {
-    this.minimumScoreToPass = value;
+  public AttemptBuilder setStudentSequence(String studentSequence) {
+    this.studentSequence = studentSequence;
     return this;
   }
 
-  public AttemptBuilder setStudentAssignmentId(Long studentAssignmentId) {
-    this.studentAssignmentId = studentAssignmentId;
+  public AttemptBuilder setTaskSequence(String taskSequence) {
+    this.taskSequence = taskSequence;
+    return this;
+  }
+
+  public AttemptBuilder setTaskMinSocreToPass(double taskMinScoreToPass) {
+    this.taskMinScoreToPass = taskMinScoreToPass;
+    return this;
+  }
+
+  public AttemptBuilder setScore(double score) {
+    this.score = score;
+    return this;
+  }
+
+  public AttemptBuilder setTimeSpent(Duration timeSpent) {
+    this.timeSpent = timeSpent;
+    return this;
+  }
+
+  public AttemptBuilder setAttemptStatus(AttemptStatus attemptStatus) {
+    this.attemptStatus = attemptStatus;
     return this;
   }
 
@@ -47,22 +70,12 @@ public class AttemptBuilder {
     return this;
   }
 
-  public AttemptBuilder randomDate(LocalDate taskCreatedDate, LocalDate taskDueDate) {
-    this.date = randomGenerator.date(taskCreatedDate, taskDueDate);
-    return this;
-  }
-
   public AttemptBuilder randomDuration() {
-    this.duration = randomGenerator.duration();
+    this.timeSpent = randomGenerator.duration();
     return this;
   }
 
   public Attempt build() {
-    return new Attempt(
-        score,
-        date,
-        duration,
-        minimumScoreToPass,
-        studentAssignmentId);
+    return new Attempt(studentSequence, taskSequence, taskMinScoreToPass, score, timeSpent, attemptStatus);
   }
 }

@@ -56,6 +56,20 @@ public class Attempt extends DomainBaseModel {
 		this.code = generateCode();
 	}
 
+	public Attempt(String studentSequence, String taskSequence, double taskMinScoreToPass, double score,
+			Duration timeSpent, AttemptStatus attemptStatus) {
+		super();
+		this.sequence = null;
+		this.studentSequence = studentSequence;
+		this.taskSequence = taskSequence;
+		this.taskMinScoreToPass = new Score(taskMinScoreToPass);
+		this.score = new Score(score);
+		this.timeSpent = validateDuration(timeSpent);
+		this.attemptStatus = requireAttemptStatus(attemptStatus);
+		this.result = determineResult();
+		this.code = generateCode();
+	}
+
 	public String getCode() {
 		return this.code;
 	}
