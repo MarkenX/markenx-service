@@ -31,5 +31,5 @@ public class CourseJpaEntity extends AuditableEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "period_id")
-  private AcademicPeriodJpaEntity academicPeriod;
+  private AcademicTermJpaEntity academicPeriod;
 }

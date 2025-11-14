@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.udla.markenx.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
 import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicPeriodJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.AcademicPeriodMapper;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.CourseMapper;
@@ -29,8 +29,8 @@ public class AcademicPeriodRepositoryAdapter implements AcademicPeriodRepository
   @Override
   public AcademicTerm save(AcademicTerm period) {
     try {
-      AcademicPeriodJpaEntity entity = AcademicPeriodMapper.toEntity(period);
-      AcademicPeriodJpaEntity saved = jpaRepository.save(entity);
+      AcademicTermJpaEntity entity = AcademicPeriodMapper.toEntity(period);
+      AcademicTermJpaEntity saved = jpaRepository.save(entity);
       return AcademicPeriodMapper.toDomain(saved);
     } catch (DataAccessException e) {
       throw new PersistenceException("Error al guardar el período académico", e);
@@ -40,13 +40,13 @@ public class AcademicPeriodRepositoryAdapter implements AcademicPeriodRepository
   @Override
   public AcademicTerm update(AcademicTerm period) {
     try {
-      AcademicPeriodJpaEntity existingEntity = jpaRepository.findById(period.getId())
+      AcademicTermJpaEntity existingEntity = jpaRepository.findById(period.getId())
           .orElseThrow(() -> new PersistenceException("Período académico no encontrado"));
 
       existingEntity.setStartDate(period.getStartOfTerm());
       existingEntity.setEndDate(period.getEndOfTerm());
 
-      AcademicPeriodJpaEntity updated = jpaRepository.save(existingEntity);
+      AcademicTermJpaEntity updated = jpaRepository.save(existingEntity);
       return AcademicPeriodMapper.toDomain(updated);
     } catch (DataAccessException e) {
       throw new PersistenceException("Error al actualizar el período académico", e);

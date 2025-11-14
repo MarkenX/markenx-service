@@ -14,18 +14,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-/**
- * Base auditable entity for tracking creation and modification metadata.
- * 
- * Provides automatic auditing for admin CRUD operations:
- * - createdBy: Email of admin who created the entity
- * - createdAt: Timestamp when entity was created
- * - lastModifiedBy: Email of admin who last modified the entity
- * - lastModifiedAt: Timestamp when entity was last modified
- * 
- * Students can only view and upload data, so audit fields track admin actions
- * only.
- */
 @Getter
 @Setter
 @MappedSuperclass

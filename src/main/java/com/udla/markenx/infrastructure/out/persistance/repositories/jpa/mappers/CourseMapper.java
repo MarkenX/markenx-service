@@ -150,7 +150,7 @@ public class CourseMapper {
 
     // Map academic period id if present on domain
     if (domain.getAcademicTermId() != null) {
-      com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity ap = new com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity();
+      com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity ap = new com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity();
       ap.setId(domain.getAcademicTermId());
       entity.setAcademicPeriod(ap);
     }

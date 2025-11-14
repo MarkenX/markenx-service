@@ -2,9 +2,9 @@ package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfa
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 
-public interface AcademicPeriodJpaRepository extends JpaRepository<AcademicPeriodJpaEntity, Long> {
+public interface AcademicPeriodJpaRepository extends JpaRepository<AcademicTermJpaEntity, Long> {
 
   /**
    * Checks if a period exists for the given year and semester.

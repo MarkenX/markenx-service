@@ -10,7 +10,7 @@ import com.udla.markenx.core.models.Course;
 
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicPeriodJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 
 public final class AcademicPeriodMapper {
@@ -19,7 +19,7 @@ public final class AcademicPeriodMapper {
     throw new UtilityClassInstantiationException(getClass());
   }
 
-  public static @NonNull AcademicTerm toDomain(AcademicPeriodJpaEntity entity) {
+  public static @NonNull AcademicTerm toDomain(AcademicTermJpaEntity entity) {
     if (entity == null) {
       throw new DomainMappingException();
     }
@@ -35,23 +35,23 @@ public final class AcademicPeriodMapper {
         entity.getStartDate(),
         entity.getEndDate(),
         entity.getYear(),
-        entity.getSemesterNumber(),
+        entity.getTermNumber(),
         courses);
 
     return domain;
   }
 
-  public static @NonNull AcademicPeriodJpaEntity toEntity(AcademicTerm domain) {
+  public static @NonNull AcademicTermJpaEntity toEntity(AcademicTerm domain) {
     if (domain == null) {
       throw new EntityMappingException();
     }
 
-    AcademicPeriodJpaEntity entity = new AcademicPeriodJpaEntity();
+    AcademicTermJpaEntity entity = new AcademicTermJpaEntity();
     entity.setId(domain.getId());
     entity.setStartDate(domain.getStartOfTerm());
     entity.setEndDate(domain.getEndOfTerm());
     entity.setYear(domain.getAcademicYear());
-    entity.setSemesterNumber(domain.getTermNumber());
+    entity.setTermNumber(domain.getTermNumber());
 
     if (domain.getAssignedCourses() != null) {
       List<CourseJpaEntity> courses = domain.getAssignedCourses().stream()
