@@ -2,9 +2,11 @@ package com.udla.markenx.application.factories;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import com.udla.markenx.application.builders.CourseBuilder;
 import com.udla.markenx.core.models.Course;
 import com.udla.markenx.core.models.Student;
 import com.udla.markenx.core.models.Task;
@@ -16,16 +18,24 @@ public class RandomCourseFactory {
 
   private final RandomStudentFactory studentFactory;
   private final RandomTaskFactory taskFactory;
+  private final CourseBuilder courseBuilder;
 
   public RandomCourseFactory(
       RandomStudentFactory studentFactory,
-      RandomTaskFactory taskFactory) {
+      RandomTaskFactory taskFactory,
+      CourseBuilder courseBuilder) {
     this.studentFactory = studentFactory;
     this.taskFactory = taskFactory;
+    this.courseBuilder = courseBuilder;
   }
 
-  public Course createRandomCourse(LocalDate endDate) {
-    Course course = new Course();
+  public Course createRandomCourse(UUID academicTermId, int academicTermYear, LocalDate endDate) {
+    Course course = courseBuilder
+        .reset()
+        .setAcademicTermId(academicTermId)
+        .setAcademicTermYear(academicTermYear)
+        .randomName()
+        .build();
 
     List<Student> students = studentFactory
         .createRandomStudentsUpTo(MAX_STUDENTS);

@@ -23,7 +23,8 @@ public class Course extends DomainBaseModel {
   private final List<Assignment> assignments;
 
   public Course(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID academicTermId,
-      int academicTermYear, String name, List<Student> students, List<Assignment> assignments, String createdBy,
+      int academicTermYear, String name, List<Student> students, List<? extends Assignment> assignments,
+      String createdBy,
       LocalDateTime createdAt, LocalDateTime updatedAt) {
     super(id, code, status, createdBy, createdAt, updatedAt);
     this.sequence = sequence;
@@ -31,7 +32,7 @@ public class Course extends DomainBaseModel {
     this.academicTermYear = academicTermYear;
     setName(name);
     this.students = requireStudents(students);
-    this.assignments = requireAssignments(assignments);
+    this.assignments = new ArrayList<>(requireAssignments(assignments));
     this.code = requireCode(code);
   }
 
@@ -85,7 +86,7 @@ public class Course extends DomainBaseModel {
     return EntityValidator.ensureNotNullOrEmpty(CLAZZ, name, "name");
   }
 
-  private List<Assignment> requireAssignments(List<Assignment> assignments) {
+  private List<? extends Assignment> requireAssignments(List<? extends Assignment> assignments) {
     return EntityValidator.ensureNotNull(CLAZZ, assignments, "assignments");
   }
 
@@ -105,7 +106,7 @@ public class Course extends DomainBaseModel {
     return this.assignments.add(requireAssignment(assignment));
   }
 
-  public void addAssignments(List<Assignment> assignments) {
+  public void addAssignments(List<? extends Assignment> assignments) {
     this.assignments.addAll(requireAssignments(assignments));
   }
 

@@ -38,7 +38,8 @@ public class RandomAcademicPeriodFactory {
 
     int courseCount = numberGenerator.positiveIntegerBetween(1, MAX_COURSES);
     for (int i = 0; i < courseCount; i++) {
-      Course course = courseFactory.createRandomCourse(academicPeriod.getEndOfTerm());
+      Course course = courseFactory.createRandomCourse(academicPeriod.getId(), academicPeriod.getAcademicYear(),
+          academicPeriod.getEndOfTerm());
       academicPeriod.addCourse(course);
     }
 
