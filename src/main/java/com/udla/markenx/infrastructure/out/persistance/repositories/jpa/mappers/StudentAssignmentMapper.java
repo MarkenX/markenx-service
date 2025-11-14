@@ -1,58 +1,46 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers;
 
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
-import com.udla.markenx.core.exceptions.UtilityClassInstantiationException;
+import com.udla.markenx.core.interfaces.Assignment;
 import com.udla.markenx.core.interfaces.StudentAssignment;
+import com.udla.markenx.core.models.StudentTask;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentAssignmentJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
+import com.udla.markenx.infrastructure.out.persistance.exceptions.MappingException;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity;
 
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AssignmentJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
+import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-
+@Component
+@RequiredArgsConstructor
 public final class StudentAssignmentMapper {
 
-  private StudentAssignmentMapper() {
-    throw new UtilityClassInstantiationException(getClass());
-  }
+  private final StudentTaskMapper studentTaskMapper;
 
-  public static @NonNull StudentAssignment toDomain(StudentAssignmentJpaEntity entity) {
+  public @NonNull StudentAssignment<?> toDomain(StudentAssignmentJpaEntity entity) {
     if (entity == null) {
-      throw new IllegalArgumentException("Entity is null");
-    }
-    Long assignmentId = null;
-    Long studentId = null;
-    if (entity.getAssignment() != null) {
-      assignmentId = entity.getAssignment().getId();
-    }
-    if (entity.getStudent() != null) {
-      studentId = entity.getStudent().getId();
+      throw new DomainMappingException();
     }
 
-    StudentAssignment domain = new StudentAssignment(
-        entity.getId(),
-        assignmentId,
-        studentId,
-        entity.getActiveAttempt(),
-        entity.getCurrentStatus(),
-        new ArrayList<>());
-
-    return domain;
+    if (entity instanceof StudentTaskJpaEntity studentTask) {
+      return studentTaskMapper.toDomain(studentTask);
+    } else {
+      throw new MappingException("Tipo de asignación no reconocido: " + entity.getClass());
+    }
   }
 
-  public static @NonNull StudentAssignmentJpaEntity toEntity(StudentAssignment domain,
-      AssignmentJpaEntity assignmentEntity,
-      StudentJpaEntity studentEntity) {
+  public @NonNull <D extends Assignment> StudentAssignmentJpaEntity toEntity(StudentAssignment<D> domain) {
     if (domain == null) {
-      throw new IllegalArgumentException("Domain is null");
+      throw new EntityMappingException();
     }
-    StudentAssignmentJpaEntity entity = new StudentAssignmentJpaEntity();
-    entity.setId(domain.getId());
-    entity.setAssignment(assignmentEntity);
-    entity.setStudent(studentEntity);
-    entity.setActiveAttempt(domain.getActiveAttempt());
-    entity.setCurrentStatus(domain.getAssignmentStatus());
-    return entity;
+
+    if (domain instanceof StudentTask studentTask) {
+      return studentTaskMapper.toEntity(studentTask);
+    } else {
+      throw new MappingException("Tipo de asignación no reconocido: " + domain.getClass());
+    }
   }
 }
