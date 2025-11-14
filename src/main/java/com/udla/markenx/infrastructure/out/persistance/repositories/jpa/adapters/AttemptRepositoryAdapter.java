@@ -10,31 +10,34 @@ import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.AttemptJpaRepository;
 
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.AttemptMapper;
+
+import lombok.RequiredArgsConstructor;
+
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentAssignmentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.StudentAssignmentJpaRepository;
 
 @Repository
+@RequiredArgsConstructor
 public class AttemptRepositoryAdapter implements AttemptRepositoryPort {
   private final AttemptJpaRepository jpaRepository;
   private final StudentAssignmentJpaRepository studentAssignmentJpaRepository;
-
-  public AttemptRepositoryAdapter(AttemptJpaRepository jpaRepository,
-      StudentAssignmentJpaRepository studentAssignmentJpaRepository) {
-    this.jpaRepository = jpaRepository;
-    this.studentAssignmentJpaRepository = studentAssignmentJpaRepository;
-  }
+  private final AttemptMapper mapper;
 
   @Override
   public Page<Attempt> getAttemptsByStudentAssignmentId(Long studentAssignmentId, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
-    return jpaRepository.findByStudentAssignmentId(studentAssignmentId, pageable).map(AttemptMapper::toDomain);
+    // return jpaRepository.findByStudentAssignmentId(studentAssignmentId,
+    // pageable).map(AttemptMapper::toDomain);
+    return null;
   }
 
   @Override
   public Page<Attempt> getAttemptsByTaskId(Long taskId, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
-    return jpaRepository.findByStudentAssignment_Assignment_Id(taskId, pageable).map(AttemptMapper::toDomain);
+    // return jpaRepository.findByStudentAssignment_Assignment_Id(taskId,
+    // pageable).map(AttemptMapper::toDomain);
+    return null;
   }
 
   @Override
@@ -50,14 +53,17 @@ public class AttemptRepositoryAdapter implements AttemptRepositoryPort {
     }
 
     // map domain to entity and attach associations
-    AttemptJpaEntity entity = AttemptMapper.toEntity(attempt);
+    // AttemptJpaEntity entity = mapper.toEntity(attempt);
 
-    StudentAssignmentJpaEntity saEntity = studentAssignmentJpaRepository.findById(studentAssignmentId)
-        .orElseThrow(() -> new IllegalArgumentException("StudentAssignment not found with id: " + studentAssignmentId));
+    // StudentAssignmentJpaEntity saEntity =
+    // studentAssignmentJpaRepository.findById(studentAssignmentId)
+    // .orElseThrow(() -> new IllegalArgumentException("StudentAssignment not found
+    // with id: " + studentAssignmentId));
 
-    entity.setStudentAssignment(saEntity);
+    // entity.setStudentAssignment(saEntity);
 
-    AttemptJpaEntity saved = jpaRepository.save(entity);
-    return AttemptMapper.toDomain(saved);
+    // AttemptJpaEntity saved = jpaRepository.save(entity);
+    // return mapper.toDomain(saved);
+    return null;
   }
 }
