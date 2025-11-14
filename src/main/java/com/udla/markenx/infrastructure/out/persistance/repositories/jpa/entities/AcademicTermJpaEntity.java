@@ -20,14 +20,9 @@ import lombok.Setter;
     @UniqueConstraint(columnNames = { "academic_year", "term_number" })
 })
 public class AcademicTermJpaEntity extends BaseJpaEntity {
-  @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "term_id")
   private Long id;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false)
-  private DomainBaseModelStatus status;
 
   @Column(name = "start_date", nullable = false)
   private LocalDate startOfTerm;

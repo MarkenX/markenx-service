@@ -14,8 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "courses")
-public class CourseJpaEntity extends AuditJpaEntity {
-  @Id
+public class CourseJpaEntity extends BaseJpaEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "course_id")
   private Long id;
@@ -26,10 +25,10 @@ public class CourseJpaEntity extends AuditJpaEntity {
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<StudentJpaEntity> students = new ArrayList<>();
 
-  @Column(name = "course_label")
-  private String label;
+  @Column(name = "course_name")
+  private String name;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "period_id")
-  private AcademicTermJpaEntity academicPeriod;
+  @JoinColumn(name = "term_id")
+  private AcademicTermJpaEntity academicTerm;
 }

@@ -66,7 +66,7 @@ public final class AcademicTermMapper {
     if (domain.getAssignedCourses() != null) {
       List<CourseJpaEntity> courses = domain.getAssignedCourses().stream()
           .map(CourseMapper::toEntity)
-          .peek(e -> e.setAcademicPeriod(entity))
+          .peek(e -> e.setAcademicTerm(entity))
           .toList();
       entity.setAssignedCourses(courses);
     }

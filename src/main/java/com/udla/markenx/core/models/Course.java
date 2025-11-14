@@ -24,8 +24,7 @@ public class Course extends DomainBaseModel {
 
   public Course(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID academicTermId,
       int academicTermYear, String name, List<Student> students, List<? extends Assignment> assignments,
-      String createdBy,
-      LocalDateTime createdAt, LocalDateTime updatedAt) {
+      String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
     super(id, code, status, createdBy, createdAt, updatedAt);
     this.sequence = sequence;
     this.academicTermId = academicTermId;
@@ -68,6 +67,10 @@ public class Course extends DomainBaseModel {
 
   public String getName() {
     return this.name;
+  }
+
+  public Long getSequence() {
+    return this.sequence;
   }
 
   public List<Student> getStudents() {
