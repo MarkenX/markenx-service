@@ -24,12 +24,11 @@ public class RandomStudentTaskFactory {
     this.numberGenerator = numberGenerator;
   }
 
-  public StudentTask createRandomStudentTask(Task task, Long studentId) {
+  public StudentTask createRandomStudentTask(Task task, Student student) {
     return builder
         .reset()
         .setTask(task)
-        .setStudent(studentId)
-        .generateRandomActiveAttempt()
+        .setStudent(student)
         .build();
   }
 
@@ -43,7 +42,7 @@ public class RandomStudentTaskFactory {
     for (Student student : students) {
       for (Task task : tasks) {
         for (int i = 0; i < count; i++) {
-          StudentTask studentTask = createRandomStudentTask(task, student.getId());
+          StudentTask studentTask = createRandomStudentTask(task, student);
           studentTasks.add(studentTask);
         }
       }
