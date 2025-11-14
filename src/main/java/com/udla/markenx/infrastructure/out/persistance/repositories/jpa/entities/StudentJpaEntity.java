@@ -14,7 +14,6 @@ import lombok.Setter;
 @Table(name = "students")
 @EqualsAndHashCode(callSuper = true)
 public class StudentJpaEntity extends PersonJpaEntity {
-	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "student_id")
 	private Long id;

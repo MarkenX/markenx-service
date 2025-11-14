@@ -20,7 +20,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class BaseJpaEntity {
-
   @Id
   @Column(name = "public_id", nullable = false, unique = true, updatable = false)
   private UUID publicId;
