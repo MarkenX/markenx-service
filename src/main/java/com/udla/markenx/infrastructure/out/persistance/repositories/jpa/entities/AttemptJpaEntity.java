@@ -1,7 +1,6 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
 
 import java.time.Duration;
-import java.time.LocalDate;
 
 import com.udla.markenx.core.valueobjects.enums.AttemptResult;
 import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
@@ -27,7 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "attempts")
-public class AttemptJpaEntity {
+public class AttemptJpaEntity extends BaseJpaEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "attempt_id")
@@ -35,9 +34,6 @@ public class AttemptJpaEntity {
 
 	@Column(name = "attempt_score")
 	private double score;
-
-	@Column(name = "attempt_date")
-	private LocalDate date;
 
 	@Column(name = "attempt_duration")
 	private Duration duration;

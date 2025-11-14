@@ -19,19 +19,22 @@ public class Attempt extends DomainBaseModel {
 
 	private final String code;
 	private final Long sequence;
-	private final String studentSequence;
-	private final String taskSequence;
+	private final Long studentSequence;
+	private final Long taskSequence;
+	private final UUID studentTaskId;
 	private final Score taskMinScoreToPass;
 	private final Score score;
 	private final Duration timeSpent;
 	private final AttemptResult result;
 	private final AttemptStatus attemptStatus;
 
-	public Attempt(UUID id, String code, Long sequence, DomainBaseModelStatus status, String studentSequence,
-			String taskSequence, double taskMinScoreToPass, double score, Duration timeSpent, AttemptResult result,
+	public Attempt(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID studentTaskId,
+			Long studentSequence,
+			Long taskSequence, double taskMinScoreToPass, double score, Duration timeSpent, AttemptResult result,
 			AttemptStatus attemptStatus, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(id, code, status, createdBy, createdAt, updatedAt);
 		this.sequence = sequence;
+		this.studentTaskId = studentTaskId;
 		this.studentSequence = studentSequence;
 		this.taskMinScoreToPass = new Score(taskMinScoreToPass);
 		this.taskSequence = taskSequence;
@@ -42,10 +45,11 @@ public class Attempt extends DomainBaseModel {
 		this.code = requireCode(code);
 	}
 
-	public Attempt(String studentSequence, String taskSequence, double taskMinScoreToPass, double score,
-			Duration timeSpent, AttemptStatus attemptStatus, String createdBy) {
+	public Attempt(Long studentSequence, Long taskSequence, double taskMinScoreToPass, double score,
+			Duration timeSpent, AttemptStatus attemptStatus, UUID studentTaskId, String createdBy) {
 		super(createdBy);
 		this.sequence = null;
+		this.studentTaskId = studentTaskId;
 		this.studentSequence = studentSequence;
 		this.taskSequence = taskSequence;
 		this.taskMinScoreToPass = new Score(taskMinScoreToPass);
@@ -56,10 +60,11 @@ public class Attempt extends DomainBaseModel {
 		this.code = generateCode();
 	}
 
-	public Attempt(String studentSequence, String taskSequence, double taskMinScoreToPass, double score,
+	public Attempt(UUID studentTaskId, Long studentSequence, Long taskSequence, double taskMinScoreToPass, double score,
 			Duration timeSpent, AttemptStatus attemptStatus) {
 		super();
 		this.sequence = null;
+		this.studentTaskId = studentTaskId;
 		this.studentSequence = studentSequence;
 		this.taskSequence = taskSequence;
 		this.taskMinScoreToPass = new Score(taskMinScoreToPass);
@@ -68,10 +73,18 @@ public class Attempt extends DomainBaseModel {
 		this.attemptStatus = requireAttemptStatus(attemptStatus);
 		this.result = determineResult();
 		this.code = generateCode();
+	}
+
+	public UUID getStudentTaskId() {
+		return this.studentTaskId;
 	}
 
 	public String getCode() {
 		return this.code;
+	}
+
+	public Long getSequence() {
+		return this.sequence;
 	}
 
 	public double getScore() {
@@ -118,6 +131,6 @@ public class Attempt extends DomainBaseModel {
 
 	@Override
 	protected String generateCode() {
-		return String.format("%s-%s-STD%s-%02d", PREFIX, taskSequence, studentSequence, sequence);
+		return String.format("%s-%04d-STD%06d-%02d", PREFIX, taskSequence, studentSequence, sequence);
 	}
 }

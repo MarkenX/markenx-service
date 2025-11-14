@@ -75,6 +75,7 @@ public class CourseMapper {
     entity.setPublicId(domain.getId());
     entity.setCode(domain.getCode());
     entity.setId(domain.getSequence());
+    entity.setStatus(domain.getStatus());
     entity.setName(domain.getName());
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());

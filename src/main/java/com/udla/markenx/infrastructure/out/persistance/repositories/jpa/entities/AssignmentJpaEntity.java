@@ -17,6 +17,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "assignments")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class AssignmentJpaEntity extends BaseJpaEntity {
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "student_assignment_id")
+	private Long id;
+
 	@Column(name = "assignment_title")
 	private String title;
 
