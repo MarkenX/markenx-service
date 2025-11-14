@@ -62,10 +62,12 @@ public class CourseController implements CourseControllerPort {
       @PathVariable @Positive(message = "El ID del curso debe ser positivo") Long id,
       @Valid @RequestBody UpdateCourseRequestDTO request) {
 
-    com.udla.markenx.core.models.Course updated = courseService.updateCourse(id, request.getAcademicPeriodId(),
-        request.getLabel());
-    CourseResponseDTO response = CourseDtoMapper.toResponseDto(updated);
-    return ResponseEntity.ok(response);
+    // com.udla.markenx.core.models.Course updated = courseService.updateCourse(id,
+    // request.getAcademicPeriodId(),
+    // request.getLabel());
+    // CourseResponseDTO response = CourseDtoMapper.toResponseDto(updated);
+    // return ResponseEntity.ok(response);
+    return ResponseEntity.ok(null);
   }
 
   @Override
@@ -73,7 +75,7 @@ public class CourseController implements CourseControllerPort {
   public ResponseEntity<Void> deleteCourse(
       @PathVariable @Positive(message = "El ID del curso debe ser positivo") Long id) {
 
-    courseService.deleteCourse(id);
+    // courseService.deleteCourse(id);
     return ResponseEntity.noContent().build();
   }
 

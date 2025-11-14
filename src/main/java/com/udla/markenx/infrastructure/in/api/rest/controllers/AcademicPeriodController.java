@@ -68,14 +68,16 @@ public class AcademicPeriodController implements AcademicPeriodControllerPort {
       @PathVariable @Positive(message = "El ID del período debe ser positivo") Long id,
       @Valid @RequestBody UpdateAcademicPeriodRequestDTO request) {
 
-    AcademicTerm updated = academicPeriodService.updateAcademicPeriod(
-        id,
-        request.getStartDate(),
-        request.getEndDate(),
-        request.getYear());
+    // AcademicTerm updated = academicPeriodService.updateAcademicPeriod(
+    // id,
+    // request.getStartDate(),
+    // request.getEndDate(),
+    // request.getYear());
 
-    AcademicPeriodResponseDTO response = AcademicPeriodMapper.toResponseDto(updated);
-    return ResponseEntity.ok(response);
+    // AcademicPeriodResponseDTO response =
+    // AcademicPeriodMapper.toResponseDto(updated);
+    // return ResponseEntity.ok(response);
+    return ResponseEntity.ok(null);
   }
 
   @Override
@@ -83,9 +85,11 @@ public class AcademicPeriodController implements AcademicPeriodControllerPort {
   public ResponseEntity<AcademicPeriodResponseDTO> getAcademicPeriodById(
       @PathVariable @Positive(message = "El ID del período debe ser positivo") Long id) {
 
-    AcademicTerm period = academicPeriodService.getAcademicPeriodById(id);
-    AcademicPeriodResponseDTO response = AcademicPeriodMapper.toResponseDto(period);
-    return ResponseEntity.ok(response);
+    // AcademicTerm period = academicPeriodService.getAcademicPeriodById(id);
+    // AcademicPeriodResponseDTO response =
+    // AcademicPeriodMapper.toResponseDto(period);
+    // return ResponseEntity.ok(response);
+    return ResponseEntity.ok(null);
   }
 
   @Override
@@ -106,8 +110,9 @@ public class AcademicPeriodController implements AcademicPeriodControllerPort {
   public ResponseEntity<Void> deleteAcademicPeriod(
       @PathVariable @Positive(message = "El ID del período debe ser positivo") Long id) {
 
-    academicPeriodService.deleteAcademicPeriod(id);
-    return ResponseEntity.noContent().build();
+    // academicPeriodService.deleteAcademicPeriod(id);
+    // return ResponseEntity.noContent().build();
+    return ResponseEntity.ok(null);
   }
 
   @Override
@@ -115,7 +120,8 @@ public class AcademicPeriodController implements AcademicPeriodControllerPort {
   public ResponseEntity<List<Course>> getCoursesByPeriodId(
       @PathVariable @Positive(message = "El ID del período debe ser positivo") Long id) {
 
-    List<Course> courses = academicPeriodService.getCoursesByPeriodId(id);
-    return ResponseEntity.ok(courses);
+    // List<Course> courses = academicPeriodService.getCoursesByPeriodId(id);
+    // return ResponseEntity.ok(courses);
+    return ResponseEntity.ok(null);
   }
 }
