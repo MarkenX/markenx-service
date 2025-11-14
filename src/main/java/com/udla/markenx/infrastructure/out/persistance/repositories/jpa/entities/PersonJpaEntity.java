@@ -22,9 +22,4 @@ public class PersonJpaEntity extends BaseJpaEntity {
 
 	@Column(name = "person_lastname")
 	private String lastName;
-
-	public PersonJpaEntity(String fistName, String lastName) {
-		this.firstName = fistName;
-		this.lastName = lastName;
-	}
 }

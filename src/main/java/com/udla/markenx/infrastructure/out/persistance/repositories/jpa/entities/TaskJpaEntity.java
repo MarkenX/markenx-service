@@ -29,14 +29,11 @@ public class TaskJpaEntity extends AssignmentJpaEntity {
 	@Column(name = "task_id")
 	private Long id;
 
-	@Column(name = "task_active_attempt")
-	private int activeAttempt;
-
 	@Column(name = "task_max_attempts")
 	private int maxAttempts;
 
 	@Column(name = "attempt_minimum_score_to_pass")
-	private double minimumScoreToPass;
+	private double minScoreToPass;
 
 	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AttemptJpaEntity> attempts = new ArrayList<>();

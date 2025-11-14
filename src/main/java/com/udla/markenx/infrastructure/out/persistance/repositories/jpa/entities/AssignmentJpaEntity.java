@@ -10,25 +10,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-/**
- * Base entity for assignments/tasks.
- * 
- * Extends AuditableEntity to automatically track admin CRUD operations:
- * - Who created/modified the assignment (admin email)
- * - When the assignment was created/modified
- */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "assignments")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class AssignmentJpaEntity extends AuditJpaEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "assignment_id")
-	private Long id;
-
+public class AssignmentJpaEntity extends BaseJpaEntity {
 	@Column(name = "assignment_title")
 	private String title;
 
@@ -46,17 +34,4 @@ public class AssignmentJpaEntity extends AuditJpaEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id")
 	private CourseJpaEntity course;
-
-	public AssignmentJpaEntity(
-			String title,
-			String summary,
-			AssignmentStatus currentStatus,
-			LocalDate dueDate,
-			CourseJpaEntity student) {
-		this.title = title;
-		this.summary = summary;
-		this.currentStatus = currentStatus;
-		this.dueDate = dueDate;
-		this.course = student;
-	}
 }

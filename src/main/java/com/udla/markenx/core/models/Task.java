@@ -24,7 +24,7 @@ public class Task extends Assignment {
 	private int maxAttempts;
 	private Score minScoreToPass;
 
-	private Task(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, int academicTermYear,
+	public Task(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, int academicTermYear,
 			String title, String summary, LocalDate dueDate, int maxAttempts, double minScoreToPass, String createdBy,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(courseId, code, sequence, status, title, summary, dueDate, createdBy, createdAt, updatedAt);
@@ -69,6 +69,10 @@ public class Task extends Assignment {
 
 	public int getMaxAttempts() {
 		return this.maxAttempts;
+	}
+
+	public Long getSequence() {
+		return this.sequence;
 	}
 
 	public double getMinScoreToPass() {
