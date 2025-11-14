@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class AcademicPeriodResponseDTO {
-  private String code;
-  private LocalDate startOfTerm;
-  private LocalDate endOfTerm;
-  private int academicYear;
-  private String label;
+  private final String code;
+  private final LocalDate startOfTerm;
+  private final LocalDate endOfTerm;
+  private final int academicYear;
+  private final String label;
 }
