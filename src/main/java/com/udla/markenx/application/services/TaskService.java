@@ -41,7 +41,9 @@ public class TaskService {
 		if (sa == null) {
 			return org.springframework.data.domain.Page.empty();
 		}
-		return attemptRepository.getAttemptsByStudentAssignmentId(sa.getId(), page, size);
+		// return attemptRepository.getAttemptsByStudentAssignmentId(sa.getId(), page,
+		// size);
+		return attemptRepository.getAttemptsByStudentAssignmentId(null, page, size);
 	}
 
 	/**
@@ -60,14 +62,15 @@ public class TaskService {
 		com.udla.markenx.core.models.Task task = taskRepository.getTaskById(taskId);
 		double minScore = task.getMinScoreToPass();
 
-		// get or create student-assignment
-		StudentAssignment sa = studentAssignmentRepository.getByAssignmentIdAndStudentId(taskId, studentId);
-		if (sa == null) {
-			sa = new StudentAssignment(taskId, studentId);
-			sa = studentAssignmentRepository.create(sa);
-		}
+		// // get or create student-assignment
+		// StudentAssignment sa =
+		// studentAssignmentRepository.getByAssignmentIdAndStudentId(taskId, studentId);
+		// if (sa == null) {
+		// sa = new StudentAssignment(taskId, studentId);
+		// sa = studentAssignmentRepository.create(sa);
+		// }
 
-		Attempt attempt = new Attempt(score, date, duration, minScore, sa.getId());
-		return attemptRepository.createAttempt(attempt, sa.getId());
+		// Attempt attempt = new Attempt(score, date, duration, minScore, sa.getId());
+		return attemptRepository.createAttempt(null, null);
 	}
 }

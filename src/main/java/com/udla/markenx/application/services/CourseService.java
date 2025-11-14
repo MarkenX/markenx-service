@@ -83,12 +83,14 @@ public class CourseService {
       throw new ResourceNotFoundException("Período académico", academicPeriodId);
     }
 
-    Course course = new Course();
-    // set academicPeriodId and label if provided by rebuilding domain object
-    if (academicPeriodId != null || label != null) {
-      course = new Course(null, course.getAssignments(), course.getStudents(), academicPeriodId, label,
-          course.getAuditInfo());
-    }
+    // Course course = new Course();
+    Course course = null;
+    // // set academicPeriodId and label if provided by rebuilding domain object
+    // if (academicPeriodId != null || label != null) {
+    // course = new Course(null, course.getAssignments(), course.getStudents(),
+    // academicPeriodId, label,
+    // course.getAuditInfo());
+    // }
 
     return courseRepository.save(course);
   }
@@ -102,9 +104,11 @@ public class CourseService {
     }
 
     // Create updated course domain preserving assignments/students and timestamps
-    Course updated = new Course(existing.getId(), existing.getAssignments(), existing.getStudents(), academicPeriodId,
-        label == null ? existing.getName() : label, existing.getAuditInfo());
+    // Course updated = new Course(existing.getId(), existing.getAssignments(),
+    // existing.getStudents(), academicPeriodId,
+    // label == null ? existing.getName() : label, existing.getAuditInfo());
 
+    Course updated = null;
     return courseRepository.update(updated);
   }
 
