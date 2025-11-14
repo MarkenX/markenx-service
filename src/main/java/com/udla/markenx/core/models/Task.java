@@ -47,6 +47,17 @@ public class Task extends Assignment {
 		this.code = generateCode();
 	}
 
+	public Task(UUID courseId, int academicTermYear, String title, String summary, LocalDate dueDate, int maxAttempts,
+			double minScoreToPass) {
+		super(title, summary, dueDate);
+		this.sequence = null;
+		this.courseId = courseId;
+		this.academicTermYear = academicTermYear;
+		this.maxAttempts = validateMaxAttempts(maxAttempts);
+		this.minScoreToPass = new Score(minScoreToPass);
+		this.code = generateCode();
+	}
+
 	@Override
 	public String getCode() {
 		return this.code;

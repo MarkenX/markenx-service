@@ -31,11 +31,11 @@ public class RandomTaskFactory {
     Task task = taskBuilder
         .reset()
         .generateId()
-        .generateRandomTitle()
-        .generateRandomSummary()
-        .generateRandomDueDate(tomorrow, limitDueDate)
-        .generateRandomMaxAttempts(maxAttemptCount)
-        .generateRandomMinimumScoreToPass()
+        .randomTitle()
+        .randomSummary()
+        .randomDueDate(tomorrow, limitDueDate)
+        .randomMaxAttempts(maxAttemptCount)
+        .randomMinScoreToPass()
         .build();
     return task;
   }

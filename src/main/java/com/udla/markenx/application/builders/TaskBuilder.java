@@ -1,89 +1,102 @@
 package com.udla.markenx.application.builders;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
 import com.udla.markenx.core.models.Task;
-import com.udla.markenx.application.ports.out.data.generators.EntityIdGenerator;
 import com.udla.markenx.application.ports.out.data.generators.random.RandomAssignmentDataGeneratorPort;
 
 @Component
 public class TaskBuilder {
 
   private final RandomAssignmentDataGeneratorPort randomGenerator;
-  private final EntityIdGenerator idGenerator;
 
-  private Long id;
+  private UUID courseId;
+  private int academicTermYear;
   private String title;
   private String summary;
   private LocalDate dueDate;
-  private int activeAttempt;
-  private int maxAttempt;
-  private double minimumScoreToPass;
+  private int maxAttempts;
+  private double minScoreToPass;
 
-  public TaskBuilder(
-      RandomAssignmentDataGeneratorPort randomGenerator,
-      EntityIdGenerator idGenerator) {
+  public TaskBuilder(RandomAssignmentDataGeneratorPort randomGenerator) {
     this.randomGenerator = randomGenerator;
-    this.idGenerator = idGenerator;
   }
 
   public TaskBuilder reset() {
-    this.id = null;
+    this.courseId = null;
+    this.academicTermYear = -1;
     this.title = null;
     this.summary = null;
     this.dueDate = null;
-    this.activeAttempt = 0;
-    this.maxAttempt = 0;
-    this.minimumScoreToPass = 0.0;
-    this.id = null;
+    this.maxAttempts = -1;
+    this.minScoreToPass = -1;
     return this;
   }
 
-  public TaskBuilder setId(Long id) {
-    this.id = id;
+  public TaskBuilder setCourseId(UUID courseId) {
+    this.courseId = courseId;
     return this;
   }
 
-  public TaskBuilder generateId() {
-    this.id = idGenerator.nextId();
+  public TaskBuilder setAcademicTermYear(int academicTermYear) {
+    this.academicTermYear = academicTermYear;
     return this;
   }
 
-  public TaskBuilder generateRandomTitle() {
+  public TaskBuilder setTitle(String title) {
+    this.title = title;
+    return this;
+  }
+
+  public TaskBuilder setSummary(String summary) {
+    this.summary = summary;
+    return this;
+  }
+
+  public TaskBuilder setDueDate(LocalDate duedaDate) {
+    this.dueDate = duedaDate;
+    return this;
+  }
+
+  public TaskBuilder setMaxAttempts(int maxAttempts) {
+    this.maxAttempts = maxAttempts;
+    return this;
+  }
+
+  public TaskBuilder setMinScoreToPass(double minScoreToPass) {
+    this.minScoreToPass = minScoreToPass;
+    return this;
+  }
+
+  public TaskBuilder randomTitle() {
     this.title = randomGenerator.title();
     return this;
   }
 
-  public TaskBuilder generateRandomSummary() {
+  public TaskBuilder randomSummary() {
     this.summary = randomGenerator.summary();
     return this;
   }
 
-  public TaskBuilder generateRandomDueDate(LocalDate start, LocalDate end) {
+  public TaskBuilder randomDueDate(LocalDate start, LocalDate end) {
     this.dueDate = randomGenerator.dueDate(start, end);
     return this;
   }
 
-  public TaskBuilder generateRandomMaxAttempts(int limit) {
-    this.maxAttempt = randomGenerator.maxAttempt(limit);
+  public TaskBuilder randomMaxAttempts(int limit) {
+    this.maxAttempts = randomGenerator.maxAttempt(limit);
     return this;
   }
 
-  public TaskBuilder generateRandomMinimumScoreToPass() {
-    this.minimumScoreToPass = randomGenerator.minimumScoreToPass();
+  public TaskBuilder randomMinScoreToPass() {
+    this.minScoreToPass = randomGenerator.minimumScoreToPass();
     return this;
   }
 
   public Task build() {
-    return new Task(
-        id,
-        title,
-        summary,
-        dueDate,
-        maxAttempt,
-        activeAttempt,
-        minimumScoreToPass);
+    return new Task(courseId, academicTermYear, title, summary, dueDate, maxAttempts, minScoreToPass);
   }
 }

@@ -32,6 +32,13 @@ public abstract class Assignment extends DomainBaseModel {
 		setDueDate(dueDate);
 	}
 
+	public Assignment(String title, String summary, LocalDate dueDate) {
+		super();
+		setTitle(title);
+		setSummary(summary);
+		setDueDate(dueDate);
+	}
+
 	public abstract String getCode();
 
 	public void setTitle(String title) {
