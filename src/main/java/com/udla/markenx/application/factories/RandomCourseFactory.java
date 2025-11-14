@@ -42,7 +42,7 @@ public class RandomCourseFactory {
     course.addStudents(students);
 
     List<Task> tasks = taskFactory
-        .createRandomTasksUpTo(MAX_TASKS, endDate);
+        .createRandomTasksUpTo(course.getId(), academicTermYear, MAX_TASKS, endDate);
     course.addAssignments(tasks);
 
     return course;

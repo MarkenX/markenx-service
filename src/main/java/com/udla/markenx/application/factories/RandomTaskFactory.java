@@ -3,6 +3,7 @@ package com.udla.markenx.application.factories;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -25,12 +26,13 @@ public class RandomTaskFactory {
     this.numberGenerator = numberGenerator;
   }
 
-  public Task createRandomTask(LocalDate limitDueDate) {
+  public Task createRandomTask(UUID courseId, int academicTermYear, LocalDate limitDueDate) {
     int maxAttemptCount = numberGenerator.positiveIntegerBetween(1, MAX_ATTEMPTS);
     LocalDate tomorrow = LocalDate.now().plusDays(1);
     Task task = taskBuilder
         .reset()
-        .generateId()
+        .setCourseId(courseId)
+        .setAcademicTermYear(academicTermYear)
         .randomTitle()
         .randomSummary()
         .randomDueDate(tomorrow, limitDueDate)
@@ -40,20 +42,20 @@ public class RandomTaskFactory {
     return task;
   }
 
-  public List<Task> createRandomTasks(int count, LocalDate limitDueDate) {
+  public List<Task> createRandomTasks(UUID courseId, int academicTermYear, int count, LocalDate limitDueDate) {
     List<Task> tasks = new ArrayList<>();
     for (int i = 0; i < count; i++) {
-      tasks.add(createRandomTask(limitDueDate));
+      tasks.add(createRandomTask(courseId, academicTermYear, limitDueDate));
     }
     return tasks;
   }
 
-  public List<Task> createRandomTasksUpTo(int maxTasks, LocalDate endDate) {
+  public List<Task> createRandomTasksUpTo(UUID courseId, int academicTermYear, int maxTasks, LocalDate endDate) {
     if (maxTasks <= 0) {
       throw new IllegalArgumentException("El límite debe ser mayor que cero");
     }
 
     int count = numberGenerator.positiveIntegerBetween(1, maxTasks);
-    return createRandomTasks(count, endDate);
+    return createRandomTasks(courseId, academicTermYear, count, endDate);
   }
 }
