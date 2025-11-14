@@ -10,7 +10,14 @@ public class FakerRandomStudentDataGenerator
     extends FakerRandomPersonDataGenerator
     implements RandomStudentDataGeneratorPort {
 
+  private final Faker faker;
+
   public FakerRandomStudentDataGenerator(Faker faker) {
     super(faker);
+    this.faker = faker;
+  }
+
+  public String email() {
+    return faker.internet().emailAddress();
   }
 }
