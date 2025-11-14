@@ -28,7 +28,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "student_assignments")
 @EqualsAndHashCode(callSuper = true)
-public class StudentAssignmentJpaEntity extends AuditableEntity {
+public class StudentAssignmentJpaEntity extends AuditJpaEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "student_assignment_id")

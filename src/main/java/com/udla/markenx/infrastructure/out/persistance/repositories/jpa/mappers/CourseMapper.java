@@ -59,7 +59,7 @@ public class CourseMapper {
         .toList();
 
     // Create AuditInfo from entity audit fields
-    AuditInfo timestamps = new AuditInfo(entity.getCreatedBy(), entity.getCreatedAt(), entity.getLastModifiedAt());
+    AuditInfo timestamps = new AuditInfo(entity.getPerformedBy(), entity.getPerformedAt(), entity.getLastModifiedAt());
 
     // Extract academic period id if present
     Long academicPeriodId = null;

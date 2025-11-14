@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "assignments")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class AssignmentJpaEntity extends AuditableEntity {
+public class AssignmentJpaEntity extends AuditJpaEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "assignment_id")

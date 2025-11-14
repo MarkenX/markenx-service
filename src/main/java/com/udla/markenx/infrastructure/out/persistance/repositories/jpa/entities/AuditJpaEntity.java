@@ -1,0 +1,47 @@
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.udla.markenx.core.valueobjects.enums.AuditEventType;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "audit_events")
+@EntityListeners(AuditingEntityListener.class)
+public class AuditJpaEntity {
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "event_type", nullable = false)
+  private AuditEventType eventType;
+
+  @CreatedBy
+  @Column(name = "performed_by", updatable = false, nullable = false)
+  private String performedBy;
+
+  @CreatedDate
+  @Column(name = "performed_at", updatable = false, nullable = false)
+  private LocalDateTime performedAt;
+
+  @Column(name = "target_entity_id", nullable = false)
+  private UUID targetEntityId;
+
+  @Column(name = "target_entity_name", nullable = false)
+  private String targetEntityName;
+}

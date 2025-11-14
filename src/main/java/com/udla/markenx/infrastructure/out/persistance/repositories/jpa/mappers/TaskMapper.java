@@ -37,7 +37,7 @@ public final class TaskMapper {
 				entity.getActiveAttempt(),
 				entity.getMinimumScoreToPass(),
 				attempts,
-				entity.getCreatedAt(),
+				entity.getPerformedAt(),
 				entity.getLastModifiedAt());
 
 		return domain;
@@ -57,7 +57,7 @@ public final class TaskMapper {
 		entity.setMaxAttempts(domain.getMaxAttempts());
 		entity.setActiveAttempt(domain.getActiveAttempt());
 		entity.setMinimumScoreToPass(domain.getMinScoreToPass());
-		entity.setCreatedAt(domain.getCreatedDateTime());
+		entity.setPerformedAt(domain.getCreatedDateTime());
 		entity.setLastModifiedAt(domain.getUpdatedDateTime());
 
 		List<AttemptJpaEntity> attempts = domain.getAttempts().stream()

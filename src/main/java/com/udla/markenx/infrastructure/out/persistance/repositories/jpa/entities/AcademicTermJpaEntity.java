@@ -3,7 +3,6 @@ package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entitie
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
@@ -20,17 +19,11 @@ import lombok.Setter;
 @Table(name = "academic_terms", uniqueConstraints = {
     @UniqueConstraint(columnNames = { "academic_year", "term_number" })
 })
-public class AcademicTermJpaEntity extends AuditableEntity {
+public class AcademicTermJpaEntity extends BaseJpaEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "term_id")
   private Long id;
-
-  @Column(name = "public_id", nullable = false, unique = true, updatable = false)
-  private UUID publicId;
-
-  @Column(name = "code", nullable = false, unique = true)
-  private String code;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false)

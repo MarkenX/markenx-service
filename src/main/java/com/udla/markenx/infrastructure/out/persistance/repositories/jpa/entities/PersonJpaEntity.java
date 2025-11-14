@@ -29,7 +29,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "persons")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class PersonJpaEntity extends AuditableEntity {
+public class PersonJpaEntity extends AuditJpaEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "person_id")
