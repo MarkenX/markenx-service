@@ -14,7 +14,7 @@ import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicTermJpaRepository;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.AcademicPeriodMapper;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.AcademicTermMapper;
 
 import jakarta.persistence.PersistenceException;
 
@@ -29,9 +29,9 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
   @Override
   public AcademicTerm save(AcademicTerm newAcademicTerm) {
     try {
-      AcademicTermJpaEntity entity = AcademicPeriodMapper.toEntity(newAcademicTerm);
+      AcademicTermJpaEntity entity = AcademicTermMapper.toEntity(newAcademicTerm);
       AcademicTermJpaEntity saved = jpaRepository.save(entity);
-      return AcademicPeriodMapper.toDomain(saved);
+      return AcademicTermMapper.toDomain(saved);
     } catch (DataAccessException e) {
       throw new PersistenceException("Error al guardar el período académico", e);
     }
@@ -47,7 +47,7 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
       existingEntity.setEndOfTerm(existingAcademicTerm.getEndOfTerm());
 
       AcademicTermJpaEntity updated = jpaRepository.save(existingEntity);
-      return AcademicPeriodMapper.toDomain(updated);
+      return AcademicTermMapper.toDomain(updated);
     } catch (DataAccessException e) {
       throw new PersistenceException("Error al actualizar el período académico", e);
     }
@@ -56,13 +56,13 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
   @Override
   public Optional<AcademicTerm> findById(UUID id) {
     return jpaRepository.findById(id)
-        .map(AcademicPeriodMapper::toDomain);
+        .map(AcademicTermMapper::toDomain);
   }
 
   @Override
   public Page<AcademicTerm> findAll(Pageable pageable) {
     return jpaRepository.findAll(pageable)
-        .map(AcademicPeriodMapper::toDomain);
+        .map(AcademicTermMapper::toDomain);
   }
 
   @Override
@@ -83,7 +83,7 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
   @Override
   public List<AcademicTerm> findAllPeriods() {
     return jpaRepository.findAll().stream()
-        .map(AcademicPeriodMapper::toDomain)
+        .map(AcademicTermMapper::toDomain)
         .toList();
   }
 

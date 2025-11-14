@@ -13,9 +13,9 @@ import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingE
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 
-public final class AcademicPeriodMapper {
+public final class AcademicTermMapper {
 
-  private AcademicPeriodMapper() {
+  private AcademicTermMapper() {
     throw new UtilityClassInstantiationException(getClass());
   }
 
