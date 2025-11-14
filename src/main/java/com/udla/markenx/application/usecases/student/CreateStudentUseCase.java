@@ -9,28 +9,12 @@ import com.udla.markenx.application.ports.out.persistance.repositories.StudentRe
 import com.udla.markenx.core.exceptions.DomainException;
 import com.udla.markenx.core.models.Student;
 
-/**
- * Use case for creating a new student with dual persistence.
- * 
- * Creates a student in both the authentication system and local database.
- * If the local save fails, automatically rolls back the authentication user
- * creation.
- * 
- * @see StudentRepositoryPort for local persistence operations
- * @see AuthenticationServicePort for authentication system operations
- */
 @Service
 public class CreateStudentUseCase {
 
   private final StudentRepositoryPort studentRepository;
   private final AuthenticationServicePort authenticationService;
 
-  /**
-   * Creates a new instance with required dependencies.
-   * 
-   * @param studentRepository     port for student persistence operations
-   * @param authenticationService port for authentication system user management
-   */
   public CreateStudentUseCase(
       StudentRepositoryPort studentRepository,
       AuthenticationServicePort authenticationService) {
@@ -38,15 +22,6 @@ public class CreateStudentUseCase {
     this.authenticationService = authenticationService;
   }
 
-  /**
-   * Creates a new student in both authentication system and local database.
-   * 
-   * @param request DTO containing email, password, firstName, lastName
-   * @return the created student domain model with generated ID
-   * @throws StudentAlreadyExistsException if email already exists in
-   *                                       authentication system or database
-   * @throws StudentCreationException      if creation fails for any reason
-   */
   @Transactional
   public Student execute(CreateStudentRequestDTO request) {
     // Validate student doesn't exist in local database
@@ -73,6 +48,7 @@ public class CreateStudentUseCase {
 
       // Create student in local database
       Student student = new Student(
+          null,
           request.firstName(),
           request.lastName(),
           request.email());

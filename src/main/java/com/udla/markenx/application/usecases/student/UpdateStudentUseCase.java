@@ -29,7 +29,7 @@ public class UpdateStudentUseCase {
     }
 
     Student updatedStudent = new Student(
-        id,
+        null,
         request.firstName(),
         request.lastName(),
         request.email());
