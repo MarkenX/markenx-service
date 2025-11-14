@@ -63,6 +63,10 @@ public class Student extends Person {
 		return courseId;
 	}
 
+	public Long getSequence() {
+		return this.sequence;
+	}
+
 	public List<StudentTask> getAssignedTaks() {
 		return List.copyOf(this.assignedTaks);
 	}

@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CourseMapper {
 
+  private final StudentMapper studentMapper;
   private final EntityManager entityManager;
 
   public @NonNull Course toDomain(CourseJpaEntity entity) {
@@ -37,7 +38,7 @@ public class CourseMapper {
         .toList();
 
     List<Student> students = entity.getStudents().stream()
-        .map(StudentMapper::toDomain)
+        .map(studentMapper::toDomain)
         .toList();
 
     UUID academicTermId = null;
@@ -79,7 +80,7 @@ public class CourseMapper {
     entity.setUpdatedAt(domain.getUpdatedAtDateTime());
 
     List<StudentJpaEntity> students = domain.getStudents().stream()
-        .map(student -> StudentMapper.toEntity(student, null))
+        .map(student -> studentMapper.toEntity(student))
         .peek(e -> e.setCourse(entity))
         .toList();
     entity.setStudents(students);
