@@ -12,20 +12,21 @@ import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.TaskMapper;
+
+import lombok.RequiredArgsConstructor;
+
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	private final TaskJpaRepository jpaRepository;
-
-	public TaskRepositoryAdapter(TaskJpaRepository jpaRepository) {
-		this.jpaRepository = jpaRepository;
-	}
+	private final TaskMapper mapper;
 
 	@Override
 	public Page<Task> getTasksByCourseId(Long courseId, Pageable pageable) {
 		return jpaRepository.findByCourseId(courseId, pageable)
-				.map(TaskMapper::toDomain);
+				.map(mapper::toDomain);
 	}
 
 	@Override
@@ -33,13 +34,13 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 		return jpaRepository
 				.findByCourseIdAndDueDateBetween(courseId, rangeDate.getStartDate(),
 						rangeDate.getEndDate(), pageable)
-				.map(TaskMapper::toDomain);
+				.map(mapper::toDomain);
 	}
 
 	@Override
 	public Page<Task> getCourseTasksByStatus(Long courseId, AssignmentStatus status, Pageable pageable) {
 		return jpaRepository.findByCourseIdAndCurrentStatus(courseId, status, pageable)
-				.map(TaskMapper::toDomain);
+				.map(mapper::toDomain);
 	}
 
 	@Override
@@ -49,19 +50,21 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 				.findByCourseIdAndDueDateBetweenAndCurrentStatus(courseId,
 						rangeDate.getStartDate(), rangeDate.getEndDate(),
 						status, pageable)
-				.map(TaskMapper::toDomain);
+				.map(mapper::toDomain);
 	}
 
 	@Override
 	public Task createTask(Task task) {
-		TaskJpaEntity entity = jpaRepository.save(TaskMapper.toEntity(task));
-		return TaskMapper.toDomain(entity);
+		TaskJpaEntity entity = jpaRepository.save(mapper.toEntity(task));
+		return mapper.toDomain(entity);
 	}
 
 	@Override
 	public Task getTaskById(Long taskId) {
-		Optional<TaskJpaEntity> opt = jpaRepository.findById(taskId);
-		return opt.map(TaskMapper::toDomain)
-				.orElseThrow(() -> new IllegalArgumentException("Task not found with id: " + taskId));
+		// Optional<TaskJpaEntity> opt = jpaRepository.findById(taskId);
+		// return opt.map(mapper::toDomain)
+		// .orElseThrow(() -> new IllegalArgumentException("Task not found with id: " +
+		// taskId));
+		return null;
 	}
 }
