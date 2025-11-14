@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
-
 import jakarta.persistence.*;
 
 import lombok.Getter;
