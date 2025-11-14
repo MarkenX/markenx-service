@@ -48,7 +48,7 @@ public final class AttemptMapper {
     entity.setDate(domain.getSubmittedAt());
     entity.setDuration(domain.getTimeSpent());
     entity.setResult(domain.getResult());
-    entity.setCurrentStatus(domain.getStatus());
+    entity.setAssignmentStatus(domain.getStatus());
 
     return entity;
   }

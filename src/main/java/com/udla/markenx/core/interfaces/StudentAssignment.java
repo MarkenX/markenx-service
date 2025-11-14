@@ -10,21 +10,28 @@ import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 public abstract class StudentAssignment<A extends Assignment> extends DomainBaseModel {
   protected final Student student;
   protected final A assignment;
-  protected AssignmentStatus currentStatus;
+  protected AssignmentStatus assignmentStatus;
 
   public StudentAssignment(UUID id, String code, DomainBaseModelStatus status, A assignment,
       Student student, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
     super(id, code, status, createdBy, createdAt, updatedAt);
     this.assignment = assignment;
     this.student = student;
-    this.currentStatus = AssignmentStatus.NOT_STARTED;
+    this.assignmentStatus = AssignmentStatus.NOT_STARTED;
   }
 
   public StudentAssignment(A assignment, Student student, String createdBy) {
     super(createdBy);
     this.assignment = assignment;
     this.student = student;
-    this.currentStatus = AssignmentStatus.NOT_STARTED;
+    this.assignmentStatus = AssignmentStatus.NOT_STARTED;
+  }
+
+  public StudentAssignment(A assignment, Student student) {
+    super();
+    this.assignment = assignment;
+    this.student = student;
+    this.assignmentStatus = AssignmentStatus.NOT_STARTED;
   }
 
   public Student getStudent() {
@@ -35,12 +42,12 @@ public abstract class StudentAssignment<A extends Assignment> extends DomainBase
     return assignment;
   }
 
-  public AssignmentStatus getCurrentStatus() {
-    return currentStatus;
+  public AssignmentStatus getAssignmentStatus() {
+    return assignmentStatus;
   }
 
-  public void setCurrentStatus(AssignmentStatus currentStatus) {
-    this.currentStatus = currentStatus;
+  public void setAssignmentStatus(AssignmentStatus currentStatus) {
+    this.assignmentStatus = currentStatus;
   }
 
   public abstract void updateStatus();

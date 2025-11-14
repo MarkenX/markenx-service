@@ -28,7 +28,7 @@ public class RandomStudentTaskFactory {
     return builder
         .reset()
         .setTask(task)
-        .setStudentId(studentId)
+        .setStudent(studentId)
         .generateRandomActiveAttempt()
         .build();
   }

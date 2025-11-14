@@ -52,7 +52,7 @@ public final class TaskMapper {
 		entity.setId(domain.getId());
 		entity.setTitle(domain.getTitle());
 		entity.setSummary(domain.getSummary());
-		entity.setCurrentStatus(domain.getCurrentStatus());
+		entity.setAssignmentStatus(domain.getStatus());
 		entity.setDueDate(domain.getDueDate());
 		entity.setMaxAttempts(domain.getMaxAttempts());
 		entity.setActiveAttempt(domain.getActiveAttempt());

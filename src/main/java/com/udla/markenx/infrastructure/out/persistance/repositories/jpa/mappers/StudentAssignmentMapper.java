@@ -52,7 +52,7 @@ public final class StudentAssignmentMapper {
     entity.setAssignment(assignmentEntity);
     entity.setStudent(studentEntity);
     entity.setActiveAttempt(domain.getActiveAttempt());
-    entity.setCurrentStatus(domain.getCurrentStatus());
+    entity.setCurrentStatus(domain.getAssignmentStatus());
     return entity;
   }
 }

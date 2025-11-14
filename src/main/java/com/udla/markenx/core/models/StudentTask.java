@@ -31,6 +31,12 @@ public class StudentTask extends StudentAssignment<Task> {
     this.code = generateCode();
   }
 
+  public StudentTask(Student student, Task task) {
+    super(task, student);
+    this.attempts = new ArrayList<>();
+    this.code = generateCode();
+  }
+
   public String getCode() {
     return this.code;
   }
@@ -93,21 +99,21 @@ public class StudentTask extends StudentAssignment<Task> {
   @Override
   public void updateStatus() {
     if (assignment.isOverdue()) {
-      this.currentStatus = AssignmentStatus.OUTDATED;
+      this.assignmentStatus = AssignmentStatus.OUTDATED;
       return;
     }
     if (isNotStarted()) {
-      this.currentStatus = AssignmentStatus.NOT_STARTED;
+      this.assignmentStatus = AssignmentStatus.NOT_STARTED;
       return;
     }
     if (didAnyAttemptPass()) {
-      this.currentStatus = AssignmentStatus.COMPLETED;
+      this.assignmentStatus = AssignmentStatus.COMPLETED;
       return;
     } else if (isOverMaxAttempts()) {
-      this.currentStatus = AssignmentStatus.FAILED;
+      this.assignmentStatus = AssignmentStatus.FAILED;
       return;
     }
-    this.currentStatus = AssignmentStatus.IN_PROGRESS;
+    this.assignmentStatus = AssignmentStatus.IN_PROGRESS;
   }
 
   @Override
