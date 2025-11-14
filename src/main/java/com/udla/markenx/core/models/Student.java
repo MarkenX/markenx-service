@@ -22,7 +22,7 @@ public class Student extends Person {
 	private final String email;
 	private final List<StudentTask> assignedTaks;
 
-	private Student(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, String firstName,
+	public Student(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, String firstName,
 			String lastName, String email, List<StudentTask> assignedTasks, String createdBy, LocalDateTime createdAt,
 			LocalDateTime updatedAt) {
 		super(id, code, status, firstName, lastName, createdBy, createdAt, updatedAt);

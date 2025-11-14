@@ -1,5 +1,8 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import lombok.EqualsAndHashCode;
@@ -28,12 +31,6 @@ public class StudentJpaEntity extends PersonJpaEntity {
 	@JoinColumn(name = "course_id")
 	private CourseJpaEntity course;
 
-	public StudentJpaEntity(String firstName, String lastName) {
-		super(firstName, lastName);
-	}
-
-	public StudentJpaEntity(String firstName, String lastName, String email) {
-		super(firstName, lastName);
-		this.email = email;
-	}
+	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<StudentTaskJpaEntity> tasks = new ArrayList<>();
 }
