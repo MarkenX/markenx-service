@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
 
 import java.util.Optional;
+import java.util.UUID;
 
-public interface StudentJpaRepository extends JpaRepository<StudentJpaEntity, Long> {
+public interface StudentJpaRepository extends JpaRepository<StudentJpaEntity, UUID> {
 
   Optional<StudentJpaEntity> findByEmail(String email);
 
