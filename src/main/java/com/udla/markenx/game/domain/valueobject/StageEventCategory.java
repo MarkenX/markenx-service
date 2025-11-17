@@ -1,6 +1,6 @@
 package com.udla.markenx.game.domain.valueobject;
 
-public enum EnviromentCategory {
+public enum StageEventCategory {
   DEMOGRAPHIC("Demográfico"),
   ECONOMIC("Económico"),
   POLITICAL("Político"),
@@ -10,7 +10,7 @@ public enum EnviromentCategory {
 
   private final String label;
 
-  EnviromentCategory(String label) {
+  StageEventCategory(String label) {
     this.label = label;
   }
 
