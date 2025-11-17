@@ -5,8 +5,8 @@ import java.util.UUID;
 import com.udla.markenx.game.domain.valueobject.ActionCategory;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 
-public class Action {
-  private static final Class<Action> CLAZZ = Action.class;
+public class PlayerAction {
+  private static final Class<PlayerAction> CLAZZ = PlayerAction.class;
 
   private final UUID id;
   private final ActionCategory category;
@@ -14,7 +14,7 @@ public class Action {
   private final String description;
   private final Double cost;
 
-  public Action(UUID id, ActionCategory category, String name, String description, Double cost) {
+  public PlayerAction(UUID id, ActionCategory category, String name, String description, Double cost) {
     this.id = requireId(id);
     this.category = category;
     this.name = name;
