@@ -20,11 +20,7 @@ public final class AcademicTermMapper {
 
   private final CourseMapper courseMapper;
 
-  public @NonNull AcademicTerm toDomain(AcademicTermJpaEntity entity) {
-    if (entity == null) {
-      // throw new DomainMappingException("AcademicTermJpaEntity cannot be null.");
-    }
-
+  public @NonNull AcademicTerm toDomain(@NonNull AcademicTermJpaEntity entity) {
     List<CourseJpaEntity> courseEntities = entity.getCourses() != null ? entity.getCourses() : List.of();
 
     List<Course> courses = courseEntities.stream()
@@ -45,11 +41,7 @@ public final class AcademicTermMapper {
         entity.getUpdatedAt());
   }
 
-  public @NonNull AcademicTermJpaEntity toEntity(AcademicTerm domain) {
-    if (domain == null) {
-      // throw new EntityMappingException("AcademicTerm cannot be null.");
-    }
-
+  public @NonNull AcademicTermJpaEntity toEntity(@NonNull AcademicTerm domain) {
     AcademicTermJpaEntity entity = new AcademicTermJpaEntity();
 
     // ----- External Reference -----
