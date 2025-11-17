@@ -312,12 +312,14 @@ COMMIT;
 ### ¿Qué necesitan cambiar los desarrolladores?
 
 **1. Importaciones:**
+
 ```java
 // Antes
+
 import com.udla.markenx.application.services.BulkStudentImportService;
 
 // Después
-import com.udla.markenx.application.services.StudentService;
+
 ```
 
 **2. Inyección de Dependencias:**
