@@ -9,6 +9,7 @@ import com.udla.markenx.core.models.StudentTask;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.MappingException;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.StudentAssignmentJpaEntity;
 
@@ -32,13 +33,14 @@ public final class StudentAssignmentMapper {
     }
   }
 
-  public @NonNull <D extends Assignment> StudentAssignmentJpaEntity toEntity(StudentAssignment<D> domain) {
+  public @NonNull <D extends Assignment> StudentAssignmentJpaEntity toEntity(StudentAssignment<D> domain,
+      CourseJpaEntity parentCourse) {
     if (domain == null) {
       throw new EntityMappingException();
     }
 
     if (domain instanceof StudentTask studentTask) {
-      return studentTaskMapper.toEntity(studentTask);
+      return studentTaskMapper.toEntity(studentTask, parentCourse);
     } else {
       throw new MappingException("Tipo de asignación no reconocido: " + domain.getClass());
     }

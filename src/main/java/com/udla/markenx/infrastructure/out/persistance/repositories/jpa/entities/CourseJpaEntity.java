@@ -26,7 +26,8 @@ import lombok.Setter;
 @Table(name = "courses")
 @PrimaryKeyJoinColumn(name = "id")
 public class CourseJpaEntity extends BaseJpaEntity {
-  @Column(name = "name")
+
+  @Column(name = "name", nullable = false)
   private String name;
 
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)

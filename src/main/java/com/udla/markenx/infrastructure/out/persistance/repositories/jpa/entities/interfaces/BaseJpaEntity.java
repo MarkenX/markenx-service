@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -55,7 +56,7 @@ public abstract class BaseJpaEntity {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "external_reference_id")
   private ExternalReferenceJpaEntity externalReference;
 }

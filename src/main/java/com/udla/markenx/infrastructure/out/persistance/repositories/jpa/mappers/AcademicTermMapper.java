@@ -1,5 +1,6 @@
 package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.lang.NonNull;
@@ -11,6 +12,7 @@ import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingE
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,18 +24,19 @@ public final class AcademicTermMapper {
 
   public @NonNull AcademicTerm toDomain(AcademicTermJpaEntity entity) {
     if (entity == null) {
-      throw new DomainMappingException();
+      // throw new DomainMappingException("AcademicTermJpaEntity cannot be null.");
     }
 
-    List<Course> courses = entity.getCourses() != null
-        ? entity.getCourses().stream()
-            .map(courseMapper::toDomain)
-            .toList()
-        : List.of();
+    List<CourseJpaEntity> courseEntities = entity.getCourses() != null ? entity.getCourses() : List.of();
 
-    AcademicTerm domain = new AcademicTerm(
-        entity.getExternalReference().getPublicId(),
-        entity.getExternalReference().getCode(),
+    List<Course> courses = courseEntities.stream()
+        .map(courseMapper::toDomain)
+        .toList();
+
+    return new AcademicTerm(
+        entity.getExternalReference() != null ? entity.getExternalReference().getPublicId()
+            : java.util.UUID.randomUUID(),
+        entity.getExternalReference() != null ? entity.getExternalReference().getCode() : "",
         entity.getStatus(),
         entity.getStartOfTerm(),
         entity.getEndOfTerm(),
@@ -42,19 +45,23 @@ public final class AcademicTermMapper {
         entity.getCreatedBy(),
         entity.getCreatedAt(),
         entity.getUpdatedAt());
-
-    return domain;
   }
 
   public @NonNull AcademicTermJpaEntity toEntity(AcademicTerm domain) {
     if (domain == null) {
-      throw new EntityMappingException();
+      // throw new EntityMappingException("AcademicTerm cannot be null.");
     }
 
     AcademicTermJpaEntity entity = new AcademicTermJpaEntity();
 
-    entity.getExternalReference().setPublicId(domain.getId());
-    entity.getExternalReference().setCode(domain.getCode());
+    // ----- External Reference -----
+    ExternalReferenceJpaEntity ref = new ExternalReferenceJpaEntity();
+    ref.setPublicId(domain.getId());
+    ref.setCode(domain.getCode());
+    ref.setEntityType("ACADEMIC_TERM");
+    entity.setExternalReference(ref);
+
+    // ----- Simple Fields -----
     entity.setStatus(domain.getStatus());
     entity.setStartOfTerm(domain.getStartOfTerm());
     entity.setEndOfTerm(domain.getEndOfTerm());
@@ -64,12 +71,28 @@ public final class AcademicTermMapper {
     entity.setCreatedAt(domain.getCreatedAtDateTime());
     entity.setUpdatedAt(domain.getUpdatedAtDateTime());
 
-    if (domain.getAssignedCourses() != null) {
-      List<CourseJpaEntity> courses = domain.getAssignedCourses().stream()
-          .map(courseMapper::toEntity)
-          .peek(e -> e.setAcademicTerm(entity))
-          .toList();
+    // ----- Courses (children) -----
+    List<CourseJpaEntity> courses = entity.getCourses();
+    if (courses == null) {
+      courses = new ArrayList<>();
       entity.setCourses(courses);
+    } else {
+      courses.clear();
+    }
+
+    if (domain.getAssignedCourses() != null) {
+      for (Course courseDomain : domain.getAssignedCourses()) {
+
+        if (courseDomain == null)
+          continue; // defensivo
+
+        CourseJpaEntity courseEntity = courseMapper.toEntity(courseDomain);
+
+        // maintain bidirectional relationship
+        courseEntity.setAcademicTerm(entity);
+
+        courses.add(courseEntity);
+      }
     }
 
     return entity;

@@ -9,6 +9,7 @@ import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -58,13 +59,21 @@ public final class AttemptMapper {
     }
 
     AttemptJpaEntity entity = new AttemptJpaEntity();
-    entity.getExternalReference().setPublicId(domain.getId());
-    entity.getExternalReference().setCode(domain.getCode());
+
+    ExternalReferenceJpaEntity ref = new ExternalReferenceJpaEntity();
+    ref.setPublicId(domain.getId());
+    ref.setCode(domain.getCode());
+    ref.setEntityType("ATTEMPT");
+
+    entity.setExternalReference(ref);
     entity.setStatus(domain.getStatus());
     entity.setScore(domain.getScore());
     entity.setDuration(domain.getTimeSpent());
     entity.setResult(domain.getResult());
     entity.setCurrentStatus(domain.getAttemptStatus());
+    entity.setCreatedBy(domain.getCreatedBy());
+    entity.setCreatedAt(domain.getCreatedAtDateTime());
+    entity.setUpdatedAt(domain.getUpdatedAtDateTime());
 
     return entity;
   }

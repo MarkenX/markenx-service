@@ -12,6 +12,8 @@ import com.udla.markenx.core.models.Task;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 
@@ -53,16 +55,35 @@ public class StudentTaskMapper {
     return studentTask;
   }
 
-  public @NonNull StudentTaskJpaEntity toEntity(StudentTask domain) {
+  public @NonNull StudentTaskJpaEntity toEntity(StudentTask domain, CourseJpaEntity parentCourse) {
     if (domain == null) {
       throw new EntityMappingException();
     }
 
-    TaskJpaEntity task = taskMapper.toEntity(domain.getAssignment());
+    TaskJpaEntity task = null;
+    if (parentCourse != null && parentCourse.getAssignments() != null) {
+      task = parentCourse.getAssignments().stream()
+          .filter(TaskJpaEntity.class::isInstance)
+          .map(TaskJpaEntity.class::cast)
+          .filter(t -> t.getExternalReference() != null
+              && t.getExternalReference().getPublicId() != null
+              && t.getExternalReference().getPublicId().equals(domain.getAssignment().getId()))
+          .findFirst()
+          .orElse(null);
+    }
+    if (task == null) {
+      task = taskMapper.toEntity(domain.getAssignment(), parentCourse);
+    }
 
     StudentTaskJpaEntity entity = new StudentTaskJpaEntity();
-    entity.getExternalReference().setPublicId(domain.getId());
-    entity.getExternalReference().setCode(domain.getCode());
+
+    ExternalReferenceJpaEntity ref = new ExternalReferenceJpaEntity();
+    ref.setPublicId(domain.getId());
+    ref.setCode(domain.getCode());
+    ref.setEntityType("STUDENT_TASK");
+
+    entity.setExternalReference(ref);
+    entity.setStatus(domain.getStatus());
     entity.setAssignment(task);
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());

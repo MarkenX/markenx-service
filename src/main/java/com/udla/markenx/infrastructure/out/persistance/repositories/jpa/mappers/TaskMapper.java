@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import com.udla.markenx.core.models.Task;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -24,8 +26,12 @@ public final class TaskMapper {
 		UUID courseId = null;
 		int academicTermYear = -1;
 		if (entity.getCourse() != null) {
-			courseId = entity.getCourse().getExternalReference().getPublicId();
-			academicTermYear = entity.getCourse().getAcademicTerm().getAcademicYear();
+			if (entity.getCourse().getExternalReference() != null) {
+				courseId = entity.getCourse().getExternalReference().getPublicId();
+			}
+			if (entity.getCourse().getAcademicTerm() != null) {
+				academicTermYear = entity.getCourse().getAcademicTerm().getAcademicYear();
+			}
 		}
 
 		Task domain = new Task(
@@ -47,14 +53,19 @@ public final class TaskMapper {
 		return domain;
 	}
 
-	public @NonNull TaskJpaEntity toEntity(Task domain) {
+	public @NonNull TaskJpaEntity toEntity(Task domain, CourseJpaEntity parentCourse) {
 		if (domain == null) {
 			throw new EntityMappingException();
 		}
 
 		TaskJpaEntity entity = new TaskJpaEntity();
-		entity.getExternalReference().setPublicId(domain.getId());
-		entity.getExternalReference().setCode(domain.getCode());
+
+		ExternalReferenceJpaEntity ref = new ExternalReferenceJpaEntity();
+		ref.setPublicId(domain.getId());
+		ref.setCode(domain.getCode());
+		ref.setEntityType("TASK");
+
+		entity.setExternalReference(ref);
 		entity.setStatus(domain.getStatus());
 		entity.setTitle(domain.getTitle());
 		entity.setSummary(domain.getSummary());
@@ -64,6 +75,7 @@ public final class TaskMapper {
 		entity.setCreatedBy(domain.getCreatedBy());
 		entity.setCreatedAt(domain.getCreatedAtDateTime());
 		entity.setUpdatedAt(domain.getUpdatedAtDateTime());
+		entity.setCourse(parentCourse);
 
 		return entity;
 	}

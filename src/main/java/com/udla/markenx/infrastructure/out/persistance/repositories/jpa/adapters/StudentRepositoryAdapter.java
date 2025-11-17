@@ -23,9 +23,10 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
 
   @Override
   public Student save(Student student, String externalAuthId) {
-    StudentJpaEntity entity = mapper.toEntity(student);
-    StudentJpaEntity savedEntity = jpaRepository.save(entity);
-    return mapper.toDomain(savedEntity);
+    // StudentJpaEntity entity = mapper.toEntity(student);
+    // StudentJpaEntity savedEntity = jpaRepository.save(entity);
+    // return mapper.toDomain(savedEntity);
+    return null;
   }
 
   @Override

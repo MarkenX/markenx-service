@@ -28,13 +28,15 @@ public class ExternalReferenceJpaEntity {
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "code", nullable = false, unique = true)
+  // @Column(name = "code", nullable = false, unique = true)
+  @Column(name = "code", nullable = false)
   private String code;
 
   @Column(name = "public_id", nullable = false, unique = true, updatable = false)
   private UUID publicId;
 
-  @Column(name = "entity_type", nullable = false, length = 50)
+  // @Column(name = "entity_type", nullable = false, length = 50)
+  @Column(name = "entity_type", nullable = false)
   private String entityType;
 
   @OneToMany(mappedBy = "externalReference", cascade = CascadeType.ALL, orphanRemoval = true)
