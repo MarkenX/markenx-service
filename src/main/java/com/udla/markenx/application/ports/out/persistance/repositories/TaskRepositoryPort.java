@@ -13,10 +13,12 @@ public interface TaskRepositoryPort {
 
 	Page<Task> getCourseTasksByDueDate(Long courseId, RangeDate rangeDate, Pageable pageable);
 
-	Page<Task> getCourseTasksByStatus(Long courseId, AssignmentStatus status, Pageable pageable);
+	// Page<Task> getCourseTasksByStatus(Long courseId, AssignmentStatus status,
+	// Pageable pageable);
 
-	Page<Task> getCourseTasksByDueDateAndStatus(Long courseId, RangeDate rangeDate, AssignmentStatus status,
-			Pageable pageable);
+	// Page<Task> getCourseTasksByDueDateAndStatus(Long courseId, RangeDate
+	// rangeDate, AssignmentStatus status,
+	// Pageable pageable);
 
 	Task createTask(Task task);
 

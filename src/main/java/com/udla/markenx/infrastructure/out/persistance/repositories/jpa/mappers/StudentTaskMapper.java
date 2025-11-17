@@ -84,6 +84,7 @@ public class StudentTaskMapper {
 
     entity.setExternalReference(ref);
     entity.setStatus(domain.getStatus());
+    entity.setCurrentStatus(domain.getAssignmentStatus());
     entity.setAssignment(task);
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());

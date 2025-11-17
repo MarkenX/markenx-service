@@ -57,24 +57,26 @@ public class CourseService {
   public Page<TaskResponseDTO> getCourseTasks(Long courseId, LocalDate startDate, LocalDate endDate,
       AssignmentStatus status, int page, int size) {
 
-    Pageable pageable = PageRequest.of(page, size);
+    // Pageable pageable = PageRequest.of(page, size);
 
-    if (startDate != null || endDate != null) {
-      RangeDate rangeDate = new RangeDate(startDate, endDate);
-      if (status != null) {
-        return taskRepository.getCourseTasksByDueDateAndStatus(courseId, rangeDate, status, pageable)
-            .map(TaskMapper::toResponseDto);
-      } else {
-        return taskRepository.getCourseTasksByDueDate(courseId, rangeDate, pageable)
-            .map(TaskMapper::toResponseDto);
-      }
-    } else if (status != null) {
-      return taskRepository.getCourseTasksByStatus(courseId, status, pageable)
-          .map(TaskMapper::toResponseDto);
-    } else {
-      return taskRepository.getTasksByCourseId(courseId, pageable)
-          .map(TaskMapper::toResponseDto);
-    }
+    // if (startDate != null || endDate != null) {
+    // RangeDate rangeDate = new RangeDate(startDate, endDate);
+    // if (status != null) {
+    // return taskRepository.getCourseTasksByDueDateAndStatus(courseId, rangeDate,
+    // status, pageable)
+    // .map(TaskMapper::toResponseDto);
+    // } else {
+    // return taskRepository.getCourseTasksByDueDate(courseId, rangeDate, pageable)
+    // .map(TaskMapper::toResponseDto);
+    // }
+    // } else if (status != null) {
+    // return taskRepository.getCourseTasksByStatus(courseId, status, pageable)
+    // .map(TaskMapper::toResponseDto);
+    // } else {
+    // return taskRepository.getTasksByCourseId(courseId, pageable)
+    // .map(TaskMapper::toResponseDto);
+    // }
+    return null;
   }
 
   // ---- New course management methods ----

@@ -40,10 +40,6 @@ public class AssignmentJpaEntity extends BaseJpaEntity {
 	@Column(name = "assignment_summary")
 	private String summary;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "assignment_current_status")
-	private AssignmentStatus currentStatus;
-
 	@Column(name = "assignment_duedate")
 	@Temporal(TemporalType.DATE)
 	private LocalDate dueDate;

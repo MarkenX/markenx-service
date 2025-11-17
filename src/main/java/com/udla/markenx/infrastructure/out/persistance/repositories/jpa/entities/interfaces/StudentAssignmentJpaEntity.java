@@ -5,6 +5,8 @@ import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
@@ -34,6 +36,7 @@ public abstract class StudentAssignmentJpaEntity extends BaseJpaEntity {
   @JoinColumn(name = "student_id")
   private StudentJpaEntity student;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "current_status")
   private AssignmentStatus currentStatus;
 }
