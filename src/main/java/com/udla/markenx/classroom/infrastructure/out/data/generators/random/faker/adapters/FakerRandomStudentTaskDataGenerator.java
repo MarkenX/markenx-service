@@ -3,7 +3,7 @@ package com.udla.markenx.classroom.infrastructure.out.data.generators.random.fak
 import com.github.javafaker.Faker;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomStudentTaskDataGeneratorPort;
-import com.udla.markenx.classroom.core.valueobjects.enums.AssignmentStatus;
+import com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus;
 
 public class FakerRandomStudentTaskDataGenerator implements RandomStudentTaskDataGeneratorPort {
 

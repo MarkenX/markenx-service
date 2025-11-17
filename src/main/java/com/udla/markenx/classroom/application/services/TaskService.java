@@ -1,12 +1,12 @@
 package com.udla.markenx.classroom.application.services;
 
-import com.udla.markenx.classroom.core.models.Task;
+import com.udla.markenx.classroom.domain.models.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AttemptRepositoryPort;
-import com.udla.markenx.classroom.core.interfaces.StudentAssignment;
-import com.udla.markenx.classroom.core.models.Attempt;
+import com.udla.markenx.classroom.domain.interfaces.StudentAssignment;
+import com.udla.markenx.classroom.domain.models.Attempt;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentAssignmentRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
 

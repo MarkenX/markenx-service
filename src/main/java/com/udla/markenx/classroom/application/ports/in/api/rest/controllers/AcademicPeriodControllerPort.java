@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.udla.markenx.classroom.application.dtos.requests.CreateAcademicPeriodRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateAcademicPeriodRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.AcademicPeriodResponseDTO;
-import com.udla.markenx.classroom.core.models.Course;
+import com.udla.markenx.classroom.domain.models.Course;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

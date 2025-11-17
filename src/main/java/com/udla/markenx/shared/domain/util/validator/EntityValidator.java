@@ -1,8 +1,8 @@
 package com.udla.markenx.shared.domain.util.validator;
 
-import com.udla.markenx.classroom.core.exceptions.InvalidEntityException;
-import com.udla.markenx.classroom.core.exceptions.NullFieldException;
-import com.udla.markenx.classroom.core.exceptions.UtilityClassInstantiationException;
+import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.classroom.domain.exceptions.NullFieldException;
+import com.udla.markenx.classroom.domain.exceptions.UtilityClassInstantiationException;
 
 public final class EntityValidator {
 

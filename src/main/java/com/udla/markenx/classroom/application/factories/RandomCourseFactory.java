@@ -7,9 +7,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.udla.markenx.classroom.application.builders.CourseBuilder;
-import com.udla.markenx.classroom.core.models.Course;
-import com.udla.markenx.classroom.core.models.Student;
-import com.udla.markenx.classroom.core.models.Task;
+import com.udla.markenx.classroom.domain.models.Course;
+import com.udla.markenx.classroom.domain.models.Student;
+import com.udla.markenx.classroom.domain.models.Task;
 
 import lombok.RequiredArgsConstructor;
 

@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.classroom.application.ports.out.auth.AuthenticationServicePort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
-import com.udla.markenx.classroom.core.exceptions.DomainException;
+import com.udla.markenx.classroom.domain.exceptions.DomainException;
 
 /**
  * Use case for deleting a student from both database and authentication system.

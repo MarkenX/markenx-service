@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 
 import com.udla.markenx.classroom.application.builders.AttemptBuilder;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
-import com.udla.markenx.classroom.core.models.Attempt;
-import com.udla.markenx.classroom.core.models.StudentTask;
-import com.udla.markenx.classroom.core.valueobjects.enums.AttemptStatus;
+import com.udla.markenx.classroom.domain.models.Attempt;
+import com.udla.markenx.classroom.domain.models.StudentTask;
+import com.udla.markenx.classroom.domain.valueobjects.enums.AttemptStatus;
 
 @Component
 public class RandomAttemptFactory {

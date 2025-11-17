@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
-import com.udla.markenx.classroom.core.exceptions.InvalidEntityException;
-import com.udla.markenx.classroom.core.models.AcademicTerm;
-import com.udla.markenx.classroom.core.services.AcademicPeriodDomainService;
+import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.services.AcademicPeriodDomainService;
 
 @Service
 public class AcademicTermService {

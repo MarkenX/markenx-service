@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.core.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.application.factories.RandomAcademicPeriodFactory;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
 

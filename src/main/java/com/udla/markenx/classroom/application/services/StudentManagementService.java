@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateStudentRequestDTO;
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.models.Student;
 
 /**
  * Application service (facade) for student management operations.

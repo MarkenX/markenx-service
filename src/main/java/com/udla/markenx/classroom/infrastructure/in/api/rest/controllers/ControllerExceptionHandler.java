@@ -15,12 +15,12 @@ import jakarta.validation.ConstraintViolationException;
 
 import com.udla.markenx.classroom.application.dtos.responses.ErrorResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.ControllerExceptionHandlerPort;
-import com.udla.markenx.classroom.core.exceptions.BulkImportException;
-import com.udla.markenx.classroom.core.exceptions.DuplicateResourceException;
-import com.udla.markenx.classroom.core.exceptions.InvalidEmailException;
-import com.udla.markenx.classroom.core.exceptions.InvalidEntityException;
-import com.udla.markenx.classroom.core.exceptions.PeriodHasCoursesException;
-import com.udla.markenx.classroom.core.exceptions.ResourceNotFoundException;
+import com.udla.markenx.classroom.domain.exceptions.BulkImportException;
+import com.udla.markenx.classroom.domain.exceptions.DuplicateResourceException;
+import com.udla.markenx.classroom.domain.exceptions.InvalidEmailException;
+import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.classroom.domain.exceptions.PeriodHasCoursesException;
+import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler implements ControllerExceptionHandlerPort {

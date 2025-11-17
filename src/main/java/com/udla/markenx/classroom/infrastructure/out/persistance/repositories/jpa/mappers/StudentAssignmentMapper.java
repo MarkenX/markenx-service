@@ -3,9 +3,9 @@ package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.j
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.core.interfaces.Assignment;
-import com.udla.markenx.classroom.core.interfaces.StudentAssignment;
-import com.udla.markenx.classroom.core.models.StudentTask;
+import com.udla.markenx.classroom.domain.interfaces.Assignment;
+import com.udla.markenx.classroom.domain.interfaces.StudentAssignment;
+import com.udla.markenx.classroom.domain.models.StudentTask;
 import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.MappingException;

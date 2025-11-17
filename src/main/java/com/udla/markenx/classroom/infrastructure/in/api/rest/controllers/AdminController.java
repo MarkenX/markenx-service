@@ -19,7 +19,7 @@ import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.AdminControllerPort;
 import com.udla.markenx.classroom.application.services.StudentManagementService;
 import com.udla.markenx.classroom.application.services.StudentService;
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.models.Student;
 
 @RestController
 @RequestMapping("/api/markenx/admin")

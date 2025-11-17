@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.models.Student;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.StudentMapper;
 

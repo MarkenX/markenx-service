@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.udla.markenx.classroom.application.builders.StudentTaskBuilder;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
-import com.udla.markenx.classroom.core.models.Attempt;
-import com.udla.markenx.classroom.core.models.Student;
-import com.udla.markenx.classroom.core.models.StudentTask;
-import com.udla.markenx.classroom.core.models.Task;
+import com.udla.markenx.classroom.domain.models.Attempt;
+import com.udla.markenx.classroom.domain.models.Student;
+import com.udla.markenx.classroom.domain.models.StudentTask;
+import com.udla.markenx.classroom.domain.models.Task;
 
 @Component
 public class RandomStudentTaskFactory {

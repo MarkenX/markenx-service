@@ -2,8 +2,8 @@ package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.j
 
 import java.time.Duration;
 
-import com.udla.markenx.classroom.core.valueobjects.enums.AttemptResult;
-import com.udla.markenx.classroom.core.valueobjects.enums.AttemptStatus;
+import com.udla.markenx.classroom.domain.valueobjects.enums.AttemptResult;
+import com.udla.markenx.classroom.domain.valueobjects.enums.AttemptStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -17,7 +17,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.udla.markenx.classroom.core.valueobjects.enums.AuditEventType;
+import com.udla.markenx.classroom.domain.valueobjects.enums.AuditEventType;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

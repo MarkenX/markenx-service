@@ -3,8 +3,8 @@ package com.udla.markenx.classroom.application.usecases.student;
 import org.springframework.stereotype.Service;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
-import com.udla.markenx.classroom.core.exceptions.DomainException;
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.exceptions.DomainException;
+import com.udla.markenx.classroom.domain.models.Student;
 
 /**
  * Use case for retrieving a single student by ID.

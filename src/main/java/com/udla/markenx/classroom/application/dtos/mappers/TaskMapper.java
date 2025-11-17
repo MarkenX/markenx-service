@@ -1,7 +1,7 @@
 package com.udla.markenx.classroom.application.dtos.mappers;
 
 import com.udla.markenx.classroom.application.dtos.responses.TaskResponseDTO;
-import com.udla.markenx.classroom.core.models.Task;
+import com.udla.markenx.classroom.domain.models.Task;
 
 public class TaskMapper {
 	public static TaskResponseDTO toResponseDto(Task domain) {

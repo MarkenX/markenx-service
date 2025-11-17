@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.udla.markenx.classroom.application.builders.StudentBuilder;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.models.Student;
 
 import lombok.RequiredArgsConstructor;
 

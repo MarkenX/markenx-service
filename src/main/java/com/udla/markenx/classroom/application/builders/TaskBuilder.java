@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.core.models.Task;
+import com.udla.markenx.classroom.domain.models.Task;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomAssignmentDataGeneratorPort;
 
 @Component

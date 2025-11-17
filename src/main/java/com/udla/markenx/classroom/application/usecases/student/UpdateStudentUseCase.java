@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.classroom.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
-import com.udla.markenx.classroom.core.exceptions.DomainException;
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.exceptions.DomainException;
+import com.udla.markenx.classroom.domain.models.Student;
 
 @Service
 public class UpdateStudentUseCase {

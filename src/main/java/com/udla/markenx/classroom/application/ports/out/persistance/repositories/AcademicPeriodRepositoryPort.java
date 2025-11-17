@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.udla.markenx.classroom.core.models.AcademicTerm;
-import com.udla.markenx.classroom.core.models.Course;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.models.Course;
 
 /**
  * Repository port for Academic Period entity operations.

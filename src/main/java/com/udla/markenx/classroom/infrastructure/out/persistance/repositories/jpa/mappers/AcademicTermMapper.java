@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.core.models.AcademicTerm;
-import com.udla.markenx.classroom.core.models.Course;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;

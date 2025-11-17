@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomStudentDataGeneratorPort;
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.models.Student;
 
 import lombok.RequiredArgsConstructor;
 

@@ -8,7 +8,7 @@ import com.udla.markenx.classroom.application.dtos.mappers.AttemptMapper;
 import com.udla.markenx.classroom.application.dtos.responses.AttemptResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.TaskControllerPort;
 import com.udla.markenx.classroom.application.services.TaskService;
-import com.udla.markenx.classroom.core.models.Attempt;
+import com.udla.markenx.classroom.domain.models.Attempt;
 import com.udla.markenx.classroom.application.dtos.requests.AttemptRequestDTO;
 
 import org.springframework.data.domain.Page;

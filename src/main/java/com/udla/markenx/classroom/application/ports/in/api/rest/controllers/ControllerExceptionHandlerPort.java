@@ -10,11 +10,11 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 
 import com.udla.markenx.classroom.application.dtos.responses.ErrorResponseDTO;
-import com.udla.markenx.classroom.core.exceptions.BulkImportException;
-import com.udla.markenx.classroom.core.exceptions.DuplicateResourceException;
-import com.udla.markenx.classroom.core.exceptions.InvalidEmailException;
-import com.udla.markenx.classroom.core.exceptions.InvalidEntityException;
-import com.udla.markenx.classroom.core.exceptions.ResourceNotFoundException;
+import com.udla.markenx.classroom.domain.exceptions.BulkImportException;
+import com.udla.markenx.classroom.domain.exceptions.DuplicateResourceException;
+import com.udla.markenx.classroom.domain.exceptions.InvalidEmailException;
+import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 
 /**
  * Port for global exception handling across all controllers.

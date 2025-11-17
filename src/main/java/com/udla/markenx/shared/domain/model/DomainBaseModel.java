@@ -8,7 +8,7 @@ import java.util.Objects;
 import org.springframework.lang.NonNull;
 
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
-import com.udla.markenx.classroom.core.valueobjects.AuditInfo;
+import com.udla.markenx.classroom.domain.valueobjects.AuditInfo;
 import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 public abstract class DomainBaseModel {

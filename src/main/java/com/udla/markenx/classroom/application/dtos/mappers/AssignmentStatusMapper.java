@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.udla.markenx.classroom.application.dtos.responses.AssignmentStatusResponseDTO;
-import com.udla.markenx.classroom.core.valueobjects.enums.AssignmentStatus;
+import com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus;
 
 public class AssignmentStatusMapper {
   public static AssignmentStatusResponseDTO toDto(AssignmentStatus status) {

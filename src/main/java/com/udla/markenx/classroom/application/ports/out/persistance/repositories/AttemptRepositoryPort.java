@@ -2,7 +2,7 @@ package com.udla.markenx.classroom.application.ports.out.persistance.repositorie
 
 import org.springframework.data.domain.Page;
 
-import com.udla.markenx.classroom.core.models.Attempt;
+import com.udla.markenx.classroom.domain.models.Attempt;
 
 public interface AttemptRepositoryPort {
     Page<Attempt> getAttemptsByStudentAssignmentId(Long studentAssignmentId, int page, int size);

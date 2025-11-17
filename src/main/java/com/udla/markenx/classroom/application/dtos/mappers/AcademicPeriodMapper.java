@@ -1,8 +1,8 @@
 package com.udla.markenx.classroom.application.dtos.mappers;
 
 import com.udla.markenx.classroom.application.dtos.responses.AcademicPeriodResponseDTO;
-import com.udla.markenx.classroom.core.exceptions.UtilityClassInstantiationException;
-import com.udla.markenx.classroom.core.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.exceptions.UtilityClassInstantiationException;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
 
 public final class AcademicPeriodMapper {
 

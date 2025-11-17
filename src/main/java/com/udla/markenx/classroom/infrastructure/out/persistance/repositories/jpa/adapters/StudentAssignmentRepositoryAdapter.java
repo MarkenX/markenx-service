@@ -3,7 +3,7 @@ package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.j
 import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentAssignmentRepositoryPort;
-import com.udla.markenx.classroom.core.interfaces.StudentAssignment;
+import com.udla.markenx.classroom.domain.interfaces.StudentAssignment;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AttemptRepositoryPort;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentAssignmentJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository;

@@ -3,7 +3,7 @@ package com.udla.markenx.classroom.application.services;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.models.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -13,9 +13,9 @@ import com.udla.markenx.classroom.application.ports.out.persistance.repositories
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
-import com.udla.markenx.classroom.core.exceptions.ResourceNotFoundException;
-import com.udla.markenx.classroom.core.models.Course;
-import com.udla.markenx.classroom.core.valueobjects.enums.AssignmentStatus;
+import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
+import com.udla.markenx.classroom.domain.models.Course;
+import com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus;
 
 /**
  * Service for course domain operations.

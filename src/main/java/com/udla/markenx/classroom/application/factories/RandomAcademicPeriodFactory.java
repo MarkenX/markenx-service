@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 import com.udla.markenx.classroom.application.builders.AcademicTermBuilder;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
-import com.udla.markenx.classroom.core.models.AcademicTerm;
-import com.udla.markenx.classroom.core.models.Course;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.models.Course;
 
 @Component
 public class RandomAcademicPeriodFactory {

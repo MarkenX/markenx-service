@@ -20,8 +20,8 @@ import com.udla.markenx.classroom.application.dtos.responses.CourseResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.CourseControllerPort;
 import com.udla.markenx.classroom.application.services.CourseService;
-import com.udla.markenx.classroom.core.models.Course;
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.models.Course;
+import com.udla.markenx.classroom.domain.models.Student;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AttemptRepositoryPort;
-import com.udla.markenx.classroom.core.models.Attempt;
+import com.udla.markenx.classroom.domain.models.Attempt;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.AttemptJpaRepository;
 
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.AttemptMapper;

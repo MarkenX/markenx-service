@@ -17,8 +17,8 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.udla.markenx.classroom.application.dtos.requests.BulkStudentImportDTO;
 import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
-import com.udla.markenx.classroom.core.exceptions.BulkImportException;
-import com.udla.markenx.classroom.core.exceptions.InvalidEmailException;
+import com.udla.markenx.classroom.domain.exceptions.BulkImportException;
+import com.udla.markenx.classroom.domain.exceptions.InvalidEmailException;
 
 /**
  * Service for student domain operations.

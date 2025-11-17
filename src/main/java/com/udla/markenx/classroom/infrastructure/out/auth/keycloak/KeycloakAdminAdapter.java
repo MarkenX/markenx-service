@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.udla.markenx.classroom.application.ports.out.auth.AuthenticationServicePort;
-import com.udla.markenx.classroom.core.exceptions.DomainException;
+import com.udla.markenx.classroom.domain.exceptions.DomainException;
 
 import java.util.HashMap;
 import java.util.List;

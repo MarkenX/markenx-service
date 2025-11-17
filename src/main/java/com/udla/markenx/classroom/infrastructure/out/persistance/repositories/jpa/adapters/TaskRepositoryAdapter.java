@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
-import com.udla.markenx.classroom.core.models.Task;
-import com.udla.markenx.classroom.core.valueobjects.RangeDate;
+import com.udla.markenx.classroom.domain.models.Task;
+import com.udla.markenx.classroom.domain.valueobjects.RangeDate;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.TaskMapper;
 

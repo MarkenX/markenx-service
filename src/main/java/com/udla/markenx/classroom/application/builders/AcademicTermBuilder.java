@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.core.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
 
 @Component
 public class AcademicTermBuilder {

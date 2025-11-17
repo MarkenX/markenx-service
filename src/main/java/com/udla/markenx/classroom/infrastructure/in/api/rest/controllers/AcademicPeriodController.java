@@ -24,8 +24,8 @@ import com.udla.markenx.classroom.application.dtos.requests.UpdateAcademicPeriod
 import com.udla.markenx.classroom.application.dtos.responses.AcademicPeriodResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.AcademicPeriodControllerPort;
 import com.udla.markenx.classroom.application.services.AcademicTermService;
-import com.udla.markenx.classroom.core.models.AcademicTerm;
-import com.udla.markenx.classroom.core.models.Course;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.models.Course;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

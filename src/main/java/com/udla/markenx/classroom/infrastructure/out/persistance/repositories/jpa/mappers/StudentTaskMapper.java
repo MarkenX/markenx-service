@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.core.models.Attempt;
-import com.udla.markenx.classroom.core.models.StudentTask;
-import com.udla.markenx.classroom.core.models.Task;
+import com.udla.markenx.classroom.domain.models.Attempt;
+import com.udla.markenx.classroom.domain.models.StudentTask;
+import com.udla.markenx.classroom.domain.models.Task;
 import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;

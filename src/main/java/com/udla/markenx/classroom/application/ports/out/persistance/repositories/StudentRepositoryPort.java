@@ -3,7 +3,7 @@ package com.udla.markenx.classroom.application.ports.out.persistance.repositorie
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.udla.markenx.classroom.core.models.Student;
+import com.udla.markenx.classroom.domain.models.Student;
 
 import java.util.Optional;
 
