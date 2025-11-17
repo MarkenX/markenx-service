@@ -1,8 +1,9 @@
 package com.udla.markenx.application.builders;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.core.models.Student;
 import com.udla.markenx.core.models.StudentTask;
 import com.udla.markenx.core.models.Task;
 
@@ -10,11 +11,13 @@ import com.udla.markenx.core.models.Task;
 public class StudentTaskBuilder {
 
   private Task task;
-  private Student student;
+  private UUID studentId;
+  private Long studentSerialNumber;
 
   public StudentTaskBuilder reset() {
     this.task = null;
-    this.student = null;
+    this.studentId = null;
+    this.studentSerialNumber = null;
     return this;
   }
 
@@ -23,12 +26,17 @@ public class StudentTaskBuilder {
     return this;
   }
 
-  public StudentTaskBuilder setStudent(Student student) {
-    this.student = student;
+  public StudentTaskBuilder setStudentId(UUID studentId) {
+    this.studentId = studentId;
+    return this;
+  }
+
+  public StudentTaskBuilder setStudentSerialNumber(Long studentSerialNumber) {
+    this.studentSerialNumber = studentSerialNumber;
     return this;
   }
 
   public StudentTask build() {
-    return new StudentTask(student, task);
+    return new StudentTask(task, studentId, studentSerialNumber);
   }
 }

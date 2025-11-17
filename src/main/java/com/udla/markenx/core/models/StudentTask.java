@@ -18,21 +18,45 @@ public class StudentTask extends StudentAssignment<Task> {
   private final String code;
   private final List<Attempt> attempts;
 
-  public StudentTask(UUID id, String code, DomainBaseModelStatus status, Student student, Task task,
-      List<Attempt> attempts, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-    super(id, code, status, task, student, createdBy, createdAt, updatedAt);
+  // public StudentTask(UUID id, String code, DomainBaseModelStatus status,
+  // Student student, Task task,
+  // List<Attempt> attempts, String createdBy, LocalDateTime createdAt,
+  // LocalDateTime updatedAt) {
+  public StudentTask(
+      UUID id,
+      String code,
+      DomainBaseModelStatus status,
+      Task task,
+      UUID studentId,
+      Long studentSerialNumber,
+      List<Attempt> attempts,
+      String createdBy,
+      LocalDateTime createdAt,
+      LocalDateTime updatedAt) {
+    // super(id, code, status, task, student, createdBy, createdAt, updatedAt);
+    super(id, code, status, task, studentId, studentSerialNumber, createdBy, createdAt, updatedAt);
     this.attempts = requireAttempts(attempts);
     this.code = requireCode(code);
   }
 
-  public StudentTask(Student student, Task task, String createdBy) {
-    super(task, student, createdBy);
+  // public StudentTask(Student student, Task task, String createdBy) {
+  public StudentTask(
+      Task task,
+      UUID studentId,
+      Long studentSerialNumber,
+      String createdBy) {
+    // super(task, student, createdBy);
+    super(task, studentId, studentSerialNumber, createdBy);
     this.attempts = new ArrayList<>();
     this.code = generateCode();
   }
 
-  public StudentTask(Student student, Task task) {
-    super(task, student);
+  // public StudentTask(Student student, Task task) {
+  public StudentTask(
+      Task task,
+      UUID studentId,
+      Long studentSerialNumber) {
+    super(task, studentId, studentSerialNumber);
     this.attempts = new ArrayList<>();
     this.code = generateCode();
   }
@@ -47,23 +71,6 @@ public class StudentTask extends StudentAssignment<Task> {
 
   public int getActiveAttempt() {
     return this.attempts.size();
-  }
-
-  public String getStudentSequence() {
-    String studentPart = "UNKWN";
-    if (student != null && student.getCode() != null) {
-      studentPart = student.getCode().replaceFirst("^STD-?", "");
-    }
-    return studentPart;
-  }
-
-  public String getTaskSequence() {
-    String taskPart = "UNKWN";
-    if (assignment != null && assignment.getCode() != null) {
-      String[] parts = assignment.getCode().split("-");
-      taskPart = parts.length > 0 ? parts[parts.length - 1] : "UNKWN";
-    }
-    return taskPart;
   }
 
   public void addAttempt(Attempt attempt) {
@@ -126,8 +133,6 @@ public class StudentTask extends StudentAssignment<Task> {
 
   @Override
   protected String generateCode() {
-    String taskPart = getTaskSequence();
-    String studentPart = getStudentSequence();
-    return String.format("%s-%s-STD%s", PREFIX, taskPart, studentPart);
+    return String.format("%s-%s-STD%s", PREFIX, assignment.getSerialNumber(), studentSerialNumber);
   }
 }

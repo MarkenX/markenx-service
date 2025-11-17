@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +29,10 @@ import java.util.UUID;
 @Table(name = "audit_events")
 @EntityListeners(AuditingEntityListener.class)
 public class AuditJpaEntity {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "audit_id")
+  private Long id;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "event_type", nullable = false)

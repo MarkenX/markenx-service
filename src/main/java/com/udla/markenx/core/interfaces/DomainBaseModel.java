@@ -77,7 +77,8 @@ public abstract class DomainBaseModel {
   }
 
   private DomainBaseModelStatus requireStatus(DomainBaseModelStatus status) {
-    return EntityValidator.ensureNotNull(getClass(), status, "status");
+    // return EntityValidator.ensureNotNull(getClass(), status, "status");
+    return status;
   }
 
   protected abstract String generateCode();

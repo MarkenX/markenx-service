@@ -31,15 +31,17 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   @Override
   public Student update(Student student) {
     // Find existing entity to preserve externalAuthId
-    StudentJpaEntity existingEntity = jpaRepository.findById(student.getId())
-        .orElseThrow(() -> new IllegalArgumentException("Student not found with id: " + student.getId()));
+    // StudentJpaEntity existingEntity = jpaRepository.findById(student.getId())
+    // .orElseThrow(() -> new IllegalArgumentException("Student not found with id: "
+    // + student.getId()));
 
     // Update with existing externalAuthId
     // StudentJpaEntity entity = mapper.toEntity(student,
     // existingEntity.getKeycloakUserId());
-    StudentJpaEntity entity = mapper.toEntity(student);
-    StudentJpaEntity savedEntity = jpaRepository.save(entity);
-    return mapper.toDomain(savedEntity);
+    // StudentJpaEntity entity = mapper.toEntity(student);
+    // StudentJpaEntity savedEntity = jpaRepository.save(entity);
+    // return mapper.toDomain(savedEntity);
+    return null;
   }
 
   @Override

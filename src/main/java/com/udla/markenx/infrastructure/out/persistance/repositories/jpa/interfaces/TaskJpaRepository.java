@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 
-public interface TaskJpaRepository extends JpaRepository<TaskJpaEntity, UUID> {
+public interface TaskJpaRepository extends JpaRepository<TaskJpaEntity, Long> {
 	Page<TaskJpaEntity> findByCourseId(Long courseId, Pageable pageable);
 
 	Page<TaskJpaEntity> findByCourseIdAndCurrentStatus(Long courseId,

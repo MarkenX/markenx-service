@@ -8,14 +8,12 @@ import org.springframework.stereotype.Component;
 
 import com.udla.markenx.core.models.Student;
 import com.udla.markenx.core.models.StudentTask;
-
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.StudentAssignmentJpaEntity;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -23,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 public final class StudentMapper {
 
   private final StudentTaskMapper studentTaskMapper;
-  private final EntityManager entityManager;
 
   public @NonNull Student toDomain(StudentJpaEntity entity) {
     if (entity == null) {
@@ -32,16 +29,18 @@ public final class StudentMapper {
 
     UUID courseId = null;
     if (entity.getCourse() != null) {
-      courseId = entity.getCourse().getPublicId();
+      courseId = entity.getCourse().getExternalReference().getPublicId();
     }
 
-    List<StudentTask> tasks = entity.getTasks().stream()
+    List<StudentTask> tasks = entity.getStudentAssignments().stream()
+        .filter(StudentTaskJpaEntity.class::isInstance)
+        .map(StudentTaskJpaEntity.class::cast)
         .map(studentTaskMapper::toDomain)
         .toList();
 
     Student domain = new Student(
-        entity.getPublicId(),
-        entity.getCode(),
+        entity.getExternalReference().getPublicId(),
+        entity.getExternalReference().getCode(),
         entity.getId(),
         entity.getStatus(),
         courseId,
@@ -62,26 +61,21 @@ public final class StudentMapper {
     }
 
     StudentJpaEntity entity = new StudentJpaEntity();
-    entity.setPublicId(domain.getId());
-    entity.setCode(domain.getCode());
-    entity.setId(domain.getSequence());
+    entity.getExternalReference().setPublicId(domain.getId());
+    entity.getExternalReference().setCode(domain.getCode());
     entity.setFirstName(domain.getFirstName());
     entity.setLastName(domain.getLastName());
-    entity.setEmail(domain.getEmail());
+    entity.setEmail(domain.getAcademicEmail());
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());
     entity.setUpdatedAt(domain.getUpdatedAtDateTime());
 
-    List<StudentTaskJpaEntity> tasks = domain.getAssignedTaks().stream()
+    List<StudentAssignmentJpaEntity> tasks = domain.getAssignedTasks().stream()
         .map(studentTaskMapper::toEntity)
+        .map(StudentAssignmentJpaEntity.class::cast)
         .peek(e -> e.setStudent(entity))
         .toList();
-    entity.setTasks(tasks);
-
-    if (domain.getCourseId() != null) {
-      CourseJpaEntity ref = entityManager.getReference(CourseJpaEntity.class, domain.getCourseId());
-      entity.setCourse(ref);
-    }
+    entity.setStudentAssignments(tasks);
 
     return entity;
   }

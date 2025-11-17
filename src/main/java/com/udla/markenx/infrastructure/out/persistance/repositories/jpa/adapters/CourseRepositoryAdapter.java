@@ -31,11 +31,13 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
 
   @Override
   public Course update(Course course) {
-    jpaRepository.findById(course.getId())
-        .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + course.getId()));
-    CourseJpaEntity entity = mapper.toEntity(course);
-    CourseJpaEntity saved = jpaRepository.save(entity);
-    return mapper.toDomain(saved);
+    // jpaRepository.findById(course.getId())
+    // .orElseThrow(() -> new IllegalArgumentException("Course not found with id: "
+    // + course.getId()));
+    // CourseJpaEntity entity = mapper.toEntity(course);
+    // CourseJpaEntity saved = jpaRepository.save(entity);
+    // return mapper.toDomain(saved);
+    return null;
   }
 
   @Override

@@ -22,7 +22,7 @@ public class UpdateStudentUseCase {
     Student existingStudent = studentRepository.findById(id)
         .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
 
-    if (!existingStudent.getEmail().equals(request.email())) {
+    if (!existingStudent.getAcademicEmail().equals(request.email())) {
       if (studentRepository.existsByEmail(request.email())) {
         throw new EmailAlreadyExistsException("Email already in use: " + request.email());
       }

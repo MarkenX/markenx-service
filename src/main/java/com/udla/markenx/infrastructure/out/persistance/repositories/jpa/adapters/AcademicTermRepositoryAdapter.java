@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -16,7 +15,6 @@ import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicTermJpaRepository;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.AcademicTermMapper;
 
-import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -28,35 +26,44 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
 
   @Override
   public AcademicTerm save(AcademicTerm newAcademicTerm) {
-    try {
-      AcademicTermJpaEntity entity = mapper.toEntity(newAcademicTerm);
-      AcademicTermJpaEntity saved = jpaRepository.save(entity);
-      return mapper.toDomain(saved);
-    } catch (DataAccessException e) {
-      throw new PersistenceException("Error al guardar el período académico", e);
-    }
+    // try {
+    // AcademicTermJpaEntity entity = mapper.toEntity(newAcademicTerm);
+    // AcademicTermJpaEntity saved = jpaRepository.save(entity);
+    // return mapper.toDomain(saved);
+    // } catch (DataAccessException e) {
+    // throw new PersistenceException("Error al guardar el período académico", e);
+    // }
+    AcademicTermJpaEntity entity = mapper.toEntity(newAcademicTerm);
+    AcademicTermJpaEntity saved = jpaRepository.save(entity);
+    // return mapper.toDomain(saved);
+    return newAcademicTerm;
   }
 
   @Override
   public AcademicTerm update(AcademicTerm existingAcademicTerm) {
-    try {
-      AcademicTermJpaEntity existingEntity = jpaRepository.findById(existingAcademicTerm.getId())
-          .orElseThrow(() -> new PersistenceException("Período académico no encontrado"));
+    // try {
+    // AcademicTermJpaEntity existingEntity =
+    // jpaRepository.findById(existingAcademicTerm.getId())
+    // .orElseThrow(() -> new PersistenceException("Período académico no
+    // encontrado"));
 
-      existingEntity.setStartOfTerm(existingAcademicTerm.getStartOfTerm());
-      existingEntity.setEndOfTerm(existingAcademicTerm.getEndOfTerm());
+    // existingEntity.setStartOfTerm(existingAcademicTerm.getStartOfTerm());
+    // existingEntity.setEndOfTerm(existingAcademicTerm.getEndOfTerm());
 
-      AcademicTermJpaEntity updated = jpaRepository.save(existingEntity);
-      return mapper.toDomain(updated);
-    } catch (DataAccessException e) {
-      throw new PersistenceException("Error al actualizar el período académico", e);
-    }
+    // AcademicTermJpaEntity updated = jpaRepository.save(existingEntity);
+    // return mapper.toDomain(updated);
+    // } catch (DataAccessException e) {
+    // throw new PersistenceException("Error al actualizar el período académico",
+    // e);
+    // }
+    return null;
   }
 
   @Override
   public Optional<AcademicTerm> findById(UUID id) {
-    return jpaRepository.findById(id)
-        .map(mapper::toDomain);
+    // return jpaRepository.findById(id)
+    // .map(mapper::toDomain);
+    return null;
   }
 
   @Override
@@ -67,17 +74,19 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
 
   @Override
   public void deleteById(UUID id) {
-    jpaRepository.deleteById(id);
+    // jpaRepository.deleteById(id);
   }
 
   @Override
   public boolean existsByYearAndSemesterNumber(int year, int semesterNumber) {
-    return jpaRepository.existsByYearAndSemesterNumber(year, semesterNumber);
+    // return jpaRepository.existsByYearAndSemesterNumber(year, semesterNumber);
+    return false;
   }
 
   @Override
   public long countByYear(int year) {
-    return jpaRepository.countByYear(year);
+    // return jpaRepository.countByYear(year);
+    return -1;
   }
 
   @Override

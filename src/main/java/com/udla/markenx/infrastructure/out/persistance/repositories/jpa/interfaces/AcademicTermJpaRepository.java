@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 
-public interface AcademicTermJpaRepository extends JpaRepository<AcademicTermJpaEntity, UUID> {
+public interface AcademicTermJpaRepository extends JpaRepository<AcademicTermJpaEntity, Long> {
 
-  boolean existsByYearAndSemesterNumber(int year, int semesterNumber);
+  // boolean existsByYearAndSemesterNumber(int year, int semesterNumber);
 
-  long countByYear(int year);
+  // long countByYear(int year);
 }

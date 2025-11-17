@@ -19,6 +19,6 @@ public final class StudentMapper {
         domain.getCode(),
         domain.getFirstName(),
         domain.getLastName(),
-        domain.getEmail());
+        domain.getAcademicEmail());
   }
 }

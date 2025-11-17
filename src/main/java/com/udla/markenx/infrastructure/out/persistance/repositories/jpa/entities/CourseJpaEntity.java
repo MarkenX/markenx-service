@@ -3,8 +3,18 @@ package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entitie
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.*;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.AssignmentJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.BaseJpaEntity;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,19 +24,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "courses")
+@PrimaryKeyJoinColumn(name = "id")
 public class CourseJpaEntity extends BaseJpaEntity {
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "course_id")
-  private Long id;
+  @Column(name = "name")
+  private String name;
 
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<AssignmentJpaEntity> assignments = new ArrayList<>();
 
   @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<StudentJpaEntity> students = new ArrayList<>();
-
-  @Column(name = "course_name")
-  private String name;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "term_id")

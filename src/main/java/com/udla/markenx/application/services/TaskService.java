@@ -7,11 +7,12 @@ import com.udla.markenx.application.ports.out.persistance.repositories.AttemptRe
 import com.udla.markenx.core.interfaces.StudentAssignment;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.application.ports.out.persistance.repositories.StudentAssignmentRepositoryPort;
+import com.udla.markenx.application.ports.out.persistance.repositories.TaskRepositoryPort;
 
 @Service
 public class TaskService {
 	private final AttemptRepositoryPort attemptRepository;
-	private final com.udla.markenx.application.ports.out.persistance.repositories.TaskRepositoryPort taskRepository;
+	private final TaskRepositoryPort taskRepository;
 	private final StudentAssignmentRepositoryPort studentAssignmentRepository;
 
 	public TaskService(AttemptRepositoryPort attemptRepository,

@@ -1,16 +1,17 @@
-package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces;
 
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +22,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "student_assignments")
+@PrimaryKeyJoinColumn(name = "id")
 @EqualsAndHashCode(callSuper = true)
-public class StudentAssignmentJpaEntity extends BaseJpaEntity {
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "student_assignment_id")
-  private Long id;
-
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class StudentAssignmentJpaEntity extends BaseJpaEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "assignment_id")
   private AssignmentJpaEntity assignment;

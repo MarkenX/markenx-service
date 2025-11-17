@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.udla.markenx.core.models.AcademicTerm;
 import com.udla.markenx.core.models.Course;
-
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
@@ -26,15 +25,15 @@ public final class AcademicTermMapper {
       throw new DomainMappingException();
     }
 
-    List<Course> courses = entity.getAssignedCourses() != null
-        ? entity.getAssignedCourses().stream()
+    List<Course> courses = entity.getCourses() != null
+        ? entity.getCourses().stream()
             .map(courseMapper::toDomain)
             .toList()
         : List.of();
 
     AcademicTerm domain = new AcademicTerm(
-        entity.getPublicId(),
-        entity.getCode(),
+        entity.getExternalReference().getPublicId(),
+        entity.getExternalReference().getCode(),
         entity.getStatus(),
         entity.getStartOfTerm(),
         entity.getEndOfTerm(),
@@ -54,8 +53,8 @@ public final class AcademicTermMapper {
 
     AcademicTermJpaEntity entity = new AcademicTermJpaEntity();
 
-    entity.setPublicId(domain.getId());
-    entity.setCode(domain.getCode());
+    entity.getExternalReference().setPublicId(domain.getId());
+    entity.getExternalReference().setCode(domain.getCode());
     entity.setStatus(domain.getStatus());
     entity.setStartOfTerm(domain.getStartOfTerm());
     entity.setEndOfTerm(domain.getEndOfTerm());
@@ -70,7 +69,7 @@ public final class AcademicTermMapper {
           .map(courseMapper::toEntity)
           .peek(e -> e.setAcademicTerm(entity))
           .toList();
-      entity.setAssignedCourses(courses);
+      entity.setCourses(courses);
     }
 
     return entity;

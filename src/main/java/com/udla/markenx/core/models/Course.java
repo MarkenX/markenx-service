@@ -22,11 +22,21 @@ public class Course extends DomainBaseModel {
   private final List<Student> students;
   private final List<Assignment> assignments;
 
-  public Course(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID academicTermId,
-      int academicTermYear, String name, List<Student> students, List<? extends Assignment> assignments,
-      String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+  public Course(
+      UUID id,
+      String code,
+      Long serialNumber,
+      DomainBaseModelStatus status,
+      UUID academicTermId,
+      int academicTermYear,
+      String name,
+      List<Student> students,
+      List<? extends Assignment> assignments,
+      String createdBy,
+      LocalDateTime createdAt,
+      LocalDateTime updatedAt) {
     super(id, code, status, createdBy, createdAt, updatedAt);
-    this.sequence = sequence;
+    this.sequence = serialNumber;
     this.academicTermId = academicTermId;
     this.academicTermYear = academicTermYear;
     setName(name);

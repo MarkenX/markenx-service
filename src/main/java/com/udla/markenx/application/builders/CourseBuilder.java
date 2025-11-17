@@ -4,13 +4,13 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.application.ports.out.data.generators.random.RandomCourseDataGenerator;
+import com.udla.markenx.application.ports.out.data.generators.random.RandomCourseDataGeneratorPort;
 import com.udla.markenx.core.models.Course;
 
 @Component
 public class CourseBuilder {
 
-  private final RandomCourseDataGenerator randomGenerator;
+  private final RandomCourseDataGeneratorPort randomGenerator;
 
   private UUID academicTermId;
   private int academicTermYear;
@@ -23,7 +23,7 @@ public class CourseBuilder {
     return this;
   }
 
-  public CourseBuilder(RandomCourseDataGenerator randomGenerator) {
+  public CourseBuilder(RandomCourseDataGeneratorPort randomGenerator) {
     this.randomGenerator = randomGenerator;
   }
 

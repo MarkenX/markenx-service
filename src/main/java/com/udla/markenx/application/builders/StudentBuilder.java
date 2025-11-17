@@ -7,30 +7,31 @@ import org.springframework.stereotype.Component;
 import com.udla.markenx.application.ports.out.data.generators.random.RandomStudentDataGeneratorPort;
 import com.udla.markenx.core.models.Student;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class StudentBuilder {
 
   private final RandomStudentDataGeneratorPort randomGenerator;
 
-  private UUID courseId;
+  private UUID enrolledCourseId;
   private String firstName;
   private String lastName;
-  private String email;
-
-  public StudentBuilder(RandomStudentDataGeneratorPort randomGenerator) {
-    this.randomGenerator = randomGenerator;
-  }
+  private String academicEmail;
 
   public StudentBuilder reset() {
-    this.courseId = null;
+    this.enrolledCourseId = null;
     this.firstName = null;
     this.lastName = null;
-    this.email = null;
+    this.academicEmail = null;
     return this;
   }
 
-  public StudentBuilder setCourseId(UUID courseId) {
-    this.courseId = courseId;
+  // #region Setters
+
+  public StudentBuilder setEnrolledCourseId(UUID courseId) {
+    this.enrolledCourseId = courseId;
     return this;
   }
 
@@ -44,10 +45,14 @@ public class StudentBuilder {
     return this;
   }
 
-  public StudentBuilder setEmail(String email) {
-    this.email = email;
+  public StudentBuilder setAcademicEmail(String email) {
+    this.academicEmail = email;
     return this;
   }
+
+  // #endregion
+
+  // #region Random Generators
 
   public StudentBuilder randomFirstName() {
     this.firstName = randomGenerator.firstName();
@@ -60,11 +65,17 @@ public class StudentBuilder {
   }
 
   public StudentBuilder randomEmail() {
-    this.email = randomGenerator.email();
+    this.academicEmail = randomGenerator.email();
     return this;
   }
 
+  // #endregion
+
   public Student build() {
-    return new Student(courseId, firstName, lastName, email);
+    return new Student(
+        enrolledCourseId,
+        firstName,
+        lastName,
+        academicEmail);
   }
 }

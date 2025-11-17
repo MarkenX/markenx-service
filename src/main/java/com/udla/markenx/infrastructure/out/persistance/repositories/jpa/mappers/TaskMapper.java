@@ -6,20 +6,15 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import com.udla.markenx.core.models.Task;
-
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public final class TaskMapper {
-
-	private final EntityManager entityManager;
 
 	public @NonNull Task toDomain(TaskJpaEntity entity) {
 		if (entity == null) {
@@ -29,13 +24,13 @@ public final class TaskMapper {
 		UUID courseId = null;
 		int academicTermYear = -1;
 		if (entity.getCourse() != null) {
-			courseId = entity.getCourse().getPublicId();
+			courseId = entity.getCourse().getExternalReference().getPublicId();
 			academicTermYear = entity.getCourse().getAcademicTerm().getAcademicYear();
 		}
 
 		Task domain = new Task(
-				entity.getPublicId(),
-				entity.getCode(),
+				entity.getExternalReference().getPublicId(),
+				entity.getExternalReference().getCode(),
 				entity.getId(),
 				entity.getStatus(),
 				courseId,
@@ -58,9 +53,8 @@ public final class TaskMapper {
 		}
 
 		TaskJpaEntity entity = new TaskJpaEntity();
-		entity.setPublicId(domain.getId());
-		entity.setCode(domain.getCode());
-		entity.setId(domain.getSequence());
+		entity.getExternalReference().setPublicId(domain.getId());
+		entity.getExternalReference().setCode(domain.getCode());
 		entity.setStatus(domain.getStatus());
 		entity.setTitle(domain.getTitle());
 		entity.setSummary(domain.getSummary());
@@ -70,11 +64,6 @@ public final class TaskMapper {
 		entity.setCreatedBy(domain.getCreatedBy());
 		entity.setCreatedAt(domain.getCreatedAtDateTime());
 		entity.setUpdatedAt(domain.getUpdatedAtDateTime());
-
-		if (domain.getCourseId() != null) {
-			CourseJpaEntity ref = entityManager.getReference(CourseJpaEntity.class, domain.getCourseId());
-			entity.setCourse(ref);
-		}
 
 		return entity;
 	}

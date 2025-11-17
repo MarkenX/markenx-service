@@ -5,10 +5,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import com.udla.markenx.application.ports.out.data.generators.random.RandomAttemptDataGeneratorPort;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
-
-import com.udla.markenx.application.ports.out.data.generators.random.RandomAttemptDataGeneratorPort;
 
 @Component
 public class AttemptBuilder {
@@ -84,7 +83,7 @@ public class AttemptBuilder {
   }
 
   public Attempt build() {
-    return new Attempt(studentSequence, taskSequence, taskMinScoreToPass, score, timeSpent,
-        attemptStatus, studentTaskId);
+    return new Attempt(studentSequence, taskSequence, taskMinScoreToPass, score, timeSpent, attemptStatus,
+        studentTaskId);
   }
 }

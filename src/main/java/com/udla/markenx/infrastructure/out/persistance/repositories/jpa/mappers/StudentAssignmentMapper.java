@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 import com.udla.markenx.core.interfaces.Assignment;
 import com.udla.markenx.core.interfaces.StudentAssignment;
 import com.udla.markenx.core.models.StudentTask;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentAssignmentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.MappingException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.StudentAssignmentJpaEntity;
 
 import lombok.RequiredArgsConstructor;
 

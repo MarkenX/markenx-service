@@ -9,6 +9,7 @@ import com.udla.markenx.application.builders.AttemptBuilder;
 import com.udla.markenx.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
 import com.udla.markenx.core.models.Attempt;
 import com.udla.markenx.core.models.StudentTask;
+import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
 
 @Component
 public class RandomAttemptFactory {
@@ -26,9 +27,10 @@ public class RandomAttemptFactory {
   public Attempt createRandomAttempt(StudentTask studentTask, double minScoreToPass) {
     Attempt attempt = attemptBuilder
         .reset()
-        .setStudentSequence(studentTask.getStudent().getSequence())
-        .setTaskSequence(studentTask.getAssignment().getSequence())
+        .setStudentSequence(studentTask.getAssignment().getSerialNumber())
+        .setTaskSequence(studentTask.getAssignment().getSerialNumber())
         .setTaskMinSocreToPass(minScoreToPass)
+        .setAttemptStatus(AttemptStatus.COMPLETED)
         .randomScore()
         .randomDuration()
         .build();

@@ -7,7 +7,7 @@ import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities
 import java.util.Optional;
 import java.util.UUID;
 
-public interface StudentJpaRepository extends JpaRepository<StudentJpaEntity, UUID> {
+public interface StudentJpaRepository extends JpaRepository<StudentJpaEntity, Long> {
 
   Optional<StudentJpaEntity> findByEmail(String email);
 

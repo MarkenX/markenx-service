@@ -13,63 +13,106 @@ import com.udla.markenx.core.utils.validators.EntityValidator;
 import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
 
 public class Student extends Person {
+	// #region Constants
+
 	private static final Class<Student> CLAZZ = Student.class;
 	private static final String PREFIX = "STD";
 
-	private final String code;
-	private final Long sequence;
-	private final UUID courseId;
-	private final String email;
-	private final List<StudentTask> assignedTaks;
+	// #endregion
 
-	public Student(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, String firstName,
-			String lastName, String email, List<StudentTask> assignedTasks, String createdBy, LocalDateTime createdAt,
+	private final String code;
+	private final Long serialNumber;
+	private final UUID enrolledCourseId;
+	private final String academicEmail;
+	private final List<StudentTask> assignedTasks;
+
+	// #region Constructors
+
+	public Student(
+			UUID id,
+			String code,
+			Long serialNumber,
+			DomainBaseModelStatus status,
+			UUID enrolledCourseId,
+			String firstName,
+			String lastName,
+			String email,
+			List<StudentTask> assignedTasks,
+			String createdBy,
+			LocalDateTime createdAt,
 			LocalDateTime updatedAt) {
 		super(id, code, status, firstName, lastName, createdBy, createdAt, updatedAt);
-		this.sequence = sequence;
-		this.courseId = courseId;
-		this.email = validateEmail(email);
-		this.assignedTaks = requireStudentTasks(assignedTasks);
+		this.serialNumber = serialNumber;
+		this.enrolledCourseId = enrolledCourseId;
+		this.academicEmail = validateEmail(email);
+		this.assignedTasks = requireStudentTasks(assignedTasks);
 		this.code = requireCode(code);
 	}
 
-	public Student(UUID courseId, String firstName, String lastName, String email, String createdBy) {
+	public Student(
+			UUID courseId,
+			String firstName,
+			String lastName,
+			String email,
+			List<StudentTask> assignedTasks,
+			String createdBy) {
 		super(firstName, lastName, createdBy);
-		this.sequence = null;
-		this.courseId = courseId;
-		this.email = validateEmail(email);
-		this.assignedTaks = new ArrayList<>();
+		this.serialNumber = null;
+		this.enrolledCourseId = courseId;
+		this.academicEmail = validateEmail(email);
+		this.assignedTasks = new ArrayList<>();
 		this.code = generateCode();
 	}
 
-	public Student(UUID courseId, String firstName, String lastName, String email) {
+	public Student(
+			UUID courseId,
+			String firstName,
+			String lastName,
+			String email) {
 		super(firstName, lastName);
-		this.sequence = null;
-		this.courseId = courseId;
-		this.email = validateEmail(email);
-		this.assignedTaks = new ArrayList<>();
+		this.serialNumber = null;
+		this.enrolledCourseId = courseId;
+		this.academicEmail = validateEmail(email);
+		this.assignedTasks = new ArrayList<>();
 		this.code = generateCode();
 	}
+
+	// #endregion
+
+	// #region Getters
 
 	public String getCode() {
 		return this.code;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getAcademicEmail() {
+		return academicEmail;
 	}
 
-	public UUID getCourseId() {
-		return courseId;
+	public UUID getEnrolledCourseId() {
+		return enrolledCourseId;
 	}
 
-	public Long getSequence() {
-		return this.sequence;
+	public Long getSerialNumber() {
+		return this.serialNumber;
 	}
 
-	public List<StudentTask> getAssignedTaks() {
-		return List.copyOf(this.assignedTaks);
+	public List<StudentTask> getAssignedTasks() {
+		return List.copyOf(this.assignedTasks);
 	}
+
+	// #endregion
+
+	// #region Setters
+
+	public void addAssignTasks(List<StudentTask> assignedTasks) {
+		List<StudentTask> validated = EntityValidator.ensureNotNull(CLAZZ, assignedTasks, "assigned tasks");
+		this.assignedTasks.addAll(List.copyOf(validated));
+	}
+
+	// #endregion
+
+	// #region Validations
 
 	private String validateEmail(String email) {
 		String validatedEmail = EntityValidator.ensureNotNullOrEmpty(CLAZZ, email, "email");
@@ -81,11 +124,13 @@ public class Student extends Person {
 	}
 
 	private List<StudentTask> requireStudentTasks(List<StudentTask> tasks) {
-		return EntityValidator.ensureNotNull(CLAZZ, assignedTaks, "assignedTaks");
+		return EntityValidator.ensureNotNull(CLAZZ, assignedTasks, "assignedTaks");
 	}
+
+	// #endregion
 
 	@Override
 	protected String generateCode() {
-		return String.format("%s-%06d", PREFIX, sequence);
+		return String.format("%s-%06d", PREFIX, serialNumber);
 	}
 }

@@ -29,7 +29,7 @@ public class RandomAcademicPeriodFactory {
   public AcademicTerm createRandomAcademicPeriod(LocalDate startOfTerm, LocalDate endOfTerm) {
     int academicYear = startOfTerm.getYear();
 
-    AcademicTerm academicPeriod = academicPeriodBuilder
+    AcademicTerm academicTerm = academicPeriodBuilder
         .reset()
         .setStartOfTerm(startOfTerm)
         .setEndOfTerm(endOfTerm)
@@ -38,11 +38,11 @@ public class RandomAcademicPeriodFactory {
 
     int courseCount = numberGenerator.positiveIntegerBetween(1, MAX_COURSES);
     for (int i = 0; i < courseCount; i++) {
-      Course course = courseFactory.createRandomCourse(academicPeriod.getId(), academicPeriod.getAcademicYear(),
-          academicPeriod.getEndOfTerm());
-      academicPeriod.addCourse(course);
+      Course course = courseFactory.createRandomCourse(academicTerm.getId(), academicTerm.getAcademicYear(),
+          academicTerm.getEndOfTerm());
+      academicTerm.addCourse(course);
     }
 
-    return academicPeriod;
+    return academicTerm;
   }
 }

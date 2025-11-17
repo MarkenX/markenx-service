@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AttemptJpaEntity;
 
-public interface AttemptJpaRepository extends JpaRepository<AttemptJpaEntity, UUID> {
+public interface AttemptJpaRepository extends JpaRepository<AttemptJpaEntity, Long> {
   // Page<AttemptJpaEntity> findByStudentAssignmentId(UUID studentAssignmentId,
   // Pageable pageable);
 

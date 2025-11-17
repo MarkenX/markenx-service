@@ -10,26 +10,26 @@ import com.udla.markenx.application.builders.StudentBuilder;
 import com.udla.markenx.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
 import com.udla.markenx.core.models.Student;
 
-@Component
-public class RandomStudentFactory {
-  private final StudentBuilder studentBuilder;
-  private final RandomNumberGeneratorPort numberGenerator;
+import lombok.RequiredArgsConstructor;
 
-  public RandomStudentFactory(
-      StudentBuilder studentBuilder,
-      RandomNumberGeneratorPort numberGenerator) {
-    this.studentBuilder = studentBuilder;
-    this.numberGenerator = numberGenerator;
-  }
+@Component
+@RequiredArgsConstructor
+public class RandomStudentFactory {
+  private static final int MAX_TASKS = 30;
+
+  private final StudentBuilder studentBuilder;
+  private final RandomStudentTaskFactory randomStudentTaskFactory;
+  private final RandomNumberGeneratorPort randomNumberGenerator;
 
   public Student createRandomStudent(UUID courseId) {
-    return studentBuilder
+    Student student = studentBuilder
         .reset()
-        .setCourseId(courseId)
+        .setEnrolledCourseId(courseId)
         .randomFirstName()
         .randomLastName()
         .randomEmail()
         .build();
+    return student;
   }
 
   public List<Student> createRandomStudents(UUID courseId, int count) {
@@ -41,11 +41,11 @@ public class RandomStudentFactory {
   }
 
   public List<Student> createRandomStudentsUpTo(UUID courseId, int maxCount) {
-    if (maxCount <= 0) {
-      throw new IllegalArgumentException("El límite debe ser mayor que cero");
-    }
+    // if (maxCount <= 0) {
+    // throw new IllegalArgumentException("El límite debe ser mayor que cero");
+    // }
 
-    int count = numberGenerator.positiveIntegerBetween(1, maxCount);
+    int count = randomNumberGenerator.positiveIntegerBetween(1, maxCount);
     return createRandomStudents(courseId, count);
   }
 }

@@ -4,8 +4,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.*;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.BaseJpaEntity;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,26 +20,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "academic_terms", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "academic_year", "term_number" })
-})
+@Table(name = "academic_terms")
+@PrimaryKeyJoinColumn(name = "id")
 public class AcademicTermJpaEntity extends BaseJpaEntity {
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "term_id")
-  private Long id;
-
-  @Column(name = "start_date", nullable = false)
+  @Column(name = "start_of_term", nullable = false)
   private LocalDate startOfTerm;
 
-  @Column(name = "end_date", nullable = false)
+  @Column(name = "end_of_term", nullable = false)
   private LocalDate endOfTerm;
 
   @Column(name = "academic_year", nullable = false)
   private int academicYear;
 
-  @Column(name = "term_number", nullable = false)
+  @Column(name = "number", nullable = false)
   private int termNumber;
 
   @OneToMany(mappedBy = "academicTerm", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<CourseJpaEntity> assignedCourses = new ArrayList<>();
+  private List<CourseJpaEntity> courses = new ArrayList<>();
 }

@@ -1,11 +1,11 @@
-package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "persons")
+@PrimaryKeyJoinColumn(name = "id")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class PersonJpaEntity extends BaseJpaEntity {
 	@Column(name = "person_firstname")

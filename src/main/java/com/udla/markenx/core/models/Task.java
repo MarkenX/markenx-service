@@ -18,7 +18,6 @@ public class Task extends Assignment {
 	private static final int MIN_ATTEMPT = 0;
 
 	private final String code;
-	private final Long sequence;
 	private final UUID courseId;
 	private final int academicTermYear;
 	private int maxAttempts;
@@ -28,7 +27,6 @@ public class Task extends Assignment {
 			String title, String summary, LocalDate dueDate, int maxAttempts, double minScoreToPass, String createdBy,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(courseId, code, sequence, status, title, summary, dueDate, createdBy, createdAt, updatedAt);
-		this.sequence = sequence;
 		this.courseId = courseId;
 		this.academicTermYear = academicTermYear;
 		this.maxAttempts = validateMaxAttempts(maxAttempts);
@@ -39,7 +37,6 @@ public class Task extends Assignment {
 	public Task(UUID courseId, int academicTermYear, String title, String summary, LocalDate dueDate, int maxAttempts,
 			double minScoreToPass, String createdBy) {
 		super(title, summary, dueDate, createdBy);
-		this.sequence = null;
 		this.courseId = courseId;
 		this.academicTermYear = academicTermYear;
 		this.maxAttempts = validateMaxAttempts(maxAttempts);
@@ -50,7 +47,6 @@ public class Task extends Assignment {
 	public Task(UUID courseId, int academicTermYear, String title, String summary, LocalDate dueDate, int maxAttempts,
 			double minScoreToPass) {
 		super(title, summary, dueDate);
-		this.sequence = null;
 		this.courseId = courseId;
 		this.academicTermYear = academicTermYear;
 		this.maxAttempts = validateMaxAttempts(maxAttempts);
@@ -69,10 +65,6 @@ public class Task extends Assignment {
 
 	public int getMaxAttempts() {
 		return this.maxAttempts;
-	}
-
-	public Long getSequence() {
-		return this.sequence;
 	}
 
 	public double getMinScoreToPass() {
@@ -96,6 +88,6 @@ public class Task extends Assignment {
 
 	@Override
 	protected String generateCode() {
-		return String.format("%s-%d-%04d", PREFIX, academicTermYear, sequence);
+		return String.format("%s-%d-%04d", PREFIX, academicTermYear, serialNumber);
 	}
 }

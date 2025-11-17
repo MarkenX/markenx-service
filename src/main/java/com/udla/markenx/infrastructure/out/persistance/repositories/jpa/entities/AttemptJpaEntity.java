@@ -4,19 +4,17 @@ import java.time.Duration;
 
 import com.udla.markenx.core.valueobjects.enums.AttemptResult;
 import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.BaseJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.StudentAssignmentJpaEntity;
 
-import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,11 +25,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "attempts")
 public class AttemptJpaEntity extends BaseJpaEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "attempt_id")
-	private Long id;
-
 	@Column(name = "attempt_score")
 	private double score;
 
@@ -47,6 +40,6 @@ public class AttemptJpaEntity extends BaseJpaEntity {
 	private AttemptStatus currentStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "student_assignment_id")
-	private StudentAssignmentJpaEntity studentAssignment;
+	@JoinColumn(name = "student_task_id")
+	private StudentAssignmentJpaEntity studentTask;
 }

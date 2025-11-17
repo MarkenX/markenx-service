@@ -19,12 +19,14 @@ public class AuditInfo {
   public AuditInfo() {
     this.createdBy = DEFAULT_USER;
     this.createdAt = Instant.now();
+    this.lastModifiedBy = this.createdBy;
     this.lastModifiedAt = this.createdAt;
   }
 
   public AuditInfo(String createdBy) {
     this.createdBy = createdBy;
     this.createdAt = Instant.now();
+    this.lastModifiedBy = this.createdBy;
     this.lastModifiedAt = this.createdAt;
   }
 
@@ -33,6 +35,7 @@ public class AuditInfo {
     this.createdBy = DEFAULT_USER;
     this.createdAt = createdAt.atZone(zone).toInstant();
     this.lastModifiedAt = updatedAt.atZone(zone).toInstant();
+    this.lastModifiedBy = this.createdBy;
   }
 
   public AuditInfo(String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -40,6 +43,7 @@ public class AuditInfo {
     this.createdBy = createdBy;
     this.createdAt = createdAt.atZone(zone).toInstant();
     this.lastModifiedAt = updatedAt.atZone(zone).toInstant();
+    this.lastModifiedBy = this.createdBy;
   }
 
   public void markUpdated() {

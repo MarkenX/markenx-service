@@ -7,18 +7,14 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import com.udla.markenx.core.interfaces.Assignment;
-
 import com.udla.markenx.core.models.Course;
 import com.udla.markenx.core.models.Student;
-
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AssignmentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.AssignmentJpaEntity;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -27,7 +23,7 @@ public class CourseMapper {
 
   private final StudentMapper studentMapper;
   private final AssignmentMapper assignmentMapper;
-  private final EntityManager entityManager;
+  // private final EntityManager entityManager;
 
   public @NonNull Course toDomain(CourseJpaEntity entity) {
     if (entity == null) {
@@ -45,13 +41,13 @@ public class CourseMapper {
     UUID academicTermId = null;
     int academicTermYear = -1;
     if (entity.getAcademicTerm() != null) {
-      academicTermId = entity.getAcademicTerm().getPublicId();
+      academicTermId = entity.getAcademicTerm().getExternalReference().getPublicId();
       academicTermYear = entity.getAcademicTerm().getAcademicYear();
     }
 
     Course domain = new Course(
-        entity.getPublicId(),
-        entity.getCode(),
+        entity.getExternalReference().getPublicId(),
+        entity.getExternalReference().getCode(),
         entity.getId(),
         entity.getStatus(),
         academicTermId,
@@ -66,15 +62,16 @@ public class CourseMapper {
     return domain;
   }
 
+  // entity.setId(domain.getSequence());
+
   public @NonNull CourseJpaEntity toEntity(Course domain) {
     if (domain == null) {
       throw new EntityMappingException();
     }
 
     CourseJpaEntity entity = new CourseJpaEntity();
-    entity.setPublicId(domain.getId());
-    entity.setCode(domain.getCode());
-    entity.setId(domain.getSequence());
+    entity.getExternalReference().setPublicId(domain.getId());
+    entity.getExternalReference().setCode(domain.getCode());
     entity.setStatus(domain.getStatus());
     entity.setName(domain.getName());
     entity.setCreatedBy(domain.getCreatedBy());
@@ -93,11 +90,13 @@ public class CourseMapper {
         .toList();
     entity.setAssignments(assignments);
 
-    if (domain.getAcademicTermId() != null) {
-      AcademicTermJpaEntity ref = entityManager.getReference(AcademicTermJpaEntity.class, domain.getAcademicTermId());
-      entity.setAcademicTerm(ref);
-    }
-
     return entity;
   }
 }
+
+// if (domain.getAcademicTermId() != null) {
+// AcademicTermJpaEntity ref =
+// entityManager.getReference(AcademicTermJpaEntity.class,
+// domain.getAcademicTermId());
+// entity.setAcademicTerm(ref);
+// }
