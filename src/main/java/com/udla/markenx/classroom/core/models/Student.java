@@ -9,7 +9,7 @@ import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 
 import com.udla.markenx.classroom.core.exceptions.InvalidEmailException;
 import com.udla.markenx.classroom.core.interfaces.Person;
-import com.udla.markenx.classroom.core.utils.validators.EntityValidator;
+import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 import com.udla.markenx.classroom.core.valueobjects.enums.DomainBaseModelStatus;
 
 public class Student extends Person {

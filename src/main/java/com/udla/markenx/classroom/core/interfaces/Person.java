@@ -3,7 +3,7 @@ package com.udla.markenx.classroom.core.interfaces;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.udla.markenx.classroom.core.utils.validators.EntityValidator;
+import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 import com.udla.markenx.classroom.core.valueobjects.enums.DomainBaseModelStatus;
 
 public abstract class Person extends DomainBaseModel {
