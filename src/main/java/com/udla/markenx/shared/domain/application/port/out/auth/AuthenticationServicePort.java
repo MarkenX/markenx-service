@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.application.ports.out.auth;
+package com.udla.markenx.shared.domain.application.port.out.auth;
 
 /**
  * Port for authentication system user management operations.

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
-import com.udla.markenx.classroom.application.ports.out.auth.AuthenticationServicePort;
+import com.udla.markenx.shared.domain.application.port.out.auth.AuthenticationServicePort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.DomainException;
 import com.udla.markenx.classroom.domain.models.Student;
