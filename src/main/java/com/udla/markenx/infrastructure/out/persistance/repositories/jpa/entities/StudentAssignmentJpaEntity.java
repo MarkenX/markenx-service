@@ -1,7 +1,6 @@
-package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces;
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
 
 import com.udla.markenx.core.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

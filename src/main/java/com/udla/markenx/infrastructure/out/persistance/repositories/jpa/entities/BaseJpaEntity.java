@@ -1,9 +1,8 @@
-package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces;
+package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities;
 
 import java.time.LocalDateTime;
 
 import com.udla.markenx.core.valueobjects.enums.DomainBaseModelStatus;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

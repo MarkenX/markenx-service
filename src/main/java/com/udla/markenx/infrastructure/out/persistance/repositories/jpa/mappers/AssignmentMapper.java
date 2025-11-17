@@ -8,9 +8,9 @@ import com.udla.markenx.core.models.Task;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.MappingException;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AssignmentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.AssignmentJpaEntity;
 
 import lombok.RequiredArgsConstructor;
 

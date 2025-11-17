@@ -12,9 +12,9 @@ import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingE
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentAssignmentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.StudentAssignmentJpaEntity;
 
 import lombok.RequiredArgsConstructor;
 

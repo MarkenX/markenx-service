@@ -12,8 +12,8 @@ import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.mappers.
 
 import lombok.RequiredArgsConstructor;
 
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentAssignmentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.StudentAssignmentJpaEntity;
 
 import org.springframework.data.domain.Page;
 

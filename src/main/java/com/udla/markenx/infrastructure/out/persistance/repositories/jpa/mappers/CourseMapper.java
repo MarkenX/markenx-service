@@ -12,10 +12,10 @@ import com.udla.markenx.core.models.Student;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.DomainMappingException;
 import com.udla.markenx.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
+import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.AssignmentJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
 import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.AssignmentJpaEntity;
 
 import lombok.RequiredArgsConstructor;
 

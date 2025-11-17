@@ -4,8 +4,6 @@ import java.time.Duration;
 
 import com.udla.markenx.core.valueobjects.enums.AttemptResult;
 import com.udla.markenx.core.valueobjects.enums.AttemptStatus;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.BaseJpaEntity;
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.StudentAssignmentJpaEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

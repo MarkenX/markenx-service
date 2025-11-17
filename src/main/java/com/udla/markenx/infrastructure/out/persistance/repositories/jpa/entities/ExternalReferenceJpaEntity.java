@@ -3,8 +3,6 @@ package com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entitie
 import java.util.List;
 import java.util.UUID;
 
-import com.udla.markenx.infrastructure.out.persistance.repositories.jpa.entities.interfaces.BaseJpaEntity;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
