@@ -78,6 +78,7 @@ public final class StudentMapper {
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());
     entity.setUpdatedAt(domain.getUpdatedAtDateTime());
+    entity.setUpdatedBy(domain.getUpdatedBy());
 
     if (parentCourse != null) {
       entity.setCourse(parentCourse);

@@ -89,6 +89,7 @@ public class StudentTaskMapper {
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());
     entity.setUpdatedAt(domain.getUpdatedAtDateTime());
+    entity.setUpdatedBy(domain.getUpdatedBy());
 
     List<AttemptJpaEntity> attempts = domain.getAttempts().stream()
         .map(attemptMapper::toEntity)

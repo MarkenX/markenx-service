@@ -70,6 +70,7 @@ public final class AcademicTermMapper {
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());
     entity.setUpdatedAt(domain.getUpdatedAtDateTime());
+    entity.setUpdatedBy(domain.getUpdatedBy());
 
     // ----- Courses (children) -----
     List<CourseJpaEntity> courses = entity.getCourses();

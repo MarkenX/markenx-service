@@ -48,6 +48,10 @@ public abstract class DomainBaseModel {
     return this.auditInfo.getCreatedBy();
   }
 
+  public String getUpdatedBy() {
+    return this.auditInfo.getLastModifiedBy();
+  }
+
   public LocalDate getCreatedAtDate() {
     return this.auditInfo.getCreatedDate();
   }

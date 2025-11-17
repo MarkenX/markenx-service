@@ -75,6 +75,7 @@ public final class TaskMapper {
 		entity.setCreatedBy(domain.getCreatedBy());
 		entity.setCreatedAt(domain.getCreatedAtDateTime());
 		entity.setUpdatedAt(domain.getUpdatedAtDateTime());
+		entity.setUpdatedBy(domain.getUpdatedBy());
 		entity.setCourse(parentCourse);
 
 		return entity;

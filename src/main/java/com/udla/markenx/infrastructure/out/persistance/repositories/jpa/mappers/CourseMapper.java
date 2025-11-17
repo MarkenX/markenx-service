@@ -50,6 +50,7 @@ public class CourseMapper {
     target.setCreatedBy(domain.getCreatedBy());
     target.setCreatedAt(domain.getCreatedAtDateTime());
     target.setUpdatedAt(domain.getUpdatedAtDateTime());
+    target.setUpdatedBy(domain.getUpdatedBy());
 
     // Academic Term
     if (domain.getAcademicTermId() != null) {

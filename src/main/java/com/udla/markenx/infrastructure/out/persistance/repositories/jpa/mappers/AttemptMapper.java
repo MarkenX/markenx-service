@@ -74,6 +74,7 @@ public final class AttemptMapper {
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());
     entity.setUpdatedAt(domain.getUpdatedAtDateTime());
+    entity.setUpdatedBy(domain.getUpdatedBy());
 
     return entity;
   }
