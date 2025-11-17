@@ -10,7 +10,7 @@ import java.util.UUID;
 import com.udla.markenx.classroom.core.exceptions.InvalidEntityException;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
-import com.udla.markenx.classroom.core.valueobjects.enums.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 public class AcademicTerm extends DomainBaseModel {
   private static final Class<AcademicTerm> CLAZZ = AcademicTerm.class;

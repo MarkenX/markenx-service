@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.core.valueobjects.enums;
+package com.udla.markenx.shared.domain.valueobjects;
 
 public enum DomainBaseModelStatus {
   ENABLED("Habilitado"),

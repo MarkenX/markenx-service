@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
-import com.udla.markenx.classroom.core.valueobjects.enums.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 public abstract class Person extends DomainBaseModel {
 	private final String firstName;

@@ -2,7 +2,7 @@ package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.j
 
 import java.time.LocalDateTime;
 
-import com.udla.markenx.classroom.core.valueobjects.enums.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -11,7 +11,7 @@ import com.udla.markenx.classroom.core.valueobjects.Score;
 
 import com.udla.markenx.classroom.core.valueobjects.enums.AttemptResult;
 import com.udla.markenx.classroom.core.valueobjects.enums.AttemptStatus;
-import com.udla.markenx.classroom.core.valueobjects.enums.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 public class Attempt extends DomainBaseModel {
 	private static final Class<Attempt> CLAZZ = Attempt.class;

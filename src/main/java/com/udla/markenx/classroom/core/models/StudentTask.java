@@ -9,7 +9,7 @@ import com.udla.markenx.classroom.core.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.core.interfaces.StudentAssignment;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 import com.udla.markenx.classroom.core.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.classroom.core.valueobjects.enums.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 public class StudentTask extends StudentAssignment<Task> {
   private static final Class<StudentTask> CLAZZ = StudentTask.class;
