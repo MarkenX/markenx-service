@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.core.interfaces;
+package com.udla.markenx.shared.domain.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

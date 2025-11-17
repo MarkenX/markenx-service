@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.udla.markenx.classroom.core.interfaces.Assignment;
-import com.udla.markenx.classroom.core.interfaces.DomainBaseModel;
+import com.udla.markenx.shared.domain.model.DomainBaseModel;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 import com.udla.markenx.classroom.core.valueobjects.enums.DomainBaseModelStatus;
 
