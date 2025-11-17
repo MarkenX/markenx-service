@@ -1,6 +1,6 @@
 package com.udla.markenx.game.domain.valueobject;
 
-public enum ActionCategory {
+public enum PlayerActionCategory {
   PRODUCTION("Producción"),
   DESIGN("Diseño"),
   PRICE("Precio"),
@@ -9,7 +9,7 @@ public enum ActionCategory {
 
   private final String label;
 
-  ActionCategory(String label) {
+  PlayerActionCategory(String label) {
     this.label = label;
   }
 

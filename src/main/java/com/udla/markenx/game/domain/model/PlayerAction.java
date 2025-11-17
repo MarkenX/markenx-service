@@ -2,19 +2,19 @@ package com.udla.markenx.game.domain.model;
 
 import java.util.UUID;
 
-import com.udla.markenx.game.domain.valueobject.ActionCategory;
+import com.udla.markenx.game.domain.valueobject.PlayerActionCategory;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 
 public class PlayerAction {
   private static final Class<PlayerAction> CLAZZ = PlayerAction.class;
 
   private final UUID id;
-  private final ActionCategory category;
+  private final PlayerActionCategory category;
   private final String name;
   private final String description;
   private final Double cost;
 
-  public PlayerAction(UUID id, ActionCategory category, String name, String description, Double cost) {
+  public PlayerAction(UUID id, PlayerActionCategory category, String name, String description, Double cost) {
     this.id = requireId(id);
     this.category = category;
     this.name = name;
@@ -28,7 +28,7 @@ public class PlayerAction {
     return this.id;
   }
 
-  public ActionCategory getCategory() {
+  public PlayerActionCategory getCategory() {
     return this.category;
   }
 
