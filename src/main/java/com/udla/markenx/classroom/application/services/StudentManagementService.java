@@ -54,8 +54,8 @@ public class StudentManagementService {
   }
 
   @Transactional
-  public BulkImportResponseDTO bulkImportStudents(MultipartFile file) {
-    return studentService.importStudentsFromCsv(file);
+  public BulkImportResponseDTO bulkImportStudents(UUID courseId, MultipartFile file) {
+    return studentService.importStudentsFromCsv(courseId, file);
   }
 
   @Transactional
@@ -64,7 +64,8 @@ public class StudentManagementService {
         request.firstName(),
         request.lastName(),
         request.email(),
-        request.password());
+        request.password(),
+        request.courseId());
   }
 
   @Transactional

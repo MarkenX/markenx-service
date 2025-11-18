@@ -54,17 +54,18 @@ public class StudentService {
    * Process:
    * 1. Validate email domain
    * 2. Check for duplicates in DB and Keycloak
-   * 3. Create user in Keycloak
-   * 4. Save student in database
+   * 3. Create user in Keycloak with STUDENT role
+   * 4. Save student in database with assigned course
    * 
    * @param firstName First name
    * @param lastName  Last name
    * @param email     Email (must be @udla.edu.ec)
    * @param password  Initial password
+   * @param courseId  UUID of the course to enroll the student
    * @return Created student
    */
   @Transactional
-  public Student createStudent(String firstName, String lastName, String email, String password) {
+  public Student createStudent(String firstName, String lastName, String email, String password, UUID courseId) {
     // Validate email
     validateUdlaEmail(email);
 
@@ -77,7 +78,7 @@ public class StudentService {
       throw new IllegalArgumentException("El usuario ya existe en Keycloak");
     }
 
-    // Create user in Keycloak
+    // Create user in Keycloak with STUDENT role
     authenticationService.createUser(
         email,
         password,
@@ -87,9 +88,9 @@ public class StudentService {
         true // Require password change on first login
     );
 
-    // Create student domain object
+    // Create student domain object with enrolled course
     Student student = new Student(
-        null, // enrolledCourseId - will be assigned later
+        courseId,
         firstName,
         lastName,
         email);
@@ -101,15 +102,24 @@ public class StudentService {
   /**
    * Deletes (disables) a student.
    * 
-   * This is a soft delete - sets status to DISABLED.
-   * The student record remains in database but is not visible to non-admins.
-   * Keycloak user is NOT deleted to preserve authentication history.
+   * This is a soft delete:
+   * - Sets status to DISABLED in database
+   * - Disables user in Keycloak (preserves authentication history)
+   * - Student record remains but is not visible to non-admins
    * 
    * @param studentId Student UUID
    */
   @Transactional
   public void deleteStudent(UUID studentId) {
+    // Find student to get email
+    Student student = studentRepository.findByIdIncludingDisabled(studentId)
+        .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + studentId));
+
+    // Disable in database
     studentRepository.deleteById(studentId);
+
+    // Disable in Keycloak
+    authenticationService.disableUser(student.getAcademicEmail());
   }
 
   /**
@@ -121,14 +131,15 @@ public class StudentService {
    * ALL students must be valid or NONE will be imported (transactional).
    * If ANY validation fails, the entire import is rolled back.
    * 
-   * @param file CSV file with student data
+   * @param courseId UUID of the course to enroll all students
+   * @param file     CSV file with student data
    * @return BulkImportResponseDTO with success message and count
    * @throws BulkImportException      if any student is invalid (contains all
    *                                  validation errors)
    * @throws IllegalArgumentException if file is empty or malformed
    */
   @Transactional
-  public BulkImportResponseDTO importStudentsFromCsv(MultipartFile file) {
+  public BulkImportResponseDTO importStudentsFromCsv(UUID courseId, MultipartFile file) {
     if (file.isEmpty()) {
       throw new IllegalArgumentException("El archivo CSV está vacío");
     }
@@ -148,7 +159,7 @@ public class StudentService {
         throw new IllegalArgumentException("El archivo CSV no contiene registros válidos");
       }
 
-      return processStudentImports(students);
+      return processStudentImports(courseId, students);
 
     } catch (BulkImportException ex) {
       throw ex; // Re-throw to preserve validation errors
@@ -164,10 +175,13 @@ public class StudentService {
    * Process:
    * 1. Validate all CSV data
    * 2. Check for duplicates in DB and Keycloak
-   * 3. Create users in Keycloak
-   * 4. Save students in database
+   * 3. Create users in Keycloak with STUDENT role
+   * 4. Save students in database assigned to specified course
+   * 
+   * @param courseId UUID of the course to enroll all students
+   * @param students List of students from CSV
    */
-  private BulkImportResponseDTO processStudentImports(List<BulkStudentImportDTO> students) {
+  private BulkImportResponseDTO processStudentImports(UUID courseId, List<BulkStudentImportDTO> students) {
     int totalRecords = students.size();
     Map<Integer, String> validationErrors = new HashMap<>();
 
@@ -222,7 +236,7 @@ public class StudentService {
     int successCount = 0;
     for (BulkStudentImportDTO studentDto : students) {
       try {
-        // Create user in Keycloak first
+        // Create user in Keycloak with STUDENT role
         authenticationService.createUser(
             studentDto.getEmail(),
             DEFAULT_PASSWORD,
@@ -232,9 +246,9 @@ public class StudentService {
             true // Require password change on first login
         );
 
-        // Create student domain object
+        // Create student domain object with enrolled course (from parameter)
         Student student = new Student(
-            null, // enrolledCourseId - will be assigned later
+            courseId,
             studentDto.getFirstName(),
             studentDto.getLastName(),
             studentDto.getEmail());

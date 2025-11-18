@@ -23,7 +23,7 @@ public interface StudentControllerPort {
 
   ResponseEntity<Void> deleteStudent(UUID id);
 
-  ResponseEntity<BulkImportResponseDTO> bulkImportStudents(MultipartFile file);
+  ResponseEntity<BulkImportResponseDTO> bulkImportStudents(UUID courseId, MultipartFile file);
 
   ResponseEntity<byte[]> downloadBulkImportTemplate();
 

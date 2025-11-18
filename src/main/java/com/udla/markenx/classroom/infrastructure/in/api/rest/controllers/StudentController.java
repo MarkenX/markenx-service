@@ -116,18 +116,20 @@ public class StudentController implements StudentControllerPort {
   }
 
   @Override
-  @PostMapping(value = "/bulk-import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = "/course/{courseId}/bulk-import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @Operation(summary = "Bulk import students from CSV", description = "Imports multiple students from a CSV file. CSV must have header: firstName,lastName,email,enrollmentCode. All emails must belong to @udla.edu.ec domain. Import is transactional (all-or-nothing). Requires ADMIN role.")
+  @Operation(summary = "Bulk import students from CSV", description = "Imports multiple students from a CSV file to a specific course. CSV must have header: firstName,lastName,email,enrollmentCode. All emails must belong to @udla.edu.ec domain. Import is transactional (all-or-nothing). Requires ADMIN role.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Students imported successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BulkImportResponseDTO.class))),
       @ApiResponse(responseCode = "400", description = "Invalid CSV format or validation errors"),
       @ApiResponse(responseCode = "401", description = "Unauthorized"),
-      @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role")
+      @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role"),
+      @ApiResponse(responseCode = "404", description = "Course not found")
   })
   public ResponseEntity<BulkImportResponseDTO> bulkImportStudents(
+      @Parameter(description = "Course UUID", required = true) @PathVariable UUID courseId,
       @Parameter(description = "CSV file with student data", required = true) @RequestParam("file") MultipartFile file) {
-    BulkImportResponseDTO response = studentManagementService.bulkImportStudents(file);
+    BulkImportResponseDTO response = studentManagementService.bulkImportStudents(courseId, file);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 

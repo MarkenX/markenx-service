@@ -37,6 +37,13 @@ public interface AuthenticationServicePort {
   void deleteUser(String externalUserId);
 
   /**
+   * Disables a user in the authentication system.
+   *
+   * @param email the user's email
+   */
+  void disableUser(String email);
+
+  /**
    * Checks if a user exists in the authentication system by email.
    *
    * @param email the user's email

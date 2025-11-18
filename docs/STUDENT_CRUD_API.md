@@ -32,7 +32,8 @@ POST /api/markenx/students
   "firstName": "Juan",
   "lastName": "Pérez",
   "email": "juan.perez@udla.edu.ec",
-  "password": "SecurePass123!"
+  "password": "SecurePass123!",
+  "courseId": "123e4567-e89b-12d3-a456-426614174000"
 }
 ```
 
@@ -41,6 +42,7 @@ POST /api/markenx/students
 - `lastName`: Required, 2-50 characters
 - `email`: Required, valid email format, must be `@udla.edu.ec` domain
 - `password`: Required, minimum 8 characters
+- `courseId`: Required, must be a valid UUID of an existing course
 
 **Response (201 Created):**
 ```json
@@ -94,9 +96,11 @@ curl -X POST http://localhost:8082/api/markenx/students \
 
 ## 2. Delete Student (Soft Delete)
 
-Disables a student by setting their status to DISABLED. The student record remains in the database but is not visible to non-admins.
+Disables a student by setting their status to DISABLED in both the database and Keycloak. The student record remains but is not visible to non-admins and cannot authenticate.
 
-**Important:** Keycloak user is NOT deleted to preserve authentication history.
+**Important:** 
+- Database: Status set to DISABLED (soft delete)
+- Keycloak: User is disabled (preserves authentication history, prevents login)
 
 **Endpoint:**
 ```http
@@ -145,16 +149,17 @@ POST /api/markenx/students/bulk-import
 
 **CSV Format:**
 ```csv
-firstName,lastName,email,enrollmentCode
-Juan,Pérez,juan.perez@udla.edu.ec,202301234
-María,García,maria.garcia@udla.edu.ec,202301235
-Pedro,Rodríguez,pedro.rodriguez@udla.edu.ec,202301236
+firstName,lastName,email,enrollmentCode,courseId
+Juan,Pérez,juan.perez@udla.edu.ec,202301234,123e4567-e89b-12d3-a456-426614174000
+María,García,maria.garcia@udla.edu.ec,202301235,123e4567-e89b-12d3-a456-426614174000
+Pedro,Rodríguez,pedro.rodriguez@udla.edu.ec,202301236,123e4567-e89b-12d3-a456-426614174000
 ```
 
 **CSV Requirements:**
 - Header row is required
-- Columns: `firstName`, `lastName`, `email`, `enrollmentCode`
+- Columns: `firstName`, `lastName`, `email`, `enrollmentCode`, `courseId`
 - All emails must be `@udla.edu.ec` domain
+- `courseId` must be a valid UUID of an existing course
 - No duplicate emails (checked against DB and Keycloak)
 
 **Default Password:** All imported students receive password: `ChangeMe123!`
@@ -207,9 +212,9 @@ GET /api/markenx/students/bulk-import/template
 
 **Template Contents:**
 ```csv
-firstName,lastName,email,enrollmentCode
-Juan,Pérez,juan.perez@udla.edu.ec,202301234
-María,García,maria.garcia@udla.edu.ec,202301235
+firstName,lastName,email,enrollmentCode,courseId
+Juan,Pérez,juan.perez@udla.edu.ec,202301234,123e4567-e89b-12d3-a456-426614174000
+María,García,maria.garcia@udla.edu.ec,202301235,123e4567-e89b-12d3-a456-426614174000
 ```
 
 **curl Example:**
@@ -349,8 +354,8 @@ When a student is created (individually or via bulk import):
 ### Delete Operations
 When a student is deleted:
 - Database: Status set to `DISABLED` (soft delete)
-- Keycloak: User is **NOT** deleted (preserves authentication history)
-- Access: Non-admins cannot see disabled students
+- Keycloak: User is **DISABLED** (preserves authentication history, prevents login)
+- Access: Non-admins cannot see disabled students, user cannot authenticate
 
 ### Duplicate Prevention
 Before creating:
@@ -462,10 +467,10 @@ Import the MarkenX API collection and use the following requests:
 
 **Bulk CSV:**
 ```csv
-firstName,lastName,email,enrollmentCode
-Test1,User1,test1.user1@udla.edu.ec,TEST001
-Test2,User2,test2.user2@udla.edu.ec,TEST002
-Test3,User3,test3.user3@udla.edu.ec,TEST003
+firstName,lastName,email,enrollmentCode,courseId
+Test1,User1,test1.user1@udla.edu.ec,TEST001,123e4567-e89b-12d3-a456-426614174000
+Test2,User2,test2.user2@udla.edu.ec,TEST002,123e4567-e89b-12d3-a456-426614174000
+Test3,User3,test3.user3@udla.edu.ec,TEST003,123e4567-e89b-12d3-a456-426614174000
 ```
 
 ---

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.domain.models.Student;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.CourseJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.StudentMapper;
 
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class StudentRepositoryAdapter implements StudentRepositoryPort {
 
   private final StudentJpaRepository jpaRepository;
+  private final CourseJpaRepository courseJpaRepository;
   private final StudentMapper mapper;
 
   @Override
@@ -91,7 +94,19 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   @Override
   public Student save(Student student) {
     Objects.requireNonNull(student, "Student cannot be null");
-    var entity = mapper.toEntity(student);
+
+    // Find course entity if student has a courseId
+    CourseJpaEntity courseEntity = null;
+    if (student.getEnrolledCourseId() != null) {
+      courseEntity = courseJpaRepository.findAll().stream()
+          .filter(c -> c.getExternalReference() != null &&
+              c.getExternalReference().getPublicId().equals(student.getEnrolledCourseId()))
+          .findFirst()
+          .orElseThrow(
+              () -> new IllegalArgumentException("Curso no encontrado con ID: " + student.getEnrolledCourseId()));
+    }
+
+    var entity = mapper.toEntity(student, courseEntity);
     var savedEntity = jpaRepository.save(entity);
     return mapper.toDomain(savedEntity);
   }

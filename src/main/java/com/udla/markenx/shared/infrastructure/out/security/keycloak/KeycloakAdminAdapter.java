@@ -126,6 +126,46 @@ public class KeycloakAdminAdapter implements AuthenticationServicePort {
   }
 
   @Override
+  public void disableUser(String email) {
+    try {
+      String accessToken = getAdminAccessToken();
+
+      // Find user by email
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(accessToken);
+      HttpEntity<Void> searchRequest = new HttpEntity<>(headers);
+
+      String usersUrl = String.format("%s/admin/realms/%s/users?username=%s&exact=true", keycloakUrl, realm, email);
+      ResponseEntity<List> searchResponse = restTemplate.exchange(usersUrl, HttpMethod.GET, searchRequest, List.class);
+
+      List users = searchResponse.getBody();
+      if (users == null || users.isEmpty()) {
+        throw new KeycloakException("User not found with email: " + email);
+      }
+
+      // Get user ID
+      @SuppressWarnings("unchecked")
+      Map<String, Object> user = (Map<String, Object>) users.get(0);
+      String userId = (String) user.get("id");
+
+      // Update user to disable
+      Map<String, Object> updatePayload = new HashMap<>();
+      updatePayload.put("enabled", false);
+
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      HttpEntity<Map<String, Object>> updateRequest = new HttpEntity<>(updatePayload, headers);
+
+      String userUrl = String.format("%s/admin/realms/%s/users/%s", keycloakUrl, realm, userId);
+      restTemplate.exchange(userUrl, HttpMethod.PUT, updateRequest, Void.class);
+
+    } catch (HttpClientErrorException e) {
+      throw new KeycloakException("Error disabling user in Keycloak: " + e.getResponseBodyAsString());
+    } catch (Exception e) {
+      throw new KeycloakException("Unexpected error disabling user in Keycloak", e);
+    }
+  }
+
+  @Override
   public boolean userExists(String email) {
     try {
       String accessToken = getAdminAccessToken();
