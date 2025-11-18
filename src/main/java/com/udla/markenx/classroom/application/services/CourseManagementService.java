@@ -30,9 +30,13 @@ public class CourseManagementService {
 
   @Transactional
   public Course createCourse(CreateCourseRequestDTO request) {
-    java.util.UUID academicTermUUID = java.util.UUID.randomUUID();
-    AcademicTerm academicTerm = academicPeriodRepository.findByIdIncludingDisabled(academicTermUUID)
+    AcademicTerm academicTerm = academicPeriodRepository.findByIdIncludingDisabled(request.getAcademicPeriodId())
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", request.getAcademicPeriodId()));
+
+    if (academicTerm.getStatus() != com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED) {
+      throw new com.udla.markenx.classroom.domain.exceptions.InvalidEntityException(
+          "No se puede crear un curso para un período académico deshabilitado");
+    }
 
     Course newCourse = new Course(
         academicTerm.getId(),
@@ -43,7 +47,7 @@ public class CourseManagementService {
   }
 
   @Transactional
-  public Course updateCourse(Long id, UpdateCourseRequestDTO request) {
+  public Course updateCourse(java.util.UUID id, UpdateCourseRequestDTO request) {
     Course existing = courseRepository.findByIdIncludingDisabled(id)
         .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
 
@@ -54,7 +58,7 @@ public class CourseManagementService {
   }
 
   @Transactional(readOnly = true)
-  public Course getCourseById(Long id) {
+  public Course getCourseById(java.util.UUID id) {
     if (isAdmin()) {
       return courseRepository.findByIdIncludingDisabled(id)
           .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
@@ -72,9 +76,21 @@ public class CourseManagementService {
   }
 
   @Transactional
-  public void deleteCourse(Long id) {
+  public void deleteCourse(java.util.UUID id) {
     Course course = courseRepository.findByIdIncludingDisabled(id)
         .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
+
+    // Verificar si el curso tiene tareas habilitadas
+    long enabledTasksCount = course.getAssignments().stream()
+        .filter(assignment -> assignment
+            .getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+        .count();
+
+    if (enabledTasksCount > 0) {
+      throw new com.udla.markenx.classroom.domain.exceptions.InvalidEntityException(
+          String.format("No se puede deshabilitar el curso con ID %s porque tiene %d tarea(s) habilitada(s)",
+              id, enabledTasksCount));
+    }
 
     course.disable();
     course.markUpdated();

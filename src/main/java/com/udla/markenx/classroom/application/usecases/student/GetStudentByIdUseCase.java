@@ -1,5 +1,7 @@
 package com.udla.markenx.classroom.application.usecases.student;
 
+import java.util.UUID;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,15 @@ public class GetStudentByIdUseCase {
   }
 
   public Student execute(Long id) {
+    if (isAdmin()) {
+      return studentRepository.findByIdIncludingDisabled(id)
+          .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+    }
+    return studentRepository.findById(id)
+        .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+  }
+
+  public Student execute(UUID id) {
     if (isAdmin()) {
       return studentRepository.findByIdIncludingDisabled(id)
           .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));

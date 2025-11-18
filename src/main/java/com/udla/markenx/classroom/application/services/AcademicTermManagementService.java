@@ -87,6 +87,12 @@ public class AcademicTermManagementService {
     AcademicTerm period = termRepository.findByIdIncludingDisabled(id)
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
 
+    // Verificar si el período académico tiene cursos habilitados
+    int enabledCoursesCount = termRepository.countCoursesByPeriodId(id);
+    if (enabledCoursesCount > 0) {
+      throw new com.udla.markenx.classroom.domain.exceptions.PeriodHasCoursesException(id, enabledCoursesCount);
+    }
+
     period.disable();
     period.markUpdated();
     termRepository.update(period);

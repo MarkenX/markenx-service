@@ -1,6 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.adapters;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,6 +67,63 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	public Page<Task> findAllIncludingDisabled(Pageable pageable) {
 		Objects.requireNonNull(pageable, "Pageable cannot be null");
 		return jpaRepository.findAll(pageable).map(mapper::toDomain);
+	}
+
+	@Override
+	public Optional<Task> findById(UUID id) {
+		Objects.requireNonNull(id, "Task UUID cannot be null");
+		return jpaRepository.findAll().stream()
+				.filter(entity -> entity.getExternalReference() != null &&
+						entity.getExternalReference().getPublicId().equals(id) &&
+						entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+				.findFirst()
+				.map(mapper::toDomain);
+	}
+
+	@Override
+	public Optional<Task> findByIdIncludingDisabled(UUID id) {
+		Objects.requireNonNull(id, "Task UUID cannot be null");
+		return jpaRepository.findAll().stream()
+				.filter(entity -> entity.getExternalReference() != null &&
+						entity.getExternalReference().getPublicId().equals(id))
+				.findFirst()
+				.map(mapper::toDomain);
+	}
+
+	@Override
+	public Page<Task> getTasksByCourseId(UUID courseId, Pageable pageable) {
+		Objects.requireNonNull(courseId, "Course UUID cannot be null");
+		return jpaRepository.findAll(pageable)
+				.map(entity -> {
+					if (entity.getCourse() != null &&
+							entity.getCourse().getExternalReference() != null &&
+							entity.getCourse().getExternalReference().getPublicId().equals(courseId) &&
+							entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED) {
+						return mapper.toDomain(entity);
+					}
+					return null;
+				})
+				.map(domain -> domain);
+	}
+
+	@Override
+	public Page<Task> getCourseTasksByDueDate(UUID courseId, RangeDate rangeDate, Pageable pageable) {
+		Objects.requireNonNull(courseId, "Course UUID cannot be null");
+		Objects.requireNonNull(rangeDate, "RangeDate cannot be null");
+		return jpaRepository.findAll(pageable)
+				.map(entity -> {
+					if (entity.getCourse() != null &&
+							entity.getCourse().getExternalReference() != null &&
+							entity.getCourse().getExternalReference().getPublicId().equals(courseId) &&
+							entity.getDueDate() != null &&
+							!entity.getDueDate().isBefore(rangeDate.getStartDate()) &&
+							!entity.getDueDate().isAfter(rangeDate.getEndDate()) &&
+							entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED) {
+						return mapper.toDomain(entity);
+					}
+					return null;
+				})
+				.map(domain -> domain);
 	}
 
 }

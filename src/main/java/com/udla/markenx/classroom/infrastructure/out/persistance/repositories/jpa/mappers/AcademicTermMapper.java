@@ -95,7 +95,8 @@ public final class AcademicTermMapper {
         if (courseDomain == null)
           continue; // defensivo
 
-        CourseJpaEntity courseEntity = courseMapper.toEntity(courseDomain);
+        // Use toEntityWithoutParent to avoid database lookup during cascade
+        CourseJpaEntity courseEntity = courseMapper.toEntityWithoutParent(courseDomain);
 
         // maintain bidirectional relationship
         courseEntity.setAcademicTerm(entity);

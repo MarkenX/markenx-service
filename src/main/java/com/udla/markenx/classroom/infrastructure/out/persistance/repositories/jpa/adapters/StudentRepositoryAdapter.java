@@ -1,6 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.adapters;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,5 +65,26 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   @Override
   public boolean existsByEmail(String email) {
     return jpaRepository.existsByEmail(email);
+  }
+
+  @Override
+  public Optional<Student> findById(UUID id) {
+    Objects.requireNonNull(id, "Student UUID cannot be null");
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(id) &&
+            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+        .findFirst()
+        .map(mapper::toDomain);
+  }
+
+  @Override
+  public Optional<Student> findByIdIncludingDisabled(UUID id) {
+    Objects.requireNonNull(id, "Student UUID cannot be null");
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(id))
+        .findFirst()
+        .map(mapper::toDomain);
   }
 }

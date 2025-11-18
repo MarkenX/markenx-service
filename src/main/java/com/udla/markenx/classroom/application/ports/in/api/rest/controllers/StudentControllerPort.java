@@ -1,5 +1,7 @@
 package com.udla.markenx.classroom.application.ports.in.api.rest.controllers;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +15,7 @@ public interface StudentControllerPort {
 
   ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable);
 
-  ResponseEntity<StudentResponseDTO> getStudentById(Long id);
+  ResponseEntity<StudentResponseDTO> getStudentById(UUID id);
 
   // /**
   // * Retrieves tasks assigned to a specific student with filters.

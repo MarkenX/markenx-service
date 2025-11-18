@@ -1,5 +1,7 @@
 package com.udla.markenx.classroom.application.ports.in.api.rest.controllers;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +16,11 @@ public interface CourseManagementControllerPort {
 
   ResponseEntity<CourseResponseDTO> createCourse(@Valid CreateCourseRequestDTO request);
 
-  ResponseEntity<CourseResponseDTO> updateCourse(Long id, @Valid UpdateCourseRequestDTO request);
+  ResponseEntity<CourseResponseDTO> updateCourse(UUID id, @Valid UpdateCourseRequestDTO request);
 
-  ResponseEntity<CourseResponseDTO> getCourseById(Long id);
+  ResponseEntity<CourseResponseDTO> getCourseById(UUID id);
 
   ResponseEntity<Page<CourseResponseDTO>> getAllCourses(Pageable pageable);
 
-  ResponseEntity<Void> deleteCourse(Long id);
+  ResponseEntity<Void> deleteCourse(UUID id);
 }

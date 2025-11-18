@@ -1,5 +1,9 @@
 package com.udla.markenx.classroom.application.dtos.requests;
 
+import java.util.UUID;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,8 +16,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CreateCourseRequestDTO {
-  @jakarta.validation.constraints.Positive(message = "El ID del período debe ser positivo")
-  private Long academicPeriodId;
-  @jakarta.validation.constraints.NotBlank(message = "El label del curso es requerido")
+  @NotNull(message = "El ID del período es requerido")
+  private UUID academicPeriodId;
+  @NotBlank(message = "El label del curso es requerido")
   private String label;
 }

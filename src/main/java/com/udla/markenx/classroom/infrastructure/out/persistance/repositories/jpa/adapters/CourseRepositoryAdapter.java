@@ -2,6 +2,7 @@ package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.j
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,14 +34,16 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
   @Override
   public Course update(Course course) {
     Objects.requireNonNull(course, "Course cannot be null");
-    Long courseId = Objects.requireNonNull(course.getSequence(),
-        "Course sequence (internal ID) cannot be null for update");
+    Objects.requireNonNull(course.getId(), "Course UUID cannot be null for update");
 
-    // Find existing entity
-    CourseJpaEntity existingEntity = jpaRepository.findById(courseId)
-        .orElseThrow(() -> new RuntimeException("Course not found with id: " + course.getSequence()));
+    // Find existing entity by UUID
+    CourseJpaEntity existingEntity = jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(course.getId()))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Course not found with UUID: " + course.getId()));
 
-    // Update fields
+    // Update only modifiable fields
     existingEntity.setName(course.getName());
     existingEntity.setStatus(course.getStatus());
     existingEntity.setUpdatedBy(course.getUpdatedBy());
@@ -83,6 +86,40 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
     jpaRepository.findById(id)
         .ifPresent(entity -> {
           // Soft delete: change status to DISABLED
+          entity.setStatus(DomainBaseModelStatus.DISABLED);
+          jpaRepository.save(entity);
+        });
+  }
+
+  @Override
+  public Optional<Course> findById(UUID id) {
+    Objects.requireNonNull(id, "Course UUID cannot be null");
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(id) &&
+            entity.getStatus() == DomainBaseModelStatus.ENABLED)
+        .findFirst()
+        .map(mapper::toDomain);
+  }
+
+  @Override
+  public Optional<Course> findByIdIncludingDisabled(UUID id) {
+    Objects.requireNonNull(id, "Course UUID cannot be null");
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(id))
+        .findFirst()
+        .map(mapper::toDomain);
+  }
+
+  @Override
+  public void deleteById(UUID id) {
+    Objects.requireNonNull(id, "Course UUID cannot be null");
+    jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(id))
+        .findFirst()
+        .ifPresent(entity -> {
           entity.setStatus(DomainBaseModelStatus.DISABLED);
           jpaRepository.save(entity);
         });

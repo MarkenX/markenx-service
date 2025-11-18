@@ -1,6 +1,7 @@
 package com.udla.markenx.classroom.application.dtos.requests;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,8 +18,7 @@ import lombok.Setter;
 public class CreateTaskRequestDTO {
 
   @NotNull(message = "El ID del curso es obligatorio")
-  @Positive(message = "El ID del curso debe ser positivo")
-  private Long courseId;
+  private UUID courseId;
 
   @NotBlank(message = "El título es obligatorio")
   private String title;

@@ -6,12 +6,17 @@ import org.springframework.data.domain.Pageable;
 import com.udla.markenx.classroom.domain.models.Student;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface StudentRepositoryPort {
 
   Optional<Student> findById(Long id);
 
   Optional<Student> findByIdIncludingDisabled(Long id);
+
+  Optional<Student> findById(UUID id);
+
+  Optional<Student> findByIdIncludingDisabled(UUID id);
 
   Optional<Student> findByEmail(String email);
 

@@ -133,7 +133,11 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
         .filter(entity -> entity.getExternalReference() != null &&
             entity.getExternalReference().getPublicId().equals(periodId))
         .findFirst()
-        .map(entity -> entity.getCourses() != null ? entity.getCourses().size() : 0)
+        .map(entity -> entity.getCourses() != null
+            ? (int) entity.getCourses().stream()
+                .filter(course -> course.getStatus() == DomainBaseModelStatus.ENABLED)
+                .count()
+            : 0)
         .orElse(0);
   }
 

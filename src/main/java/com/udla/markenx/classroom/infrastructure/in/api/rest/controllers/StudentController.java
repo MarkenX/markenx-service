@@ -1,5 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.in.api.rest.controllers;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -120,7 +122,7 @@ public class StudentController implements StudentControllerPort {
       @ApiResponse(responseCode = "401", description = "Unauthorized")
   })
   public ResponseEntity<StudentResponseDTO> getStudentById(
-      @Parameter(description = "Student ID", required = true) @PathVariable Long id) {
+      @Parameter(description = "Student ID", required = true) @PathVariable UUID id) {
     Student student = getStudentByIdUseCase.execute(id);
     StudentResponseDTO response = StudentMapper.toDto(student);
     return ResponseEntity.ok(response);

@@ -1,5 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.in.api.rest.controllers;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -38,11 +40,11 @@ import jakarta.validation.Valid;
 @Validated
 @Tag(name = "Courses", description = "Course management operations including CRUD operations")
 @SecurityRequirement(name = "bearerAuth")
-public class CourseManagementController implements CourseManagementControllerPort {
+public class CourseController implements CourseManagementControllerPort {
 
   private final CourseManagementService courseService;
 
-  public CourseManagementController(CourseManagementService courseService) {
+  public CourseController(CourseManagementService courseService) {
     this.courseService = courseService;
   }
 
@@ -74,7 +76,7 @@ public class CourseManagementController implements CourseManagementControllerPor
       @ApiResponse(responseCode = "403", description = "Forbidden")
   })
   public ResponseEntity<CourseResponseDTO> updateCourse(
-      @Parameter(description = "Course ID", required = true) @PathVariable Long id,
+      @Parameter(description = "Course ID", required = true) @PathVariable UUID id,
       @Parameter(description = "Updated course data", required = true) @Valid @RequestBody UpdateCourseRequestDTO request) {
     Course course = courseService.updateCourse(id, request);
     CourseResponseDTO response = CourseDtoMapper.toResponseDto(course);
@@ -91,7 +93,7 @@ public class CourseManagementController implements CourseManagementControllerPor
       @ApiResponse(responseCode = "401", description = "Unauthorized")
   })
   public ResponseEntity<CourseResponseDTO> getCourseById(
-      @Parameter(description = "Course ID", required = true) @PathVariable Long id) {
+      @Parameter(description = "Course ID", required = true) @PathVariable UUID id) {
     Course course = courseService.getCourseById(id);
     CourseResponseDTO response = CourseDtoMapper.toResponseDto(course);
     return ResponseEntity.ok(response);
@@ -122,7 +124,7 @@ public class CourseManagementController implements CourseManagementControllerPor
       @ApiResponse(responseCode = "403", description = "Forbidden")
   })
   public ResponseEntity<Void> deleteCourse(
-      @Parameter(description = "Course ID", required = true) @PathVariable Long id) {
+      @Parameter(description = "Course ID", required = true) @PathVariable UUID id) {
     courseService.deleteCourse(id);
     return ResponseEntity.noContent().build();
   }

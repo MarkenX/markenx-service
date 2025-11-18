@@ -15,7 +15,7 @@ import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jp
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AssignmentJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
-import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicTermJpaRepository;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.BaseMapper;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.ExternalReferenceMapperHelper;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.MapperValidator;
@@ -28,7 +28,12 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
   private final AssignmentMapper assignmentMapper;
   private final MapperValidator validator;
   private final ExternalReferenceMapperHelper externalReferenceHelper;
+  private final AcademicTermJpaRepository academicTermRepository;
 
+  /**
+   * Converts domain to entity with full relationship resolution.
+   * Used for standalone Course creation/update operations.
+   */
   public @NonNull CourseJpaEntity toEntity(Course domain, CourseJpaEntity entity) {
     validateDomain(domain);
 
@@ -37,6 +42,25 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
     mapExternalReference(domain, target);
     mapBasicFields(domain, target);
     mapAcademicTerm(domain, target);
+    mapAssignments(domain, target);
+    mapStudents(domain, target);
+
+    return target;
+  }
+
+  /**
+   * Converts domain to entity WITHOUT resolving AcademicTerm from database.
+   * Used when mapping as part of a parent aggregate (e.g., AcademicTermMapper).
+   * The parent mapper will set the AcademicTerm reference after this call.
+   */
+  public @NonNull CourseJpaEntity toEntityWithoutParent(Course domain) {
+    validateDomain(domain);
+
+    final CourseJpaEntity target = new CourseJpaEntity();
+
+    mapExternalReference(domain, target);
+    mapBasicFields(domain, target);
+    // Skip mapAcademicTerm - will be set by parent mapper
     mapAssignments(domain, target);
     mapStudents(domain, target);
 
@@ -127,13 +151,15 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
       return;
     }
 
-    AcademicTermJpaEntity termRef = new AcademicTermJpaEntity();
-    ExternalReferenceJpaEntity termExt = externalReferenceHelper.createExternalReference(
-        domain.getAcademicTermId(),
-        null,
-        "ACADEMIC_TERM");
-    termRef.setExternalReference(termExt);
-    target.setAcademicTerm(termRef);
+    // Find the existing AcademicTermJpaEntity by UUID
+    AcademicTermJpaEntity academicTerm = academicTermRepository.findAll().stream()
+        .filter(term -> term.getExternalReference() != null &&
+            term.getExternalReference().getPublicId().equals(domain.getAcademicTermId()))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException(
+            "AcademicTerm not found with UUID: " + domain.getAcademicTermId()));
+
+    target.setAcademicTerm(academicTerm);
   }
 
   private void mapAssignments(Course domain, CourseJpaEntity target) {
