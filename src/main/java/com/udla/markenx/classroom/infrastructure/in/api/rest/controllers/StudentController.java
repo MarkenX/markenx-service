@@ -94,13 +94,16 @@ public class StudentController implements StudentControllerPort {
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  @Operation(summary = "Get all students", description = "Retrieves a paginated list of active students. Only returns enabled students.")
+  @Operation(summary = "Get all students", description = "Retrieves a paginated list of active students. Only returns enabled students.", parameters = {
+      @Parameter(name = "page", description = "Page number (0-based)", example = "0"),
+      @Parameter(name = "size", description = "Number of items per page", example = "10"),
+      @Parameter(name = "sort", description = "Sorting criteria (e.g., 'firstName,asc' or 'email,asc')", example = "firstName,asc")
+  })
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Students retrieved successfully"),
       @ApiResponse(responseCode = "401", description = "Unauthorized")
   })
-  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(
-      @Parameter(description = "Pagination parameters") Pageable pageable) {
+  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable) {
     Page<Student> students = getAllStudentsUseCase.execute(pageable);
     Page<StudentResponseDTO> response = students.map(StudentMapper::toDto);
     return ResponseEntity.ok(response);

@@ -6,24 +6,26 @@ La aplicación MarkenX Service ahora incluye Swagger/OpenAPI para documentación
 
 ## Acceso a Swagger UI
 
-### URL Local
-Cuando la aplicación está corriendo localmente:
+### URL Local (Docker)
+Cuando la aplicación está corriendo en Docker con docker-compose.dev.yml:
 
 ```
-http://localhost:8080/swagger-ui.html
+http://localhost:8082/swagger-ui.html
 ```
 
 O alternativamente:
 ```
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8082/swagger-ui/index.html
 ```
+
+**Nota:** El puerto 8082 es el mapeado en docker-compose.dev.yml (8082:8080)
 
 ### API Docs JSON/YAML
 Los documentos OpenAPI están disponibles en:
 
 ```
-http://localhost:8080/v3/api-docs        (JSON)
-http://localhost:8080/v3/api-docs.yaml   (YAML)
+http://localhost:8082/v3/api-docs        (JSON)
+http://localhost:8082/v3/api-docs.yaml   (YAML)
 ```
 
 ## Autenticación

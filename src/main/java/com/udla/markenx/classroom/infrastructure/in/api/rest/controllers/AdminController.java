@@ -63,14 +63,17 @@ public class AdminController implements AdminControllerPort {
 
   @Override
   @GetMapping("/students")
-  @Operation(summary = "Get all students", description = "Retrieves a paginated list of all students including disabled ones. Supports sorting and pagination.")
+  @Operation(summary = "Get all students", description = "Retrieves a paginated list of all students including disabled ones. Supports sorting and pagination.", parameters = {
+      @Parameter(name = "page", description = "Page number (0-based)", example = "0"),
+      @Parameter(name = "size", description = "Number of items per page", example = "10"),
+      @Parameter(name = "sort", description = "Sorting criteria (e.g., 'firstName,asc' or 'email,asc')", example = "firstName,asc")
+  })
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Students retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))),
       @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid or missing JWT token"),
       @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role")
   })
-  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(
-      @Parameter(description = "Pagination parameters (page, size, sort)") Pageable pageable) {
+  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable) {
     Page<Student> students = getAllStudentsUseCase.execute(pageable);
     Page<StudentResponseDTO> response = students.map(StudentMapper::toDto);
     return ResponseEntity.ok(response);

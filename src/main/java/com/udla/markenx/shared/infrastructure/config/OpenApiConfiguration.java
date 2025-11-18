@@ -16,8 +16,8 @@ import java.util.List;
 @Configuration
 public class OpenApiConfiguration {
 
-  @Value("${server.port:8080}")
-  private String serverPort;
+  @Value("${swagger.server.url:http://localhost:8082}")
+  private String serverUrl;
 
   @Bean
   public OpenAPI markenxOpenAPI() {
@@ -53,11 +53,8 @@ public class OpenApiConfiguration {
                 .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
         .servers(List.of(
             new Server()
-                .url("http://localhost:" + serverPort)
-                .description("Local Development Server"),
-            new Server()
-                .url("http://host.docker.internal:" + serverPort)
-                .description("Docker Development Server")))
+                .url(serverUrl)
+                .description("Development Server (Docker)")))
         .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
         .components(new io.swagger.v3.oas.models.Components()
             .addSecuritySchemes(securitySchemeName,
