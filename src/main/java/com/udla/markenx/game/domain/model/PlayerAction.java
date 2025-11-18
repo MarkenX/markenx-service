@@ -14,7 +14,12 @@ public class PlayerAction {
   private final String description;
   private final Double cost;
 
-  public PlayerAction(UUID id, PlayerActionCategory category, String name, String description, Double cost) {
+  public PlayerAction(
+      UUID id,
+      PlayerActionCategory category,
+      String name,
+      String description,
+      Double cost) {
     this.id = requireId(id);
     this.category = category;
     this.name = name;
@@ -46,7 +51,11 @@ public class PlayerAction {
 
   // #endregion
 
+  // #region Validations
+
   private UUID requireId(UUID id) {
     return EntityValidator.ensureNotNull(CLAZZ, id, "id");
   }
+
+  // #endregion
 }
