@@ -18,6 +18,8 @@ public class Subfactor {
     this.description = requireDescription(description);
   }
 
+  // #region Getters
+
   public UUID getId() {
     return this.id;
   }
@@ -30,6 +32,10 @@ public class Subfactor {
     return this.description;
   }
 
+  // #endregion
+
+  // #region Validations
+
   private UUID requireId(UUID id) {
     return EntityValidator.ensureNotNull(CLAZZ, id, "id");
   }
@@ -41,4 +47,6 @@ public class Subfactor {
   private String requireDescription(String description) {
     return EntityValidator.ensureNotNullOrEmpty(CLAZZ, description, "description");
   }
+
+  // #endregion
 }
