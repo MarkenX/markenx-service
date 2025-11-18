@@ -15,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class RandomStudentFactory {
-  private static final int MAX_TASKS = 30;
-
   private final StudentBuilder studentBuilder;
-  private final RandomStudentTaskFactory randomStudentTaskFactory;
   private final RandomNumberGeneratorPort randomNumberGenerator;
 
   public Student createRandomStudent(UUID courseId) {
