@@ -27,11 +27,14 @@ public final class StudentAssignmentMapper implements BaseMapper<StudentAssignme
   public @NonNull StudentAssignment<?> toDomain(StudentAssignmentJpaEntity entity) {
     validateEntity(entity);
 
-    if (entity instanceof StudentTaskJpaEntity studentTask) {
-      return studentTaskMapper.toDomain(studentTask);
+    // Handle Hibernate proxy - get the actual class
+    Class<?> entityClass = org.hibernate.Hibernate.getClass(entity);
+
+    if (StudentTaskJpaEntity.class.isAssignableFrom(entityClass)) {
+      return studentTaskMapper.toDomain((StudentTaskJpaEntity) entity);
     }
 
-    throw createUnrecognizedEntityTypeException(entity.getClass());
+    throw createUnrecognizedEntityTypeException(entityClass);
   }
 
   @Override
