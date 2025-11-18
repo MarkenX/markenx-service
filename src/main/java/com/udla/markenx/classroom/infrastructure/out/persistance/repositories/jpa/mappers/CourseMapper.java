@@ -6,44 +6,91 @@ import java.util.UUID;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
+
 import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.domain.models.Student;
-import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.DomainMappingException;
-import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.EntityMappingException;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AssignmentJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
-import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
-
-import lombok.RequiredArgsConstructor;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.BaseMapper;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.ExternalReferenceMapperHelper;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.MapperValidator;
 
 @Component
 @RequiredArgsConstructor
-public class CourseMapper {
+public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
 
   private final StudentMapper studentMapper;
   private final AssignmentMapper assignmentMapper;
+  private final MapperValidator validator;
+  private final ExternalReferenceMapperHelper externalReferenceHelper;
 
   public @NonNull CourseJpaEntity toEntity(Course domain, CourseJpaEntity entity) {
-    if (domain == null) {
-      throw new EntityMappingException();
-    }
+    validateDomain(domain);
 
-    // must be effectively final
-    final CourseJpaEntity target = (entity != null) ? entity : new CourseJpaEntity();
+    final CourseJpaEntity target = entity != null ? entity : new CourseJpaEntity();
 
-    // External reference
-    ExternalReferenceJpaEntity ref = (target.getExternalReference() != null)
-        ? target.getExternalReference()
-        : new ExternalReferenceJpaEntity();
+    mapExternalReference(domain, target);
+    mapBasicFields(domain, target);
+    mapAcademicTerm(domain, target);
+    mapAssignments(domain, target);
+    mapStudents(domain, target);
 
-    ref.setPublicId(domain.getId());
-    ref.setCode(domain.getCode());
-    ref.setEntityType("COURSE");
-    target.setExternalReference(ref);
+    return target;
+  }
 
+  @Override
+  public @NonNull CourseJpaEntity toEntity(Course domain) {
+    return toEntity(domain, null);
+  }
+
+  @Override
+  public @NonNull Course toDomain(CourseJpaEntity entity) {
+    validateEntity(entity);
+
+    return new Course(
+        extractPublicId(entity),
+        extractCode(entity),
+        entity.getId(),
+        entity.getStatus(),
+        extractAcademicTermId(entity),
+        extractAcademicTermYear(entity),
+        entity.getName(),
+        mapStudentsToDomain(entity),
+        mapAssignmentsToDomain(entity),
+        entity.getCreatedBy(),
+        entity.getCreatedAt(),
+        entity.getUpdatedAt());
+  }
+
+  private void validateDomain(Course domain) {
+    validator.validateDomainNotNull(domain, Course.class);
+    validator.validateDomainField(domain.getId(), Course.class, "id");
+    validator.validateDomainStringField(domain.getName(), Course.class, "name");
+    validator.validateDomainField(domain.getAssignments(), Course.class, "assignments");
+    validator.validateDomainField(domain.getStudents(), Course.class, "students");
+  }
+
+  private void validateEntity(CourseJpaEntity entity) {
+    validator.validateEntityNotNull(entity, CourseJpaEntity.class);
+    validator.validateEntityField(entity.getExternalReference(), CourseJpaEntity.class, "externalReference");
+    validator.validateEntityField(entity.getStudents(), CourseJpaEntity.class, "students");
+    validator.validateEntityField(entity.getAssignments(), CourseJpaEntity.class, "assignments");
+  }
+
+  private void mapExternalReference(Course domain, CourseJpaEntity target) {
+    target.setExternalReference(
+        externalReferenceHelper.createExternalReference(
+            domain.getId(),
+            domain.getCode(),
+            "COURSE"));
+  }
+
+  private void mapBasicFields(Course domain, CourseJpaEntity target) {
     target.setId(domain.getSequence());
     target.setStatus(domain.getStatus());
     target.setName(domain.getName());
@@ -51,74 +98,85 @@ public class CourseMapper {
     target.setCreatedAt(domain.getCreatedAtDateTime());
     target.setUpdatedAt(domain.getUpdatedAtDateTime());
     target.setUpdatedBy(domain.getUpdatedBy());
+  }
 
-    // Academic Term
-    if (domain.getAcademicTermId() != null) {
-      AcademicTermJpaEntity termRef = new AcademicTermJpaEntity();
-      ExternalReferenceJpaEntity termExt = new ExternalReferenceJpaEntity();
-      termExt.setPublicId(domain.getAcademicTermId());
-      termExt.setEntityType("ACADEMIC_TERM");
-      termRef.setExternalReference(termExt);
-      target.setAcademicTerm(termRef);
-    } else {
+  private void mapAcademicTerm(Course domain, CourseJpaEntity target) {
+    if (domain.getAcademicTermId() == null) {
       target.setAcademicTerm(null);
+      return;
     }
 
-    // Assignments
+    AcademicTermJpaEntity termRef = new AcademicTermJpaEntity();
+    ExternalReferenceJpaEntity termExt = externalReferenceHelper.createExternalReference(
+        domain.getAcademicTermId(),
+        null,
+        "ACADEMIC_TERM");
+    termRef.setExternalReference(termExt);
+    target.setAcademicTerm(termRef);
+  }
+
+  private void mapAssignments(Course domain, CourseJpaEntity target) {
     target.getAssignments().clear();
+
     List<AssignmentJpaEntity> assignments = domain.getAssignments().stream()
-        .map(a -> assignmentMapper.toEntity(a, null))
-        .peek(ae -> ae.setCourse(target))
+        .map(assignment -> {
+          AssignmentJpaEntity entity = assignmentMapper.toEntity(assignment, null);
+          entity.setCourse(target);
+          return entity;
+        })
         .toList();
+
     target.getAssignments().addAll(assignments);
+  }
 
-    // Students (after assignments so StudentTask can link existing tasks)
+  private void mapStudents(Course domain, CourseJpaEntity target) {
     target.getStudents().clear();
+
     List<StudentJpaEntity> students = domain.getStudents().stream()
-        .map(s -> studentMapper.toEntity(s, target))
-        .peek(se -> se.setCourse(target))
+        .map(student -> {
+          StudentJpaEntity entity = studentMapper.toEntity(student, target);
+          entity.setCourse(target);
+          return entity;
+        })
         .toList();
+
     target.getStudents().addAll(students);
-
-    return target;
   }
 
-  public @NonNull CourseJpaEntity toEntity(Course domain) {
-    return toEntity(domain, null);
+  private UUID extractPublicId(CourseJpaEntity entity) {
+    return externalReferenceHelper.extractPublicId(
+        entity.getExternalReference(),
+        CourseJpaEntity.class);
   }
 
-  public @NonNull Course toDomain(CourseJpaEntity entity) {
-    if (entity == null) {
-      throw new DomainMappingException();
+  private String extractCode(CourseJpaEntity entity) {
+    return externalReferenceHelper.extractCode(entity.getExternalReference());
+  }
+
+  private UUID extractAcademicTermId(CourseJpaEntity entity) {
+    if (entity.getAcademicTerm() != null &&
+        entity.getAcademicTerm().getExternalReference() != null) {
+      return entity.getAcademicTerm().getExternalReference().getPublicId();
     }
+    return null;
+  }
 
-    UUID academicTermId = null;
-    int academicTermYear = -1;
-    if (entity.getAcademicTerm() != null && entity.getAcademicTerm().getExternalReference() != null) {
-      academicTermId = entity.getAcademicTerm().getExternalReference().getPublicId();
-      academicTermYear = entity.getAcademicTerm().getAcademicYear();
+  private int extractAcademicTermYear(CourseJpaEntity entity) {
+    if (entity.getAcademicTerm() != null) {
+      return entity.getAcademicTerm().getAcademicYear();
     }
+    return -1;
+  }
 
-    List<Student> students = entity.getStudents() != null
-        ? entity.getStudents().stream().map(studentMapper::toDomain).toList()
-        : List.of();
+  private List<Student> mapStudentsToDomain(CourseJpaEntity entity) {
+    return entity.getStudents().stream()
+        .map(studentMapper::toDomain)
+        .toList();
+  }
 
-    List<Assignment> assignments = entity.getAssignments() != null
-        ? entity.getAssignments().stream().map(assignmentMapper::toDomain).toList()
-        : List.of();
-
-    return new Course(
-        entity.getExternalReference() != null ? entity.getExternalReference().getPublicId() : UUID.randomUUID(),
-        entity.getExternalReference() != null ? entity.getExternalReference().getCode() : "",
-        entity.getId(),
-        entity.getStatus(),
-        academicTermId,
-        academicTermYear,
-        entity.getName(),
-        students,
-        assignments,
-        entity.getCreatedBy(),
-        entity.getCreatedAt(),
-        entity.getUpdatedAt());
+  private List<Assignment> mapAssignmentsToDomain(CourseJpaEntity entity) {
+    return entity.getAssignments().stream()
+        .map(assignmentMapper::toDomain)
+        .toList();
   }
 }

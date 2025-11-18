@@ -1,4 +1,4 @@
-package com.udla.markenx.shared.infrastructure.out.keycloak;
+package com.udla.markenx.shared.infrastructure.out.security.keycloak;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;

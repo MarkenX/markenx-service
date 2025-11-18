@@ -5,42 +5,33 @@ import java.util.UUID;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.domain.models.Task;
-import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.DomainMappingException;
-import com.udla.markenx.classroom.infrastructure.out.persistance.exceptions.EntityMappingException;
-import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
-import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.ExternalReferenceJpaEntity;
-import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
-
 import lombok.RequiredArgsConstructor;
+
+import com.udla.markenx.classroom.domain.models.Task;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.BaseMapper;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.ExternalReferenceMapperHelper;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.MapperValidator;
 
 @Component
 @RequiredArgsConstructor
-public final class TaskMapper {
+public final class TaskMapper implements BaseMapper<Task, TaskJpaEntity> {
 
+	private final MapperValidator validator;
+	private final ExternalReferenceMapperHelper externalReferenceHelper;
+
+	@Override
 	public @NonNull Task toDomain(TaskJpaEntity entity) {
-		if (entity == null) {
-			throw new DomainMappingException();
-		}
+		validateEntity(entity);
 
-		UUID courseId = null;
-		int academicTermYear = -1;
-		if (entity.getCourse() != null) {
-			if (entity.getCourse().getExternalReference() != null) {
-				courseId = entity.getCourse().getExternalReference().getPublicId();
-			}
-			if (entity.getCourse().getAcademicTerm() != null) {
-				academicTermYear = entity.getCourse().getAcademicTerm().getAcademicYear();
-			}
-		}
-
-		Task domain = new Task(
-				entity.getExternalReference().getPublicId(),
-				entity.getExternalReference().getCode(),
+		return new Task(
+				extractPublicId(entity),
+				extractCode(entity),
 				entity.getId(),
 				entity.getStatus(),
-				courseId,
-				academicTermYear,
+				extractCourseId(entity),
+				extractAcademicTermYear(entity),
 				entity.getTitle(),
 				entity.getSummary(),
 				entity.getDueDate(),
@@ -49,23 +40,69 @@ public final class TaskMapper {
 				entity.getCreatedBy(),
 				entity.getCreatedAt(),
 				entity.getUpdatedAt());
+	}
 
-		return domain;
+	@Override
+	public @NonNull TaskJpaEntity toEntity(Task domain) {
+		return toEntity(domain, null);
 	}
 
 	public @NonNull TaskJpaEntity toEntity(Task domain, CourseJpaEntity parentCourse) {
-		if (domain == null) {
-			throw new EntityMappingException();
-		}
+		validateDomain(domain);
 
 		TaskJpaEntity entity = new TaskJpaEntity();
 
-		ExternalReferenceJpaEntity ref = new ExternalReferenceJpaEntity();
-		ref.setPublicId(domain.getId());
-		ref.setCode(domain.getCode());
-		ref.setEntityType("TASK");
+		mapExternalReference(domain, entity);
+		mapBasicFields(domain, entity);
+		mapCourse(parentCourse, entity);
 
-		entity.setExternalReference(ref);
+		return entity;
+	}
+
+	private void validateEntity(TaskJpaEntity entity) {
+		validator.validateEntityNotNull(entity, TaskJpaEntity.class);
+		validator.validateEntityField(entity.getExternalReference(), TaskJpaEntity.class, "externalReference");
+	}
+
+	private void validateDomain(Task domain) {
+		validator.validateDomainNotNull(domain, Task.class);
+		validator.validateDomainField(domain.getId(), Task.class, "id");
+		validator.validateDomainStringField(domain.getTitle(), Task.class, "title");
+	}
+
+	private UUID extractPublicId(TaskJpaEntity entity) {
+		return externalReferenceHelper.extractPublicId(
+				entity.getExternalReference(),
+				TaskJpaEntity.class);
+	}
+
+	private String extractCode(TaskJpaEntity entity) {
+		return externalReferenceHelper.extractCode(entity.getExternalReference());
+	}
+
+	private UUID extractCourseId(TaskJpaEntity entity) {
+		if (entity.getCourse() != null && entity.getCourse().getExternalReference() != null) {
+			return entity.getCourse().getExternalReference().getPublicId();
+		}
+		return null;
+	}
+
+	private int extractAcademicTermYear(TaskJpaEntity entity) {
+		if (entity.getCourse() != null && entity.getCourse().getAcademicTerm() != null) {
+			return entity.getCourse().getAcademicTerm().getAcademicYear();
+		}
+		return -1;
+	}
+
+	private void mapExternalReference(Task domain, TaskJpaEntity entity) {
+		entity.setExternalReference(
+				externalReferenceHelper.createExternalReference(
+						domain.getId(),
+						domain.getCode(),
+						"TASK"));
+	}
+
+	private void mapBasicFields(Task domain, TaskJpaEntity entity) {
 		entity.setStatus(domain.getStatus());
 		entity.setTitle(domain.getTitle());
 		entity.setSummary(domain.getSummary());
@@ -76,8 +113,9 @@ public final class TaskMapper {
 		entity.setCreatedAt(domain.getCreatedAtDateTime());
 		entity.setUpdatedAt(domain.getUpdatedAtDateTime());
 		entity.setUpdatedBy(domain.getUpdatedBy());
-		entity.setCourse(parentCourse);
+	}
 
-		return entity;
+	private void mapCourse(CourseJpaEntity parentCourse, TaskJpaEntity entity) {
+		entity.setCourse(parentCourse);
 	}
 }

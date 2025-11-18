@@ -5,6 +5,7 @@ import java.time.Duration;
 import com.udla.markenx.classroom.domain.valueobjects.enums.AttemptResult;
 import com.udla.markenx.classroom.domain.valueobjects.enums.AttemptStatus;
 
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.BaseJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

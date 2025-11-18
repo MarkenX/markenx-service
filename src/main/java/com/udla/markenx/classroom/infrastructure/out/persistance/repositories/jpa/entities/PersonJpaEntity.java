@@ -1,5 +1,6 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities;
 
+import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.BaseJpaEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
