@@ -25,4 +25,10 @@ public interface StudentRepositoryPort {
   Page<Student> findAllIncludingDisabled(Pageable pageable);
 
   boolean existsByEmail(String email);
+
+  Student save(Student student);
+
+  Student update(Student student);
+
+  void deleteById(UUID id);
 }

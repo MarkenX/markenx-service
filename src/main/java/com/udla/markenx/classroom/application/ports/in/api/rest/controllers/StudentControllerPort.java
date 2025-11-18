@@ -5,17 +5,27 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
+import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 
-public interface StudentControllerPort {
+import jakarta.validation.Valid;
 
-  ResponseEntity<StudentResponseDTO> getCurrentProfile(Authentication authentication);
+public interface StudentControllerPort {
 
   ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable);
 
   ResponseEntity<StudentResponseDTO> getStudentById(UUID id);
+
+  ResponseEntity<StudentResponseDTO> createStudent(@Valid CreateStudentRequestDTO request);
+
+  ResponseEntity<Void> deleteStudent(UUID id);
+
+  ResponseEntity<BulkImportResponseDTO> bulkImportStudents(MultipartFile file);
+
+  ResponseEntity<byte[]> downloadBulkImportTemplate();
 
   // /**
   // * Retrieves tasks assigned to a specific student with filters.

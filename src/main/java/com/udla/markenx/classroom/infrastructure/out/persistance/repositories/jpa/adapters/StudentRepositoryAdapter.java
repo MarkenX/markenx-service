@@ -87,4 +87,51 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
         .findFirst()
         .map(mapper::toDomain);
   }
+
+  @Override
+  public Student save(Student student) {
+    Objects.requireNonNull(student, "Student cannot be null");
+    var entity = mapper.toEntity(student);
+    var savedEntity = jpaRepository.save(entity);
+    return mapper.toDomain(savedEntity);
+  }
+
+  @Override
+  public Student update(Student student) {
+    Objects.requireNonNull(student, "Student cannot be null");
+    Objects.requireNonNull(student.getId(), "Student ID cannot be null for update");
+
+    // Find existing entity by UUID
+    var existingEntity = jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(student.getId()))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + student.getId()));
+
+    // Update modifiable fields
+    existingEntity.setFirstName(student.getFirstName());
+    existingEntity.setLastName(student.getLastName());
+    existingEntity.setEmail(student.getAcademicEmail());
+    existingEntity.setStatus(student.getStatus());
+    existingEntity.setUpdatedBy(student.getUpdatedBy());
+    existingEntity.setUpdatedAt(student.getUpdatedAtDateTime());
+
+    var savedEntity = jpaRepository.save(existingEntity);
+    return mapper.toDomain(savedEntity);
+  }
+
+  @Override
+  public void deleteById(UUID id) {
+    Objects.requireNonNull(id, "Student UUID cannot be null");
+
+    var entity = jpaRepository.findAll().stream()
+        .filter(e -> e.getExternalReference() != null &&
+            e.getExternalReference().getPublicId().equals(id))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
+
+    // Soft delete: set status to DISABLED
+    entity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.DISABLED);
+    jpaRepository.save(entity);
+  }
 }
