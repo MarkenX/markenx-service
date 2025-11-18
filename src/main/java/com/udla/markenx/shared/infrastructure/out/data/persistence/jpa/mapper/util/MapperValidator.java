@@ -2,8 +2,8 @@ package com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.u
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.exception.DomainMappingException;
-import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.exception.EntityMappingException;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.exception.DomainMappingException;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.exception.EntityMappingException;
 
 @Component
 public class MapperValidator {

@@ -10,8 +10,8 @@ import com.udla.markenx.classroom.domain.models.Task;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AssignmentJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
-import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.exception.DomainMappingException;
-import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.exception.EntityMappingException;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.exception.DomainMappingException;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.exception.EntityMappingException;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.BaseMapper;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.MapperValidator;
 

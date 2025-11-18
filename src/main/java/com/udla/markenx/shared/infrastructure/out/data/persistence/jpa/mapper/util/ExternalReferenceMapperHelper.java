@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity;
-import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.exception.DomainMappingException;
+import com.udla.markenx.shared.infrastructure.out.data.persistence.exception.DomainMappingException;
 
 @Component
 public class ExternalReferenceMapperHelper {

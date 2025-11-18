@@ -1,4 +1,4 @@
-package com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.exception;
+package com.udla.markenx.shared.infrastructure.out.data.persistence.exception;
 
 public class EntityMappingException extends RuntimeException {
 
