@@ -1,4 +1,4 @@
-package com.udla.markenx.shared.domain.application.port.out.auth;
+package com.udla.markenx.shared.application.port.out.auth;
 
 /**
  * Port for Keycloak user management operations.

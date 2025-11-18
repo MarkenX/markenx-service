@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.infrastructure.configuration;
+package com.udla.markenx.shared.infrastructure.config;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;

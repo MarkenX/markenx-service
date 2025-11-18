@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.infrastructure.configuration;
+package com.udla.markenx.shared.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
