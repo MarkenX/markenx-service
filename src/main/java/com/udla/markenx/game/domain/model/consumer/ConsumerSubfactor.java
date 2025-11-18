@@ -1,19 +1,18 @@
-package com.udla.markenx.game.domain.model.stage;
+package com.udla.markenx.game.domain.model.consumer;
 
 import java.util.UUID;
 
-import com.udla.markenx.game.domain.model.consumer.Subfactor;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 
-public class StageSubfactor {
-  private static final Class<StageSubfactor> CLAZZ = StageSubfactor.class;
+public class ConsumerSubfactor {
+  private static final Class<ConsumerSubfactor> CLAZZ = ConsumerSubfactor.class;
 
   private final UUID id;
   private final Subfactor subfactor;
   private final Double weight;
   private final boolean isVisible;
 
-  public StageSubfactor(
+  public ConsumerSubfactor(
       UUID id,
       Subfactor subfactor,
       Double weight,

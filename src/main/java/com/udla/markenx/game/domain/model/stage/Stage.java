@@ -64,7 +64,6 @@ public class Stage extends DomainBaseModel {
   public ConsumerProfile getConsumerProfile() {
     return this.consumerProfile;
   }
-
   // #endregion
 
   public String requireName(String name) {
