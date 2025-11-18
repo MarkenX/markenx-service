@@ -37,7 +37,7 @@ import jakarta.validation.constraints.Positive;
  * All endpoints require ADMIN role.
  */
 @RestController
-@RequestMapping("/api/markenx/academic-periods")
+@RequestMapping("/api/markenx/academic-periods-legacy")
 @Validated
 @PreAuthorize("hasRole('ADMIN')")
 public class AcademicPeriodController implements AcademicPeriodControllerPort {

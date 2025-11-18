@@ -32,7 +32,7 @@ import jakarta.validation.constraints.Positive;
  * All endpoints require ADMIN role.
  */
 @RestController
-@RequestMapping("/api/markenx/courses")
+@RequestMapping("/api/markenx/courses-legacy")
 @Validated
 @PreAuthorize("hasRole('ADMIN')")
 public class CourseController implements CourseControllerPort {
