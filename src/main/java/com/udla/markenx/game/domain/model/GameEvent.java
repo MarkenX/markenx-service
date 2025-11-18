@@ -1,18 +1,18 @@
-package com.udla.markenx.game.domain.model.stage;
+package com.udla.markenx.game.domain.model;
 
 import java.util.UUID;
 
 import com.udla.markenx.game.domain.valueobject.StageEventCategory;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 
-public class StageEvent {
-  private static final Class<StageEvent> CLAZZ = StageEvent.class;
+public class GameEvent {
+  private static final Class<GameEvent> CLAZZ = GameEvent.class;
 
   private final UUID id;
   private final StageEventCategory category;
   private final String description;
 
-  public StageEvent(UUID id, StageEventCategory category, String description) {
+  public GameEvent(UUID id, StageEventCategory category, String description) {
     this.id = id;
     this.category = category;
     this.description = description;
