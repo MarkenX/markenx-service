@@ -1,8 +1,6 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces;
 
 import java.util.Optional;
-import java.util.UUID;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentAssignmentJpaEntity;
