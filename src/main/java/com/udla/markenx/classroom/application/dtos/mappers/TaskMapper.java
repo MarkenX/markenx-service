@@ -9,6 +9,7 @@ public class TaskMapper {
 			return null;
 
 		TaskResponseDTO dto = new TaskResponseDTO(
+				domain.getId(),
 				domain.getCode(),
 				domain.getTitle(),
 				domain.getSummary(),

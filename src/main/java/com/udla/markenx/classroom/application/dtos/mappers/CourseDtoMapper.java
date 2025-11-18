@@ -10,6 +10,7 @@ public class CourseDtoMapper {
       return null;
 
     CourseResponseDTO dto = new CourseResponseDTO(
+        domain.getId(),
         domain.getCode(),
         domain.getName());
     return dto;

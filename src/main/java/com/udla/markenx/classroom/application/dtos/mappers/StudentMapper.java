@@ -16,6 +16,7 @@ public final class StudentMapper {
     }
 
     return new StudentResponseDTO(
+        domain.getId(),
         domain.getCode(),
         domain.getFirstName(),
         domain.getLastName(),

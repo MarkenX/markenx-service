@@ -9,6 +9,7 @@ public class AttemptMapper {
       return null;
 
     AttemptResponseDTO dto = new AttemptResponseDTO(
+        domain.getId(),
         domain.getCode(),
         domain.getScore(),
         domain.getCreatedAtDate(),
