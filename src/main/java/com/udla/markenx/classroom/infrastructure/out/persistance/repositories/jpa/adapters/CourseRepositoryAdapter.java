@@ -32,9 +32,22 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
 
   @Override
   public Course update(Course course) {
-    CourseJpaEntity entity = mapper.toEntity(course);
-    CourseJpaEntity saved = jpaRepository.save(entity);
-    return mapper.toDomain(saved);
+    Objects.requireNonNull(course, "Course cannot be null");
+    Long courseId = Objects.requireNonNull(course.getSequence(),
+        "Course sequence (internal ID) cannot be null for update");
+
+    // Find existing entity
+    CourseJpaEntity existingEntity = jpaRepository.findById(courseId)
+        .orElseThrow(() -> new RuntimeException("Course not found with id: " + course.getSequence()));
+
+    // Update fields
+    existingEntity.setName(course.getName());
+    existingEntity.setStatus(course.getStatus());
+    existingEntity.setUpdatedBy(course.getUpdatedBy());
+    existingEntity.setUpdatedAt(course.getUpdatedAtDateTime());
+
+    CourseJpaEntity saved = jpaRepository.save(existingEntity);
+    return mapper.toDomainWithoutRelations(saved);
   }
 
   @Override
@@ -67,6 +80,11 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
   @Override
   public void deleteById(Long id) {
     Objects.requireNonNull(id, "Course ID cannot be null");
-    jpaRepository.deleteById(id);
+    jpaRepository.findById(id)
+        .ifPresent(entity -> {
+          // Soft delete: change status to DISABLED
+          entity.setStatus(DomainBaseModelStatus.DISABLED);
+          jpaRepository.save(entity);
+        });
   }
 }

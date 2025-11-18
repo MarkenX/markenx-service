@@ -90,9 +90,15 @@ public class StudentTaskMapper implements BaseMapper<StudentTask, StudentTaskJpa
 
   private Task extractTask(StudentTaskJpaEntity entity) {
     var assignment = entity.getAssignment();
-    // Handle Hibernate proxy - check the actual class
-    if (assignment != null && TaskJpaEntity.class.isAssignableFrom(org.hibernate.Hibernate.getClass(assignment))) {
-      return taskMapper.toDomain((TaskJpaEntity) assignment);
+    if (assignment == null) {
+      return null;
+    }
+
+    // Handle Hibernate proxy - unproxy to get the real entity
+    Object unproxied = org.hibernate.Hibernate.unproxy(assignment);
+
+    if (unproxied instanceof TaskJpaEntity taskEntity) {
+      return taskMapper.toDomain(taskEntity);
     }
     return null;
   }

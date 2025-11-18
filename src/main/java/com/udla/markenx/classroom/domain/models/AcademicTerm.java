@@ -132,7 +132,7 @@ public class AcademicTerm extends DomainBaseModel {
   }
 
   private List<Course> requireAssignedCourses(List<Course> courses) {
-    return List.copyOf(EntityValidator.ensureNotNull(CLAZZ, assignedCourses, "assignedCourses"));
+    return List.copyOf(EntityValidator.ensureNotNull(CLAZZ, courses, "assignedCourses"));
   }
 
   private int validateAcademicYear(int academicYear) {

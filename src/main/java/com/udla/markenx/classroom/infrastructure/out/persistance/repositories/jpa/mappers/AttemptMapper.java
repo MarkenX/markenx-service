@@ -99,10 +99,14 @@ public final class AttemptMapper implements BaseMapper<Attempt, AttemptJpaEntity
 
   private double extractTaskMinScoreToPass(AttemptJpaEntity entity) {
     var assignment = entity.getStudentTask().getAssignment();
+    if (assignment == null) {
+      return 0.0;
+    }
 
-    // Handle Hibernate proxy - check the actual class
-    if (assignment != null && TaskJpaEntity.class.isAssignableFrom(org.hibernate.Hibernate.getClass(assignment))) {
-      TaskJpaEntity taskEntity = (TaskJpaEntity) assignment;
+    // Handle Hibernate proxy - unproxy to get the real entity
+    Object unproxied = org.hibernate.Hibernate.unproxy(assignment);
+
+    if (unproxied instanceof TaskJpaEntity taskEntity) {
       Double minScore = taskEntity.getMinScoreToPass();
       if (minScore != null) {
         return minScore;

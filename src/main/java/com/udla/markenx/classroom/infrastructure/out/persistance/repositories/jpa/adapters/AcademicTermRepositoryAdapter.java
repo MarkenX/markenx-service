@@ -36,8 +36,24 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
   @Override
   public AcademicTerm update(AcademicTerm existingAcademicTerm) {
     java.util.Objects.requireNonNull(existingAcademicTerm, "AcademicTerm cannot be null");
-    AcademicTermJpaEntity entity = mapper.toEntity(existingAcademicTerm);
-    AcademicTermJpaEntity saved = jpaRepository.save(entity);
+
+    // Find existing entity
+    AcademicTermJpaEntity existingEntity = jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(existingAcademicTerm.getId()))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("AcademicTerm not found with id: " + existingAcademicTerm.getId()));
+
+    // Update fields
+    existingEntity.setStartOfTerm(existingAcademicTerm.getStartOfTerm());
+    existingEntity.setEndOfTerm(existingAcademicTerm.getEndOfTerm());
+    existingEntity.setAcademicYear(existingAcademicTerm.getAcademicYear());
+    existingEntity.setTermNumber(existingAcademicTerm.getTermNumber());
+    existingEntity.setStatus(existingAcademicTerm.getStatus());
+    existingEntity.setUpdatedBy(existingAcademicTerm.getUpdatedBy());
+    existingEntity.setUpdatedAt(existingAcademicTerm.getUpdatedAtDateTime());
+
+    AcademicTermJpaEntity saved = jpaRepository.save(existingEntity);
     return mapper.toDomain(saved);
   }
 
@@ -85,10 +101,9 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
             entity.getExternalReference().getPublicId().equals(id))
         .findFirst()
         .ifPresent(entity -> {
-          Long entityId = entity.getId();
-          if (entityId != null) {
-            jpaRepository.deleteById(entityId);
-          }
+          // Soft delete: change status to DISABLED
+          entity.setStatus(DomainBaseModelStatus.DISABLED);
+          jpaRepository.save(entity);
         });
   }
 
