@@ -100,13 +100,10 @@ public class AcademicTermController implements AcademicTermControllerPort {
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  @Operation(summary = "Get all academic terms", description = "Retrieves a paginated list of all academic terms/periods.", parameters = {
-      @Parameter(name = "page", description = "Page number (0-based)", example = "0"),
-      @Parameter(name = "size", description = "Number of items per page", example = "10"),
-      @Parameter(name = "sort", description = "Sorting criteria (e.g., 'name,asc' or 'createdAt,desc')", example = "createdAt,desc")
-  })
+  @Operation(summary = "Get all academic terms")
   @ApiResponse(responseCode = "200", description = "Academic terms retrieved successfully")
-  public ResponseEntity<Page<AcademicPeriodResponseDTO>> getAllAcademicTerms(Pageable pageable) {
+  public ResponseEntity<Page<AcademicPeriodResponseDTO>> getAllAcademicTerms(
+      @Parameter(hidden = true) Pageable pageable) {
     Page<AcademicTerm> academicTerms = academicTermService.getAllAcademicTerms(pageable);
     Page<AcademicPeriodResponseDTO> response = academicTerms.map(AcademicPeriodMapper::toResponseDto);
     return ResponseEntity.ok(response);

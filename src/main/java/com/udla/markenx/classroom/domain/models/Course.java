@@ -67,6 +67,29 @@ public class Course extends DomainBaseModel {
     this.code = generateCode();
   }
 
+  // Lightweight constructor for simple DTOs (without loading
+  // students/assignments)
+  public Course(
+      UUID id,
+      String code,
+      Long serialNumber,
+      DomainBaseModelStatus status,
+      UUID academicTermId,
+      int academicTermYear,
+      String name,
+      String createdBy,
+      LocalDateTime createdAt,
+      LocalDateTime updatedAt) {
+    super(id, code, status, createdBy, createdAt, updatedAt);
+    this.sequence = serialNumber;
+    this.academicTermId = academicTermId;
+    this.academicTermYear = academicTermYear;
+    setName(name);
+    this.students = new ArrayList<>();
+    this.assignments = new ArrayList<>();
+    this.code = requireCode(code);
+  }
+
   public String getCode() {
     return this.code;
   }

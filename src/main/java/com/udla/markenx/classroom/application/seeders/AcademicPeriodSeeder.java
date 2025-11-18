@@ -8,18 +8,18 @@ import org.springframework.stereotype.Component;
 
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.application.factories.RandomAcademicPeriodFactory;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
+import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 
 @Component
 @Profile("dev")
 public class AcademicPeriodSeeder implements CommandLineRunner {
 
 	private final RandomAcademicPeriodFactory factory;
-	private final AcademicPeriodRepositoryPort repository;
+	private final AcademicTermRepositoryPort repository;
 
 	public AcademicPeriodSeeder(
 			RandomAcademicPeriodFactory builder,
-			AcademicPeriodRepositoryPort repository) {
+			AcademicTermRepositoryPort repository) {
 		this.factory = builder;
 		this.repository = repository;
 	}

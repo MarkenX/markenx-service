@@ -41,6 +41,24 @@ public final class AcademicTermMapper {
         entity.getUpdatedAt());
   }
 
+  /**
+   * Lightweight mapping without loading courses - optimized for list/simple DTOs
+   */
+  public @NonNull AcademicTerm toDomainWithoutCourses(@NonNull AcademicTermJpaEntity entity) {
+    return new AcademicTerm(
+        entity.getExternalReference() != null ? entity.getExternalReference().getPublicId()
+            : java.util.UUID.randomUUID(),
+        entity.getExternalReference() != null ? entity.getExternalReference().getCode() : "",
+        entity.getStatus(),
+        entity.getStartOfTerm(),
+        entity.getEndOfTerm(),
+        entity.getAcademicYear(),
+        entity.getTermNumber(),
+        entity.getCreatedBy(),
+        entity.getCreatedAt(),
+        entity.getUpdatedAt());
+  }
+
   public @NonNull AcademicTermJpaEntity toEntity(@NonNull AcademicTerm domain) {
     AcademicTermJpaEntity entity = new AcademicTermJpaEntity();
 

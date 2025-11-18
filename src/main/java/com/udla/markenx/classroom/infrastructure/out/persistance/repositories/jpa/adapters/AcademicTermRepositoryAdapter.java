@@ -8,18 +8,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
+import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicTermJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.AcademicTermMapper;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPort {
+public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort {
 
   private final AcademicTermJpaRepository jpaRepository;
   private final AcademicTermMapper mapper;
@@ -63,8 +64,8 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
   public Page<AcademicTerm> findAll(Pageable pageable) {
     java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
-        .map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
-            ? mapper.toDomain(entity)
+        .map(entity -> entity.getStatus() == DomainBaseModelStatus.ENABLED
+            ? mapper.toDomainWithoutCourses(entity)
             : null)
         .map(domain -> domain);
   }
@@ -73,7 +74,7 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
   public Page<AcademicTerm> findAllIncludingDisabled(Pageable pageable) {
     java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
-        .map(mapper::toDomain);
+        .map(mapper::toDomainWithoutCourses);
   }
 
   @Override
@@ -107,7 +108,7 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
   @Override
   public List<AcademicTerm> findAllPeriods() {
     return jpaRepository.findAll().stream()
-        .map(mapper::toDomain)
+        .map(mapper::toDomainWithoutCourses)
         .toList();
   }
 

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
 
-public interface AcademicPeriodRepositoryPort {
+public interface AcademicTermRepositoryPort {
 
   AcademicTerm save(AcademicTerm period);
 

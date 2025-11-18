@@ -50,7 +50,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
     Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
         .map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
-            ? mapper.toDomain(entity)
+            ? mapper.toDomainWithoutTasks(entity)
             : null)
         .map(domain -> domain);
   }
@@ -58,7 +58,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   @Override
   public Page<Student> findAllIncludingDisabled(Pageable pageable) {
     Objects.requireNonNull(pageable, "Pageable cannot be null");
-    return jpaRepository.findAll(pageable).map(mapper::toDomain);
+    return jpaRepository.findAll(pageable).map(mapper::toDomainWithoutTasks);
   }
 
   @Override

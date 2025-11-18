@@ -58,6 +58,19 @@ public class AcademicTerm extends DomainBaseModel {
     this.code = generateCode();
   }
 
+  // Lightweight constructor for simple DTOs (without loading courses)
+  public AcademicTerm(UUID id, String code, DomainBaseModelStatus status, LocalDate startOfTerm, LocalDate endOfTerm,
+      int academicYear, int termNumber, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    super(id, code, status, createdBy, createdAt, updatedAt);
+    this.startOfTerm = requireStartOfTerm(startOfTerm);
+    this.endOfTerm = requireEndOfTerm(endOfTerm);
+    validateChronology(this.startOfTerm, this.endOfTerm);
+    this.academicYear = validateAcademicYear(academicYear);
+    this.termNumber = termNumber;
+    this.assignedCourses = new ArrayList<>();
+    this.code = requireCode(code);
+  }
+
   public String getCode() {
     return this.code;
   }

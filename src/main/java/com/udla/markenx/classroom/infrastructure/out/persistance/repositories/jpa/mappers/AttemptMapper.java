@@ -101,10 +101,14 @@ public final class AttemptMapper implements BaseMapper<Attempt, AttemptJpaEntity
     var assignment = entity.getStudentTask().getAssignment();
 
     if (assignment instanceof TaskJpaEntity taskEntity) {
-      return taskEntity.getMinScoreToPass();
+      Double minScore = taskEntity.getMinScoreToPass();
+      if (minScore != null) {
+        return minScore;
+      }
     }
 
-    return -1;
+    // Default value if assignment is not loaded or not a Task
+    return 0.0;
   }
 
   private void mapExternalReference(Attempt domain, AttemptJpaEntity entity) {

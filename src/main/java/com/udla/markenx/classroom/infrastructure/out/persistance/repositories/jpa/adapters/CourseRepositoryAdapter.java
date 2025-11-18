@@ -55,13 +55,13 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
   public Page<Course> findAll(Pageable pageable) {
     Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findByStatus(DomainBaseModelStatus.ENABLED, pageable)
-        .map(mapper::toDomain);
+        .map(mapper::toDomainWithoutRelations);
   }
 
   @Override
   public Page<Course> findAllIncludingDisabled(Pageable pageable) {
     Objects.requireNonNull(pageable, "Pageable cannot be null");
-    return jpaRepository.findAll(pageable).map(mapper::toDomain);
+    return jpaRepository.findAll(pageable).map(mapper::toDomainWithoutRelations);
   }
 
   @Override

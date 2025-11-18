@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
+import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.services.AcademicPeriodDomainService;
@@ -16,9 +16,9 @@ import com.udla.markenx.classroom.domain.services.AcademicPeriodDomainService;
 @Service
 public class AcademicTermService {
 
-  private final AcademicPeriodRepositoryPort periodRepository;
+  private final AcademicTermRepositoryPort periodRepository;
 
-  public AcademicTermService(AcademicPeriodRepositoryPort periodRepository) {
+  public AcademicTermService(AcademicTermRepositoryPort periodRepository) {
     this.periodRepository = periodRepository;
   }
 

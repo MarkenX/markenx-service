@@ -100,13 +100,12 @@ public class CourseManagementController implements CourseManagementControllerPor
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  @Operation(summary = "Get all courses", description = "Retrieves a paginated list of all courses.", parameters = {
-      @Parameter(name = "page", description = "Page number (0-based)", example = "0"),
-      @Parameter(name = "size", description = "Number of items per page", example = "10"),
-      @Parameter(name = "sort", description = "Sorting criteria (e.g., 'name,asc' or 'createdAt,desc')", example = "name,asc")
-  })
+  @Operation(summary = "Get all courses", description = "Retrieves a paginated list of all courses. " +
+      "Valid sort properties: id, status, createdAt, updatedAt, name, credits, academicTermId. " +
+      "Example: ?page=0&size=10&sort=name,asc")
   @ApiResponse(responseCode = "200", description = "Courses retrieved successfully")
-  public ResponseEntity<Page<CourseResponseDTO>> getAllCourses(Pageable pageable) {
+  public ResponseEntity<Page<CourseResponseDTO>> getAllCourses(
+      @Parameter(hidden = true) Pageable pageable) {
     Page<Course> courses = courseService.getAllCourses(pageable);
     Page<CourseResponseDTO> response = courses.map(CourseDtoMapper::toResponseDto);
     return ResponseEntity.ok(response);

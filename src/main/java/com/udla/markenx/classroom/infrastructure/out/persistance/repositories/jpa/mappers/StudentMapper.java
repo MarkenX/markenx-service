@@ -45,6 +45,27 @@ public final class StudentMapper implements BaseMapper<Student, StudentJpaEntity
         entity.getUpdatedAt());
   }
 
+  /**
+   * Lightweight mapping without loading tasks - optimized for list/simple DTOs
+   */
+  public @NonNull Student toDomainWithoutTasks(StudentJpaEntity entity) {
+    validator.validateEntityNotNull(entity, StudentJpaEntity.class);
+    validator.validateEntityField(entity.getExternalReference(), StudentJpaEntity.class, "externalReference");
+
+    return new Student(
+        extractPublicId(entity),
+        extractCode(entity),
+        entity.getId(),
+        entity.getStatus(),
+        extractCourseId(entity),
+        entity.getFirstName(),
+        entity.getLastName(),
+        entity.getEmail(),
+        entity.getCreatedBy(),
+        entity.getCreatedAt(),
+        entity.getUpdatedAt());
+  }
+
   @Override
   public @NonNull StudentJpaEntity toEntity(Student domain) {
     return toEntity(domain, null);

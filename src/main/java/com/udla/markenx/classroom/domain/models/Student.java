@@ -49,6 +49,27 @@ public class Student extends Person {
 		this.code = requireCode(code);
 	}
 
+	// Lightweight constructor for simple DTOs (without loading tasks)
+	public Student(
+			UUID id,
+			String code,
+			Long serialNumber,
+			DomainBaseModelStatus status,
+			UUID enrolledCourseId,
+			String firstName,
+			String lastName,
+			String email,
+			String createdBy,
+			LocalDateTime createdAt,
+			LocalDateTime updatedAt) {
+		super(id, code, status, firstName, lastName, createdBy, createdAt, updatedAt);
+		this.serialNumber = serialNumber;
+		this.enrolledCourseId = enrolledCourseId;
+		this.academicEmail = validateEmail(email);
+		this.assignedTasks = new ArrayList<>();
+		this.code = requireCode(code);
+	}
+
 	public Student(
 			UUID courseId,
 			String firstName,

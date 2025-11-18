@@ -67,6 +67,27 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
         entity.getUpdatedAt());
   }
 
+  /**
+   * Lightweight mapping without loading students/assignments - optimized for
+   * list/simple DTOs
+   */
+  public @NonNull Course toDomainWithoutRelations(CourseJpaEntity entity) {
+    validator.validateEntityNotNull(entity, CourseJpaEntity.class);
+    validator.validateEntityField(entity.getExternalReference(), CourseJpaEntity.class, "externalReference");
+
+    return new Course(
+        extractPublicId(entity),
+        extractCode(entity),
+        entity.getId(),
+        entity.getStatus(),
+        extractAcademicTermId(entity),
+        extractAcademicTermYear(entity),
+        entity.getName(),
+        entity.getCreatedBy(),
+        entity.getCreatedAt(),
+        entity.getUpdatedAt());
+  }
+
   private void validateDomain(Course domain) {
     validator.validateDomainNotNull(domain, Course.class);
     validator.validateDomainField(domain.getId(), Course.class, "id");

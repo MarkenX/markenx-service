@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.classroom.application.dtos.requests.CreateAcademicPeriodRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateAcademicTermRequestDTO;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
+import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
@@ -21,23 +21,23 @@ import com.udla.markenx.classroom.domain.services.AcademicPeriodDomainService;
 @Service
 public class AcademicTermManagementService {
 
-  private final AcademicPeriodRepositoryPort periodRepository;
+  private final AcademicTermRepositoryPort termRepository;
 
-  public AcademicTermManagementService(AcademicPeriodRepositoryPort periodRepository) {
-    this.periodRepository = periodRepository;
+  public AcademicTermManagementService(AcademicTermRepositoryPort periodRepository) {
+    this.termRepository = periodRepository;
   }
 
   @Transactional
   public AcademicTerm createAcademicTerm(CreateAcademicPeriodRequestDTO request) {
     AcademicPeriodDomainService.validateTermDates(request.getStartDate(), request.getEndDate());
 
-    List<AcademicTerm> existingPeriodsInYear = periodRepository.findAllPeriods().stream()
+    List<AcademicTerm> existingPeriodsInYear = termRepository.findAllPeriods().stream()
         .filter(p -> p.getAcademicYear() == request.getYear())
         .toList();
 
     int termNumber = AcademicPeriodDomainService.determineSemesterNumber(existingPeriodsInYear, request.getStartDate());
 
-    if (periodRepository.existsByYearAndSemesterNumber(request.getYear(), termNumber)) {
+    if (termRepository.existsByYearAndSemesterNumber(request.getYear(), termNumber)) {
       throw new InvalidEntityException(
           AcademicTerm.class,
           String.format("Ya existe un período para el %s semestre del año %d",
@@ -46,12 +46,12 @@ public class AcademicTermManagementService {
 
     AcademicTerm newPeriod = new AcademicTerm(request.getStartDate(), request.getEndDate(), request.getYear());
 
-    return periodRepository.save(newPeriod);
+    return termRepository.save(newPeriod);
   }
 
   @Transactional
   public AcademicTerm updateAcademicTerm(UUID id, UpdateAcademicTermRequestDTO request) {
-    AcademicTerm existing = periodRepository.findByIdIncludingDisabled(id)
+    AcademicTerm existing = termRepository.findByIdIncludingDisabled(id)
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
 
     AcademicPeriodDomainService.validateTermDates(request.getStartDate(), request.getEndDate());
@@ -61,35 +61,35 @@ public class AcademicTermManagementService {
     existing.setAcademicYear(request.getYear());
 
     existing.markUpdated();
-    return periodRepository.update(existing);
+    return termRepository.update(existing);
   }
 
   @Transactional(readOnly = true)
   public AcademicTerm getAcademicTermById(UUID id) {
     if (isAdmin()) {
-      return periodRepository.findByIdIncludingDisabled(id)
+      return termRepository.findByIdIncludingDisabled(id)
           .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
     }
-    return periodRepository.findById(id)
+    return termRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
   }
 
   @Transactional(readOnly = true)
   public Page<AcademicTerm> getAllAcademicTerms(Pageable pageable) {
     if (isAdmin()) {
-      return periodRepository.findAllIncludingDisabled(pageable);
+      return termRepository.findAllIncludingDisabled(pageable);
     }
-    return periodRepository.findAll(pageable);
+    return termRepository.findAll(pageable);
   }
 
   @Transactional
   public void deleteAcademicTerm(UUID id) {
-    AcademicTerm period = periodRepository.findByIdIncludingDisabled(id)
+    AcademicTerm period = termRepository.findByIdIncludingDisabled(id)
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
 
     period.disable();
     period.markUpdated();
-    periodRepository.update(period);
+    termRepository.update(period);
   }
 
   private boolean isAdmin() {

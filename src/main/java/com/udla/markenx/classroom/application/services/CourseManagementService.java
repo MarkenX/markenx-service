@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.classroom.application.dtos.requests.CreateCourseRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateCourseRequestDTO;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
+import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
@@ -19,11 +19,11 @@ import com.udla.markenx.classroom.domain.models.Course;
 public class CourseManagementService {
 
   private final CourseRepositoryPort courseRepository;
-  private final AcademicPeriodRepositoryPort academicPeriodRepository;
+  private final AcademicTermRepositoryPort academicPeriodRepository;
 
   public CourseManagementService(
       CourseRepositoryPort courseRepository,
-      AcademicPeriodRepositoryPort academicPeriodRepository) {
+      AcademicTermRepositoryPort academicPeriodRepository) {
     this.courseRepository = courseRepository;
     this.academicPeriodRepository = academicPeriodRepository;
   }
