@@ -34,7 +34,11 @@ public class StageEvent {
 
   // #endregion
 
+  // #region Validations
+
   public UUID requireId(UUID id) {
     return EntityValidator.ensureNotNull(CLAZZ, id, "id");
   }
+
+  // #endregion
 }
