@@ -1,26 +1,22 @@
 package com.udla.markenx.classroom.application.services;
 
-import com.udla.markenx.classroom.domain.models.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AttemptRepositoryPort;
+import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.classroom.domain.interfaces.StudentAssignment;
 import com.udla.markenx.classroom.domain.models.Attempt;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentAssignmentRepositoryPort;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
 
 @Service
 public class TaskService {
 	private final AttemptRepositoryPort attemptRepository;
-	private final TaskRepositoryPort taskRepository;
 	private final StudentAssignmentRepositoryPort studentAssignmentRepository;
 
 	public TaskService(AttemptRepositoryPort attemptRepository,
-			TaskRepositoryPort taskRepository,
 			StudentAssignmentRepositoryPort studentAssignmentRepository) {
 		this.attemptRepository = attemptRepository;
-		this.taskRepository = taskRepository;
 		this.studentAssignmentRepository = studentAssignmentRepository;
 	}
 
@@ -39,7 +35,8 @@ public class TaskService {
 		if (studentId == null) {
 			throw new IllegalArgumentException("El id del estudiante no puede ser nulo.");
 		}
-		StudentAssignment sa = studentAssignmentRepository.getByAssignmentIdAndStudentId(taskId, studentId);
+		StudentAssignment<? extends Assignment> sa = studentAssignmentRepository.getByAssignmentIdAndStudentId(taskId,
+				studentId);
 		if (sa == null) {
 			return org.springframework.data.domain.Page.empty();
 		}
@@ -60,9 +57,6 @@ public class TaskService {
 		if (studentId == null) {
 			throw new IllegalArgumentException("El id del estudiante no puede ser nulo.");
 		}
-
-		Task task = taskRepository.getTaskById(taskId);
-		double minScore = task.getMinScoreToPass();
 
 		// // get or create student-assignment
 		// StudentAssignment sa =

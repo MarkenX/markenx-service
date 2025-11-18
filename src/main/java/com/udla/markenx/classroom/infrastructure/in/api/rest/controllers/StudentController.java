@@ -22,7 +22,6 @@ import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequest
 import com.udla.markenx.classroom.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.StudentControllerPort;
-import com.udla.markenx.classroom.application.services.CourseService;
 import com.udla.markenx.classroom.application.services.StudentManagementService;
 import com.udla.markenx.classroom.domain.models.Student;
 
@@ -32,13 +31,10 @@ import com.udla.markenx.classroom.domain.models.Student;
 public class StudentController implements StudentControllerPort {
 
   private final StudentManagementService studentManagementService;
-  private final CourseService courseService;
 
   public StudentController(
-      StudentManagementService studentManagementService,
-      CourseService courseService) {
+      StudentManagementService studentManagementService) {
     this.studentManagementService = studentManagementService;
-    this.courseService = courseService;
   }
 
   @Override

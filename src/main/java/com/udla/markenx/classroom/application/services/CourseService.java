@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.udla.markenx.classroom.application.dtos.responses.TaskResponseDTO;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicPeriodRepositoryPort;
@@ -26,16 +25,14 @@ import com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus;
 @Service
 public class CourseService {
 
-  private final TaskRepositoryPort taskRepository;
   private final CourseRepositoryPort courseRepository;
   private final StudentRepositoryPort studentRepository;
   private final AcademicPeriodRepositoryPort periodRepository;
 
-  public CourseService(TaskRepositoryPort taskRepository,
+  public CourseService(
       CourseRepositoryPort courseRepository,
       StudentRepositoryPort studentRepository,
       AcademicPeriodRepositoryPort periodRepository) {
-    this.taskRepository = taskRepository;
     this.courseRepository = courseRepository;
     this.studentRepository = studentRepository;
     this.periodRepository = periodRepository;
@@ -137,7 +134,7 @@ public class CourseService {
   }
 
   public org.springframework.data.domain.Page<Student> getStudentsByCourseId(Long courseId,
-                                                                             int page, int size) {
+      int page, int size) {
     return studentRepository.findByCourseId(courseId, PageRequest.of(page, size));
   }
 }

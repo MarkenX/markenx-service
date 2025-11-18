@@ -1,5 +1,6 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.adapters;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -38,6 +39,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
 
   @Override
   public Optional<Course> findById(Long id) {
+    Objects.requireNonNull(id, "Course ID cannot be null");
     return jpaRepository.findById(id)
         .filter(entity -> entity.getStatus() == DomainBaseModelStatus.ENABLED)
         .map(mapper::toDomain);
@@ -45,22 +47,26 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
 
   @Override
   public Optional<Course> findByIdIncludingDisabled(Long id) {
+    Objects.requireNonNull(id, "Course ID cannot be null");
     return jpaRepository.findById(id).map(mapper::toDomain);
   }
 
   @Override
   public Page<Course> findAll(Pageable pageable) {
+    Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findByStatus(DomainBaseModelStatus.ENABLED, pageable)
         .map(mapper::toDomain);
   }
 
   @Override
   public Page<Course> findAllIncludingDisabled(Pageable pageable) {
+    Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable).map(mapper::toDomain);
   }
 
   @Override
   public void deleteById(Long id) {
+    Objects.requireNonNull(id, "Course ID cannot be null");
     jpaRepository.deleteById(id);
   }
 }

@@ -40,7 +40,7 @@ public class JpaAuditingConfiguration {
 
       // Return authenticated user's email (from JWT)
       String auditor = authentication.getName();
-      return Optional.ofNullable(auditor);
+      return auditor != null ? Optional.of(auditor) : Optional.of("system");
     };
   }
 

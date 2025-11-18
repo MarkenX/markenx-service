@@ -1,5 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.adapters;
 
+import java.util.Objects;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -46,6 +48,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
 
   @Override
   public Optional<Student> findById(Long id) {
+    Objects.requireNonNull(id, "Student ID cannot be null");
     return jpaRepository.findById(id)
         .filter(
             entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
@@ -54,6 +57,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
 
   @Override
   public Optional<Student> findByIdIncludingDisabled(Long id) {
+    Objects.requireNonNull(id, "Student ID cannot be null");
     return jpaRepository.findById(id).map(mapper::toDomain);
   }
 
@@ -67,6 +71,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
 
   @Override
   public Page<Student> findAll(Pageable pageable) {
+    Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
         .map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
             ? mapper.toDomain(entity)
@@ -76,6 +81,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
 
   @Override
   public Page<Student> findAllIncludingDisabled(Pageable pageable) {
+    Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable).map(mapper::toDomain);
   }
 

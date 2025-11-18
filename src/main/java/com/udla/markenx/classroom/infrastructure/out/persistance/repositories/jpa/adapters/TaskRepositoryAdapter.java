@@ -1,5 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.adapters;
 
+import java.util.Objects;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -66,6 +68,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 
 	@Override
 	public Optional<Task> findById(Long id) {
+		Objects.requireNonNull(id, "Task ID cannot be null");
 		return jpaRepository.findById(id)
 				.filter(
 						entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
@@ -74,11 +77,13 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 
 	@Override
 	public Optional<Task> findByIdIncludingDisabled(Long id) {
+		Objects.requireNonNull(id, "Task ID cannot be null");
 		return jpaRepository.findById(id).map(mapper::toDomain);
 	}
 
 	@Override
 	public Page<Task> findAll(Pageable pageable) {
+		Objects.requireNonNull(pageable, "Pageable cannot be null");
 		return jpaRepository.findAll(pageable)
 				.map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
 						? mapper.toDomain(entity)
@@ -88,6 +93,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 
 	@Override
 	public Page<Task> findAllIncludingDisabled(Pageable pageable) {
+		Objects.requireNonNull(pageable, "Pageable cannot be null");
 		return jpaRepository.findAll(pageable).map(mapper::toDomain);
 	}
 

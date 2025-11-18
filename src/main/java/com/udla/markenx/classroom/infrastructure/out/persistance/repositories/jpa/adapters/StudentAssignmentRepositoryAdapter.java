@@ -3,11 +3,9 @@ package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.j
 import org.springframework.stereotype.Repository;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentAssignmentRepositoryPort;
+import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.classroom.domain.interfaces.StudentAssignment;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AttemptRepositoryPort;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentAssignmentJpaRepository;
-import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository;
-import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.StudentAssignmentMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -18,30 +16,25 @@ import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jp
 @RequiredArgsConstructor
 public class StudentAssignmentRepositoryAdapter implements StudentAssignmentRepositoryPort {
   private final StudentAssignmentJpaRepository jpaRepository;
-  private final TaskJpaRepository assignmentJpaRepository;
-  private final StudentJpaRepository studentJpaRepository;
-  private final AttemptRepositoryPort attemptRepositoryPort;
   private final StudentAssignmentMapper mapper;
 
   @Override
-  public StudentAssignment getByAssignmentIdAndStudentId(Long assignmentId, Long studentId) {
+  public StudentAssignment<? extends Assignment> getByAssignmentIdAndStudentId(Long assignmentId, Long studentId) {
     StudentAssignmentJpaEntity entity = jpaRepository.findByAssignmentIdAndStudentId(assignmentId, studentId)
         .orElse(null);
     if (entity == null) {
       return null;
     }
-    StudentAssignment domain = mapper.toDomain(entity);
+    StudentAssignment<? extends Assignment> domain = mapper.toDomain(entity);
     // load attempts (all) for this pair
     // Page<com.udla.markenx.core.models.Attempt> attempts = attemptRepositoryPort
     // .getAttemptsByStudentAssignmentId(entity.getId(), 0, 1000);
     // domain.setAttempts(attempts.getContent());
-    // return domain;
-    return null;
+    return domain;
   }
 
   @Override
-  @SuppressWarnings("null")
-  public StudentAssignment create(StudentAssignment studentAssignment) {
+  public StudentAssignment<? extends Assignment> create(StudentAssignment<? extends Assignment> studentAssignment) {
     // if (studentAssignment == null) {
     // throw new IllegalArgumentException("StudentAssignment cannot be null");
     // }

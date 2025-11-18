@@ -26,21 +26,15 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
 
   @Override
   public AcademicTerm save(AcademicTerm newAcademicTerm) {
-    // try {
-    // AcademicTermJpaEntity entity = mapper.toEntity(newAcademicTerm);
-    // AcademicTermJpaEntity saved = jpaRepository.save(entity);
-    // return mapper.toDomain(saved);
-    // } catch (DataAccessException e) {
-    // throw new PersistenceException("Error al guardar el período académico", e);
-    // }
+    java.util.Objects.requireNonNull(newAcademicTerm, "AcademicTerm cannot be null");
     AcademicTermJpaEntity entity = mapper.toEntity(newAcademicTerm);
-    AcademicTermJpaEntity saved = jpaRepository.save(entity);
-    // return mapper.toDomain(saved);
+    jpaRepository.save(entity);
     return newAcademicTerm;
   }
 
   @Override
   public AcademicTerm update(AcademicTerm existingAcademicTerm) {
+    java.util.Objects.requireNonNull(existingAcademicTerm, "AcademicTerm cannot be null");
     AcademicTermJpaEntity entity = mapper.toEntity(existingAcademicTerm);
     AcademicTermJpaEntity saved = jpaRepository.save(entity);
     return mapper.toDomain(saved);
@@ -67,6 +61,7 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
 
   @Override
   public Page<AcademicTerm> findAll(Pageable pageable) {
+    java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
         .map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
             ? mapper.toDomain(entity)
@@ -76,17 +71,24 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
 
   @Override
   public Page<AcademicTerm> findAllIncludingDisabled(Pageable pageable) {
+    java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
         .map(mapper::toDomain);
   }
 
   @Override
   public void deleteById(UUID id) {
+    java.util.Objects.requireNonNull(id, "ID cannot be null");
     jpaRepository.findAll().stream()
         .filter(entity -> entity.getExternalReference() != null &&
             entity.getExternalReference().getPublicId().equals(id))
         .findFirst()
-        .ifPresent(entity -> jpaRepository.deleteById(entity.getId()));
+        .ifPresent(entity -> {
+          Long entityId = entity.getId();
+          if (entityId != null) {
+            jpaRepository.deleteById(entityId);
+          }
+        });
   }
 
   @Override
