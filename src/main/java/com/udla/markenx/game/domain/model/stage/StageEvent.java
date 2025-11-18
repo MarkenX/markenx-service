@@ -1,4 +1,4 @@
-package com.udla.markenx.game.domain.model;
+package com.udla.markenx.game.domain.model.stage;
 
 import java.util.UUID;
 
