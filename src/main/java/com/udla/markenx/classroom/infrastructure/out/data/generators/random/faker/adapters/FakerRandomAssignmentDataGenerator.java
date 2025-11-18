@@ -47,6 +47,6 @@ public class FakerRandomAssignmentDataGenerator implements RandomAssignmentDataG
 
   @Override
   public double minimumScoreToPass() {
-    return numberGenerator.positiveDecimal(1);
+    return numberGenerator.positiveDecimal(1.0);
   }
 }

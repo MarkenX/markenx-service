@@ -38,9 +38,8 @@ public class FakerRandomNumberGenerator implements RandomNumberGeneratorPort {
       throw new IllegalArgumentException(
           "El límite debe ser mayor que 0 (valor recibido: " + limit + ")");
     }
-    int maxInt = (int) Math.ceil(limit);
-    double randomScore = faker.number().randomDouble(2, 0, maxInt);
-    return Math.min(randomScore, limit);
+    double randomValue = faker.number().randomDouble(2, 0, 1);
+    return randomValue * limit;
   }
 
   private void validatePositiveLimit(int value) {
