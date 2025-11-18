@@ -7,9 +7,6 @@ import com.udla.markenx.classroom.domain.models.Course;
 
 import java.util.Optional;
 
-/**
- * Repository port for Course persistence operations.
- */
 public interface CourseRepositoryPort {
 
   Course save(Course course);
@@ -18,7 +15,11 @@ public interface CourseRepositoryPort {
 
   Optional<Course> findById(Long id);
 
+  Optional<Course> findByIdIncludingDisabled(Long id);
+
   Page<Course> findAll(Pageable pageable);
+
+  Page<Course> findAllIncludingDisabled(Pageable pageable);
 
   void deleteById(Long id);
 }

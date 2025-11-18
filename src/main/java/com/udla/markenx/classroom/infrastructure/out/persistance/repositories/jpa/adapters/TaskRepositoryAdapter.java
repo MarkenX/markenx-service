@@ -55,18 +55,53 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	// }
 
 	@Override
+	public Task save(Task task) {
+		return null;
+	}
+
+	@Override
+	public Task update(Task task) {
+		return null;
+	}
+
+	@Override
+	public Optional<Task> findById(Long id) {
+		return jpaRepository.findById(id)
+				.filter(
+						entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+				.map(mapper::toDomain);
+	}
+
+	@Override
+	public Optional<Task> findByIdIncludingDisabled(Long id) {
+		return jpaRepository.findById(id).map(mapper::toDomain);
+	}
+
+	@Override
+	public Page<Task> findAll(Pageable pageable) {
+		return jpaRepository.findAll(pageable)
+				.map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
+						? mapper.toDomain(entity)
+						: null)
+				.map(domain -> domain);
+	}
+
+	@Override
+	public Page<Task> findAllIncludingDisabled(Pageable pageable) {
+		return jpaRepository.findAll(pageable).map(mapper::toDomain);
+	}
+
+	@Override
+	public void deleteById(Long id) {
+	}
+
+	@Override
 	public Task createTask(Task task) {
-		// TaskJpaEntity entity = jpaRepository.save(mapper.toEntity(task));
-		// return mapper.toDomain(entity);
 		return null;
 	}
 
 	@Override
 	public Task getTaskById(Long taskId) {
-		// Optional<TaskJpaEntity> opt = jpaRepository.findById(taskId);
-		// return opt.map(mapper::toDomain)
-		// .orElseThrow(() -> new IllegalArgumentException("Task not found with id: " +
-		// taskId));
 		return null;
 	}
 }

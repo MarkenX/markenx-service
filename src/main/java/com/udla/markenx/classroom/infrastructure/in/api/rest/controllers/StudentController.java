@@ -1,7 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.in.api.rest.controllers;
 
-import java.time.LocalDate;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -41,6 +41,7 @@ public class StudentController implements StudentControllerPort {
     this.courseService = courseService;
   }
 
+  @Override
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody CreateStudentRequestDTO request) {
@@ -85,6 +86,16 @@ public class StudentController implements StudentControllerPort {
   // return ResponseEntity.ok(response);
   // }
 
+  @Override
+  @GetMapping
+  @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable) {
+    Page<Student> students = studentManagementService.getAllStudents(pageable);
+    Page<StudentResponseDTO> response = students.map(StudentMapper::toDto);
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
   public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
@@ -93,6 +104,7 @@ public class StudentController implements StudentControllerPort {
     return ResponseEntity.ok(response);
   }
 
+  @Override
   @PutMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<StudentResponseDTO> updateStudent(
@@ -103,6 +115,7 @@ public class StudentController implements StudentControllerPort {
     return ResponseEntity.ok(response);
   }
 
+  @Override
   @DeleteMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {

@@ -10,58 +10,29 @@ import org.springframework.data.domain.Pageable;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
 
-/**
- * Repository port for Academic Period entity operations.
- */
 public interface AcademicPeriodRepositoryPort {
 
-  /**
-   * Saves a new academic period.
-   */
   AcademicTerm save(AcademicTerm period);
 
-  /**
-   * Updates an existing academic period.
-   */
   AcademicTerm update(AcademicTerm period);
 
-  /**
-   * Finds an academic period by ID.
-   */
   Optional<AcademicTerm> findById(UUID id);
 
-  /**
-   * Finds all academic periods with pagination.
-   */
+  Optional<AcademicTerm> findByIdIncludingDisabled(UUID id);
+
   Page<AcademicTerm> findAll(Pageable pageable);
 
-  /**
-   * Deletes an academic period by ID.
-   */
+  Page<AcademicTerm> findAllIncludingDisabled(Pageable pageable);
+
   void deleteById(UUID id);
 
-  /**
-   * Checks if an academic period exists for a given year and semester.
-   */
   boolean existsByYearAndSemesterNumber(int year, int semesterNumber);
 
-  /**
-   * Counts academic periods for a specific year.
-   */
   long countByYear(int year);
 
-  /**
-   * Finds all academic periods (for overlap validation).
-   */
   List<AcademicTerm> findAllPeriods();
 
-  /**
-   * Counts the number of courses in an academic period.
-   */
   int countCoursesByPeriodId(UUID periodId);
 
-  /**
-   * Finds all courses for a specific academic period.
-   */
   List<Course> findCoursesByPeriodId(UUID periodId);
 }

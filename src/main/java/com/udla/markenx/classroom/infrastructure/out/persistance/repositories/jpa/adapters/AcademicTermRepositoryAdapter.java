@@ -41,52 +41,65 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
 
   @Override
   public AcademicTerm update(AcademicTerm existingAcademicTerm) {
-    // try {
-    // AcademicTermJpaEntity existingEntity =
-    // jpaRepository.findById(existingAcademicTerm.getId())
-    // .orElseThrow(() -> new PersistenceException("Período académico no
-    // encontrado"));
-
-    // existingEntity.setStartOfTerm(existingAcademicTerm.getStartOfTerm());
-    // existingEntity.setEndOfTerm(existingAcademicTerm.getEndOfTerm());
-
-    // AcademicTermJpaEntity updated = jpaRepository.save(existingEntity);
-    // return mapper.toDomain(updated);
-    // } catch (DataAccessException e) {
-    // throw new PersistenceException("Error al actualizar el período académico",
-    // e);
-    // }
-    return null;
+    AcademicTermJpaEntity entity = mapper.toEntity(existingAcademicTerm);
+    AcademicTermJpaEntity saved = jpaRepository.save(entity);
+    return mapper.toDomain(saved);
   }
 
   @Override
   public Optional<AcademicTerm> findById(UUID id) {
-    // return jpaRepository.findById(id)
-    // .map(mapper::toDomain);
-    return null;
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(id) &&
+            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+        .findFirst()
+        .map(mapper::toDomain);
+  }
+
+  @Override
+  public Optional<AcademicTerm> findByIdIncludingDisabled(UUID id) {
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(id))
+        .findFirst()
+        .map(mapper::toDomain);
   }
 
   @Override
   public Page<AcademicTerm> findAll(Pageable pageable) {
+    return jpaRepository.findAll(pageable)
+        .map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
+            ? mapper.toDomain(entity)
+            : null)
+        .map(domain -> domain);
+  }
+
+  @Override
+  public Page<AcademicTerm> findAllIncludingDisabled(Pageable pageable) {
     return jpaRepository.findAll(pageable)
         .map(mapper::toDomain);
   }
 
   @Override
   public void deleteById(UUID id) {
-    // jpaRepository.deleteById(id);
+    jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(id))
+        .findFirst()
+        .ifPresent(entity -> jpaRepository.deleteById(entity.getId()));
   }
 
   @Override
   public boolean existsByYearAndSemesterNumber(int year, int semesterNumber) {
-    // return jpaRepository.existsByYearAndSemesterNumber(year, semesterNumber);
-    return false;
+    return jpaRepository.findAll().stream()
+        .anyMatch(entity -> entity.getAcademicYear() == year && entity.getTermNumber() == semesterNumber);
   }
 
   @Override
   public long countByYear(int year) {
-    // return jpaRepository.countByYear(year);
-    return -1;
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getAcademicYear() == year)
+        .count();
   }
 
   @Override
@@ -98,19 +111,16 @@ public class AcademicTermRepositoryAdapter implements AcademicPeriodRepositoryPo
 
   @Override
   public int countCoursesByPeriodId(UUID periodId) {
-    // return jpaRepository.findById(periodId)
-    // .map(entity -> entity.getCourses() != null ? entity.getCourses().size() : 0)
-    // .orElse(0);
-    return 0;
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getExternalReference() != null &&
+            entity.getExternalReference().getPublicId().equals(periodId))
+        .findFirst()
+        .map(entity -> entity.getCourses() != null ? entity.getCourses().size() : 0)
+        .orElse(0);
   }
 
   @Override
   public List<Course> findCoursesByPeriodId(UUID periodId) {
-    // return jpaRepository.findById(periodId)
-    // .map(entity -> entity.getCourses().stream()
-    // .map(CourseMapper::toDomain)
-    // .toList())
-    // .orElse(List.of());
-    return null;
+    return java.util.List.of();
   }
 }

@@ -46,20 +46,37 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
 
   @Override
   public Optional<Student> findById(Long id) {
-    // return jpaRepository.findById(id).map(StudentMapper::toDomain);
-    return null;
+    return jpaRepository.findById(id)
+        .filter(
+            entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+        .map(mapper::toDomain);
+  }
+
+  @Override
+  public Optional<Student> findByIdIncludingDisabled(Long id) {
+    return jpaRepository.findById(id).map(mapper::toDomain);
   }
 
   @Override
   public Optional<Student> findByEmail(String email) {
-    // return jpaRepository.findByEmail(email).map(StudentMapper::toDomain);
-    return null;
+    return jpaRepository.findByEmail(email)
+        .filter(
+            entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+        .map(mapper::toDomain);
   }
 
   @Override
   public Page<Student> findAll(Pageable pageable) {
-    // return jpaRepository.findAll(pageable).map(StudentMapper::toDomain);
-    return null;
+    return jpaRepository.findAll(pageable)
+        .map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
+            ? mapper.toDomain(entity)
+            : null)
+        .map(domain -> domain);
+  }
+
+  @Override
+  public Page<Student> findAllIncludingDisabled(Pageable pageable) {
+    return jpaRepository.findAll(pageable).map(mapper::toDomain);
   }
 
   @Override

@@ -1,26 +1,29 @@
 package com.udla.markenx.classroom.application.ports.in.api.rest.controllers;
 
-import java.time.LocalDate;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
+import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
+import com.udla.markenx.classroom.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 
-/**
- * Port for student operations.
- * 
- * Provides endpoints for students to access their data and assigned tasks.
- */
+import jakarta.validation.Valid;
+
 public interface StudentControllerPort {
 
-  /**
-   * Retrieves the profile of the currently authenticated student.
-   * 
-   * @param authentication the authentication object from JWT token
-   * @return ResponseEntity with student profile DTO
-   */
+  ResponseEntity<StudentResponseDTO> createStudent(@Valid CreateStudentRequestDTO request);
+
   ResponseEntity<StudentResponseDTO> getCurrentProfile(Authentication authentication);
+
+  ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable);
+
+  ResponseEntity<StudentResponseDTO> getStudentById(Long id);
+
+  ResponseEntity<StudentResponseDTO> updateStudent(Long id, @Valid UpdateStudentRequestDTO request);
+
+  ResponseEntity<Void> deleteStudent(Long id);
 
   // /**
   // * Retrieves tasks assigned to a specific student with filters.
