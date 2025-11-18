@@ -1,7 +1,5 @@
 package com.udla.markenx.classroom.infrastructure.in.api.rest.controllers;
 
-import jakarta.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.udla.markenx.classroom.application.dtos.mappers.StudentMapper;
-import com.udla.markenx.classroom.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.AdminControllerPort;
-import com.udla.markenx.classroom.application.services.StudentManagementService;
 import com.udla.markenx.classroom.application.services.StudentService;
+import com.udla.markenx.classroom.application.usecases.student.GetAllStudentsUseCase;
+import com.udla.markenx.classroom.application.usecases.student.GetStudentByIdUseCase;
 import com.udla.markenx.classroom.domain.models.Student;
 
 @RestController
@@ -26,13 +24,16 @@ import com.udla.markenx.classroom.domain.models.Student;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController implements AdminControllerPort {
 
-  private final StudentManagementService studentManagementService;
+  private final GetAllStudentsUseCase getAllStudentsUseCase;
+  private final GetStudentByIdUseCase getStudentByIdUseCase;
   private final StudentService studentService;
 
   public AdminController(
-      StudentManagementService studentManagementService,
+      GetAllStudentsUseCase getAllStudentsUseCase,
+      GetStudentByIdUseCase getStudentByIdUseCase,
       StudentService studentService) {
-    this.studentManagementService = studentManagementService;
+    this.getAllStudentsUseCase = getAllStudentsUseCase;
+    this.getStudentByIdUseCase = getStudentByIdUseCase;
     this.studentService = studentService;
   }
 
@@ -50,7 +51,7 @@ public class AdminController implements AdminControllerPort {
   @Override
   @GetMapping("/students")
   public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable) {
-    Page<Student> students = studentManagementService.getAllStudents(pageable);
+    Page<Student> students = getAllStudentsUseCase.execute(pageable);
     Page<StudentResponseDTO> response = students.map(StudentMapper::toDto);
     return ResponseEntity.ok(response);
   }
@@ -58,26 +59,9 @@ public class AdminController implements AdminControllerPort {
   @Override
   @GetMapping("/students/{id}")
   public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
-    Student student = studentManagementService.getStudentById(id);
+    Student student = getStudentByIdUseCase.execute(id);
     StudentResponseDTO response = StudentMapper.toDto(student);
     return ResponseEntity.ok(response);
-  }
-
-  @Override
-  @PutMapping("/students/{id}")
-  public ResponseEntity<StudentResponseDTO> updateStudent(
-      @PathVariable Long id,
-      @Valid @RequestBody UpdateStudentRequestDTO request) {
-    Student student = studentManagementService.updateStudent(id, request);
-    StudentResponseDTO response = StudentMapper.toDto(student);
-    return ResponseEntity.ok(response);
-  }
-
-  @Override
-  @DeleteMapping("/students/{id}")
-  public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-    studentManagementService.deleteStudent(id);
-    return ResponseEntity.noContent().build();
   }
 
   @Override

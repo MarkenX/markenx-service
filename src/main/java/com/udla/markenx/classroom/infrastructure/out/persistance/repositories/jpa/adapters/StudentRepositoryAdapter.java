@@ -23,30 +23,6 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   private final StudentMapper mapper;
 
   @Override
-  public Student save(Student student, String externalAuthId) {
-    // StudentJpaEntity entity = mapper.toEntity(student);
-    // StudentJpaEntity savedEntity = jpaRepository.save(entity);
-    // return mapper.toDomain(savedEntity);
-    return null;
-  }
-
-  @Override
-  public Student update(Student student) {
-    // Find existing entity to preserve externalAuthId
-    // StudentJpaEntity existingEntity = jpaRepository.findById(student.getId())
-    // .orElseThrow(() -> new IllegalArgumentException("Student not found with id: "
-    // + student.getId()));
-
-    // Update with existing externalAuthId
-    // StudentJpaEntity entity = mapper.toEntity(student,
-    // existingEntity.getKeycloakUserId());
-    // StudentJpaEntity entity = mapper.toEntity(student);
-    // StudentJpaEntity savedEntity = jpaRepository.save(entity);
-    // return mapper.toDomain(savedEntity);
-    return null;
-  }
-
-  @Override
   public Optional<Student> findById(Long id) {
     Objects.requireNonNull(id, "Student ID cannot be null");
     return jpaRepository.findById(id)
@@ -86,25 +62,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   }
 
   @Override
-  public Page<Student> findByCourseId(Long courseId, Pageable pageable) {
-    // return jpaRepository.findByCourseId(courseId,
-    // pageable).map(StudentMapper::toDomain);
-    return null;
-  }
-
-  @Override
   public boolean existsByEmail(String email) {
     return jpaRepository.existsByEmail(email);
-  }
-
-  @Override
-  public Optional<String> findExternalAuthIdById(Long id) {
-    // return jpaRepository.findById(id).map(StudentJpaEntity::getKeycloakUserId);
-    return null;
-  }
-
-  @Override
-  public void deleteById(Long id) {
-    // jpaRepository.deleteById(id);
   }
 }

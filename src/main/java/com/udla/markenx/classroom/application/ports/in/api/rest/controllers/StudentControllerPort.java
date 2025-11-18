@@ -5,25 +5,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
-import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
-import com.udla.markenx.classroom.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 
-import jakarta.validation.Valid;
-
 public interface StudentControllerPort {
-
-  ResponseEntity<StudentResponseDTO> createStudent(@Valid CreateStudentRequestDTO request);
 
   ResponseEntity<StudentResponseDTO> getCurrentProfile(Authentication authentication);
 
   ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable);
 
   ResponseEntity<StudentResponseDTO> getStudentById(Long id);
-
-  ResponseEntity<StudentResponseDTO> updateStudent(Long id, @Valid UpdateStudentRequestDTO request);
-
-  ResponseEntity<Void> deleteStudent(Long id);
 
   // /**
   // * Retrieves tasks assigned to a specific student with filters.

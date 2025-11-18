@@ -9,10 +9,6 @@ import java.util.Optional;
 
 public interface StudentRepositoryPort {
 
-  Student save(Student student, String externalAuthId);
-
-  Student update(Student student);
-
   Optional<Student> findById(Long id);
 
   Optional<Student> findByIdIncludingDisabled(Long id);
@@ -23,11 +19,5 @@ public interface StudentRepositoryPort {
 
   Page<Student> findAllIncludingDisabled(Pageable pageable);
 
-  Page<Student> findByCourseId(Long courseId, Pageable pageable);
-
   boolean existsByEmail(String email);
-
-  Optional<String> findExternalAuthIdById(Long id);
-
-  void deleteById(Long id);
 }

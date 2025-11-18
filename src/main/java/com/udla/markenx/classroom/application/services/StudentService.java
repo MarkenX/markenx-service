@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.udla.markenx.classroom.application.dtos.requests.BulkStudentImportDTO;
-import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.classroom.domain.exceptions.BulkImportException;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEmailException;
@@ -32,10 +31,7 @@ public class StudentService {
   private static final String UDLA_EMAIL_PATTERN = ".*@udla\\.edu\\.ec$";
   private static final Pattern EMAIL_PATTERN = Pattern.compile(UDLA_EMAIL_PATTERN);
 
-  private final StudentManagementService studentManagementService;
-
-  public StudentService(StudentManagementService studentManagementService) {
-    this.studentManagementService = studentManagementService;
+  public StudentService() {
   }
 
   /**
@@ -125,21 +121,7 @@ public class StudentService {
           validationErrors);
     }
 
-    // PHASE 2: Import ALL students (only if all are valid)
-    for (BulkStudentImportDTO studentDto : students) {
-      String defaultPassword = generateDefaultPassword(studentDto);
-
-      CreateStudentRequestDTO createRequest = new CreateStudentRequestDTO(
-          studentDto.getFirstName(),
-          studentDto.getLastName(),
-          studentDto.getEmail(),
-          defaultPassword);
-
-      studentManagementService.createStudent(createRequest);
-    }
-
-    // All students imported successfully
-    return BulkImportResponseDTO.success(totalRecords);
+    throw new UnsupportedOperationException("Bulk import is not currently supported");
   }
 
   /**
@@ -156,20 +138,4 @@ public class StudentService {
     }
   }
 
-  /**
-   * Generates default password: enrollmentCode + first 3 chars of firstName.
-   * 
-   * Example: If enrollmentCode is "2025A" and firstName is "Juan",
-   * password will be "2025AJua"
-   */
-  private String generateDefaultPassword(BulkStudentImportDTO studentDto) {
-    String enrollmentCode = studentDto.getEnrollmentCode();
-    String firstName = studentDto.getFirstName();
-
-    if (firstName.length() >= 3) {
-      return enrollmentCode + firstName.substring(0, 3);
-    } else {
-      return enrollmentCode + firstName;
-    }
-  }
 }

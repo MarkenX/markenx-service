@@ -10,10 +10,6 @@ import com.udla.markenx.classroom.domain.valueobjects.RangeDate;
 
 public interface TaskRepositoryPort {
 
-	Task save(Task task);
-
-	Task update(Task task);
-
 	Optional<Task> findById(Long id);
 
 	Optional<Task> findByIdIncludingDisabled(Long id);
@@ -25,10 +21,4 @@ public interface TaskRepositoryPort {
 	Page<Task> getTasksByCourseId(Long courseId, Pageable pageable);
 
 	Page<Task> getCourseTasksByDueDate(Long courseId, RangeDate rangeDate, Pageable pageable);
-
-	void deleteById(Long id);
-
-	Task createTask(Task task);
-
-	Task getTaskById(Long taskId);
 }

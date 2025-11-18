@@ -37,35 +37,6 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 				.map(mapper::toDomain);
 	}
 
-	// @Override
-	// public Page<Task> getCourseTasksByStatus(Long courseId, AssignmentStatus
-	// status, Pageable pageable) {
-	// return jpaRepository.findByCourseIdAndCurrentStatus(courseId, status,
-	// pageable)
-	// .map(mapper::toDomain);
-	// }
-
-	// @Override
-	// public Page<Task> getCourseTasksByDueDateAndStatus(Long courseId, RangeDate
-	// rangeDate,
-	// AssignmentStatus status, Pageable pageable) {
-	// return jpaRepository
-	// .findByCourseIdAndDueDateBetweenAndCurrentStatus(courseId,
-	// rangeDate.getStartDate(), rangeDate.getEndDate(),
-	// status, pageable)
-	// .map(mapper::toDomain);
-	// }
-
-	@Override
-	public Task save(Task task) {
-		return null;
-	}
-
-	@Override
-	public Task update(Task task) {
-		return null;
-	}
-
 	@Override
 	public Optional<Task> findById(Long id) {
 		Objects.requireNonNull(id, "Task ID cannot be null");
@@ -97,17 +68,4 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 		return jpaRepository.findAll(pageable).map(mapper::toDomain);
 	}
 
-	@Override
-	public void deleteById(Long id) {
-	}
-
-	@Override
-	public Task createTask(Task task) {
-		return null;
-	}
-
-	@Override
-	public Task getTaskById(Long taskId) {
-		return null;
-	}
 }

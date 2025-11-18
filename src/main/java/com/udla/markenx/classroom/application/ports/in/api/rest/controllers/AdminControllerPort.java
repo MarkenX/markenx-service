@@ -5,11 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
-import com.udla.markenx.classroom.application.dtos.requests.UpdateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
-
-import jakarta.validation.Valid;
 
 /**
  * Port for administrative operations.
@@ -43,23 +40,6 @@ public interface AdminControllerPort {
    * @return ResponseEntity with student DTO
    */
   ResponseEntity<StudentResponseDTO> getStudentById(Long id);
-
-  /**
-   * Updates an existing student.
-   * 
-   * @param id      the student ID
-   * @param request DTO containing updated firstName, lastName, email
-   * @return ResponseEntity with updated student DTO
-   */
-  ResponseEntity<StudentResponseDTO> updateStudent(Long id, @Valid UpdateStudentRequestDTO request);
-
-  /**
-   * Deletes a student.
-   * 
-   * @param id the student ID
-   * @return ResponseEntity with HTTP 204 No Content
-   */
-  ResponseEntity<Void> deleteStudent(Long id);
 
   /**
    * Imports multiple students from CSV file.
