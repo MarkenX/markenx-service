@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.game.domain.model.consumer.ConsumerProfile;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 
@@ -15,6 +16,7 @@ public class Stage extends DomainBaseModel {
   private final String description;
   private final Double budget;
   private final Double scoreToWin;
+  private final ConsumerProfile consumerProfile;
 
   public Stage(
       UUID id,
@@ -24,6 +26,7 @@ public class Stage extends DomainBaseModel {
       String description,
       Double budget,
       Double scoreToWin,
+      ConsumerProfile consumerProfile,
       String createdBy,
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
@@ -32,6 +35,7 @@ public class Stage extends DomainBaseModel {
     this.description = description;
     this.budget = budget;
     this.scoreToWin = scoreToWin;
+    this.consumerProfile = consumerProfile;
     this.code = generateCode();
   }
 
@@ -55,6 +59,10 @@ public class Stage extends DomainBaseModel {
 
   public Double getScoreToWin() {
     return this.scoreToWin;
+  }
+
+  public ConsumerProfile getConsumerProfile() {
+    return this.consumerProfile;
   }
 
   // #endregion
