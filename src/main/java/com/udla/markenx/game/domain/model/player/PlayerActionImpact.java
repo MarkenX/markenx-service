@@ -18,7 +18,7 @@ public class PlayerActionImpact {
       PlayerAction playerAction,
       Subfactor subfactor,
       int impact) {
-    this.id = id;
+    this.id = requireId(id);
     this.playerAction = playerAction;
     this.subfactor = subfactor;
     this.impact = impact;
