@@ -145,7 +145,7 @@ public class Student extends Person {
 	}
 
 	private List<StudentTask> requireStudentTasks(List<StudentTask> tasks) {
-		return EntityValidator.ensureNotNull(CLAZZ, assignedTasks, "assignedTaks");
+		return EntityValidator.ensureNotNull(CLAZZ, tasks, "assignedTasks");
 	}
 
 	// #endregion
