@@ -23,11 +23,21 @@ import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.Cour
 import com.udla.markenx.classroom.application.services.CourseManagementService;
 import com.udla.markenx.classroom.domain.models.Course;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/markenx/courses")
 @Validated
+@Tag(name = "Courses", description = "Course management operations including CRUD operations")
+@SecurityRequirement(name = "bearerAuth")
 public class CourseManagementController implements CourseManagementControllerPort {
 
   private final CourseManagementService courseService;
@@ -39,7 +49,15 @@ public class CourseManagementController implements CourseManagementControllerPor
   @Override
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<CourseResponseDTO> createCourse(@Valid @RequestBody CreateCourseRequestDTO request) {
+  @Operation(summary = "Create a new course", description = "Creates a new course. Requires ADMIN role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Course created successfully", content = @Content(schema = @Schema(implementation = CourseResponseDTO.class))),
+      @ApiResponse(responseCode = "400", description = "Invalid input"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden")
+  })
+  public ResponseEntity<CourseResponseDTO> createCourse(
+      @Parameter(description = "Course creation data", required = true) @Valid @RequestBody CreateCourseRequestDTO request) {
     Course course = courseService.createCourse(request);
     CourseResponseDTO response = CourseDtoMapper.toResponseDto(course);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -48,9 +66,16 @@ public class CourseManagementController implements CourseManagementControllerPor
   @Override
   @PutMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Update a course", description = "Updates an existing course. Requires ADMIN role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Course updated successfully"),
+      @ApiResponse(responseCode = "404", description = "Course not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden")
+  })
   public ResponseEntity<CourseResponseDTO> updateCourse(
-      @PathVariable Long id,
-      @Valid @RequestBody UpdateCourseRequestDTO request) {
+      @Parameter(description = "Course ID", required = true) @PathVariable Long id,
+      @Parameter(description = "Updated course data", required = true) @Valid @RequestBody UpdateCourseRequestDTO request) {
     Course course = courseService.updateCourse(id, request);
     CourseResponseDTO response = CourseDtoMapper.toResponseDto(course);
     return ResponseEntity.ok(response);
@@ -59,7 +84,14 @@ public class CourseManagementController implements CourseManagementControllerPor
   @Override
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  public ResponseEntity<CourseResponseDTO> getCourseById(@PathVariable Long id) {
+  @Operation(summary = "Get course by ID", description = "Retrieves a specific course by its unique identifier.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Course found"),
+      @ApiResponse(responseCode = "404", description = "Course not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized")
+  })
+  public ResponseEntity<CourseResponseDTO> getCourseById(
+      @Parameter(description = "Course ID", required = true) @PathVariable Long id) {
     Course course = courseService.getCourseById(id);
     CourseResponseDTO response = CourseDtoMapper.toResponseDto(course);
     return ResponseEntity.ok(response);
@@ -68,7 +100,10 @@ public class CourseManagementController implements CourseManagementControllerPor
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  public ResponseEntity<Page<CourseResponseDTO>> getAllCourses(Pageable pageable) {
+  @Operation(summary = "Get all courses", description = "Retrieves a paginated list of all courses.")
+  @ApiResponse(responseCode = "200", description = "Courses retrieved successfully")
+  public ResponseEntity<Page<CourseResponseDTO>> getAllCourses(
+      @Parameter(description = "Pagination parameters") Pageable pageable) {
     Page<Course> courses = courseService.getAllCourses(pageable);
     Page<CourseResponseDTO> response = courses.map(CourseDtoMapper::toResponseDto);
     return ResponseEntity.ok(response);
@@ -77,7 +112,15 @@ public class CourseManagementController implements CourseManagementControllerPor
   @Override
   @DeleteMapping("/{id}")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
+  @Operation(summary = "Delete a course", description = "Soft deletes a course by disabling it. Requires ADMIN role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Course deleted successfully"),
+      @ApiResponse(responseCode = "404", description = "Course not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden")
+  })
+  public ResponseEntity<Void> deleteCourse(
+      @Parameter(description = "Course ID", required = true) @PathVariable Long id) {
     courseService.deleteCourse(id);
     return ResponseEntity.noContent().build();
   }

@@ -20,9 +20,20 @@ import com.udla.markenx.classroom.application.usecases.student.GetStudentByIdUse
 import com.udla.markenx.classroom.application.usecases.student.GetCurrentStudentProfileUseCase;
 import com.udla.markenx.classroom.domain.models.Student;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/markenx/students")
 @Validated
+@Tag(name = "Students", description = "Student operations including profile management and task retrieval. Accessible by STUDENT and ADMIN roles.")
+@SecurityRequirement(name = "bearerAuth")
 public class StudentController implements StudentControllerPort {
 
   private final GetAllStudentsUseCase getAllStudentsUseCase;
@@ -41,6 +52,12 @@ public class StudentController implements StudentControllerPort {
   @Override
   @GetMapping("/me")
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+  @Operation(summary = "Get current student profile", description = "Retrieves the profile of the currently authenticated student based on their JWT token.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Profile retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponseDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Student profile not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized")
+  })
   public ResponseEntity<StudentResponseDTO> getCurrentProfile(Authentication authentication) {
     String email = authentication.getName();
     Student student = getCurrentStudentProfileUseCase.execute(email);
@@ -77,7 +94,13 @@ public class StudentController implements StudentControllerPort {
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable) {
+  @Operation(summary = "Get all students", description = "Retrieves a paginated list of active students. Only returns enabled students.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Students retrieved successfully"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized")
+  })
+  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(
+      @Parameter(description = "Pagination parameters") Pageable pageable) {
     Page<Student> students = getAllStudentsUseCase.execute(pageable);
     Page<StudentResponseDTO> response = students.map(StudentMapper::toDto);
     return ResponseEntity.ok(response);
@@ -86,7 +109,14 @@ public class StudentController implements StudentControllerPort {
   @Override
   @GetMapping("/{id}")
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
+  @Operation(summary = "Get student by ID", description = "Retrieves a specific active student by their unique identifier.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Student found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponseDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Student not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized")
+  })
+  public ResponseEntity<StudentResponseDTO> getStudentById(
+      @Parameter(description = "Student ID", required = true) @PathVariable Long id) {
     Student student = getStudentByIdUseCase.execute(id);
     StudentResponseDTO response = StudentMapper.toDto(student);
     return ResponseEntity.ok(response);

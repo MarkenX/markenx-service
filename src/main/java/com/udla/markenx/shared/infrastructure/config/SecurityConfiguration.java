@@ -32,6 +32,7 @@ public class SecurityConfiguration {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
             .requestMatchers("/api/markenx/admin/**").hasRole("ADMIN")
             .requestMatchers("/api/markenx/students/**").hasAnyRole("STUDENT", "ADMIN")
             .requestMatchers("/api/markenx/assignments/status").permitAll()

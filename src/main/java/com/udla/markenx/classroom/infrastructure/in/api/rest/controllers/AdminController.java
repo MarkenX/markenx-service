@@ -19,9 +19,20 @@ import com.udla.markenx.classroom.application.usecases.student.GetAllStudentsUse
 import com.udla.markenx.classroom.application.usecases.student.GetStudentByIdUseCase;
 import com.udla.markenx.classroom.domain.models.Student;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/markenx/admin")
 @PreAuthorize("hasRole('ADMIN')")
+@Tag(name = "Admin", description = "Administrative operations for managing students and system resources. Requires ADMIN role.")
+@SecurityRequirement(name = "bearerAuth")
 public class AdminController implements AdminControllerPort {
 
   private final GetAllStudentsUseCase getAllStudentsUseCase;
@@ -39,6 +50,8 @@ public class AdminController implements AdminControllerPort {
 
   @Override
   @GetMapping("/debug/auth")
+  @Operation(summary = "Debug authentication", description = "Returns authentication details for debugging purposes. Shows principal, authorities, and other JWT token information.")
+  @ApiResponse(responseCode = "200", description = "Authentication details retrieved successfully")
   public ResponseEntity<String> debugAuth(Authentication authentication) {
     StringBuilder debug = new StringBuilder();
     debug.append("Authenticated: ").append(authentication.isAuthenticated()).append("\n");
@@ -50,7 +63,14 @@ public class AdminController implements AdminControllerPort {
 
   @Override
   @GetMapping("/students")
-  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable) {
+  @Operation(summary = "Get all students", description = "Retrieves a paginated list of all students including disabled ones. Supports sorting and pagination.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Students retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))),
+      @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid or missing JWT token"),
+      @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role")
+  })
+  public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(
+      @Parameter(description = "Pagination parameters (page, size, sort)") Pageable pageable) {
     Page<Student> students = getAllStudentsUseCase.execute(pageable);
     Page<StudentResponseDTO> response = students.map(StudentMapper::toDto);
     return ResponseEntity.ok(response);
@@ -58,7 +78,15 @@ public class AdminController implements AdminControllerPort {
 
   @Override
   @GetMapping("/students/{id}")
-  public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long id) {
+  @Operation(summary = "Get student by ID", description = "Retrieves a specific student by their unique identifier, including disabled students.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Student found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentResponseDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Student not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden")
+  })
+  public ResponseEntity<StudentResponseDTO> getStudentById(
+      @Parameter(description = "Student ID", required = true) @PathVariable Long id) {
     Student student = getStudentByIdUseCase.execute(id);
     StudentResponseDTO response = StudentMapper.toDto(student);
     return ResponseEntity.ok(response);
@@ -66,8 +94,15 @@ public class AdminController implements AdminControllerPort {
 
   @Override
   @PostMapping(value = "/students/bulk-import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @Operation(summary = "Bulk import students from CSV", description = "Imports multiple students from a CSV file. CSV must have header: firstName,lastName,email,enrollmentCode. All emails must belong to @udla.edu.ec domain. Import is transactional (all-or-nothing).")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Students imported successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BulkImportResponseDTO.class))),
+      @ApiResponse(responseCode = "400", description = "Invalid CSV format or validation errors"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden")
+  })
   public ResponseEntity<BulkImportResponseDTO> bulkImportStudents(
-      @RequestParam("file") MultipartFile file) {
+      @Parameter(description = "CSV file with student data", required = true) @RequestParam("file") MultipartFile file) {
     BulkImportResponseDTO response = studentService.importStudentsFromCsv(file);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
