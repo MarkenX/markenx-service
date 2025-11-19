@@ -17,13 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.udla.markenx.classroom.application.dtos.mappers.StudentMapper;
-import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
-import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
-import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.StudentControllerPort;
-import com.udla.markenx.classroom.application.services.StudentManagementService;
-import com.udla.markenx.classroom.domain.models.Student;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,6 +25,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import com.udla.markenx.classroom.application.dtos.mappers.StudentMapper;
+import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
+import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.StudentControllerPort;
+import com.udla.markenx.classroom.application.services.StudentManagementService;
+import com.udla.markenx.classroom.domain.models.Student;
 
 @RestController
 @RequestMapping("/api/markenx/students")
@@ -118,7 +118,7 @@ public class StudentController implements StudentControllerPort {
   @Override
   @PostMapping(value = "/course/{courseId}/bulk-import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @Operation(summary = "Bulk import students from CSV", description = "Imports multiple students from a CSV file to a specific course. CSV must have header: firstName,lastName,email,enrollmentCode. All emails must belong to @udla.edu.ec domain. Import is transactional (all-or-nothing). Requires ADMIN role.")
+  @Operation(summary = "Bulk import students from CSV", description = "Imports multiple students from a CSV file to a specific course. CSV must have header: firstName,lastName,email. All emails must belong to @udla.edu.ec domain. Import is transactional (all-or-nothing). Requires ADMIN role.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Students imported successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BulkImportResponseDTO.class))),
       @ApiResponse(responseCode = "400", description = "Invalid CSV format or validation errors"),
@@ -143,9 +143,9 @@ public class StudentController implements StudentControllerPort {
       @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role")
   })
   public ResponseEntity<byte[]> downloadBulkImportTemplate() {
-    String template = "firstName,lastName,email,enrollmentCode\n" +
-        "Juan,Pérez,juan.perez@udla.edu.ec,202301234\n" +
-        "María,García,maria.garcia@udla.edu.ec,202301235\n";
+    String template = "firstName,lastName,email\n" +
+        "Juan,Pérez,juan.perez@udla.edu.ec\n" +
+        "María,García,maria.garcia@udla.edu.ec\n";
 
     return ResponseEntity.ok()
         .header("Content-Disposition", "attachment; filename=student-import-template.csv")

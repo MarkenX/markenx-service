@@ -85,8 +85,7 @@ public class StudentManagementService {
   // Student newStudent = new Student(
   // request.getFirstName(),
   // request.getLastName(),
-  // request.getEmail(),
-  // request.getEnrollmentCode());
+  // request.getEmail());
   //
   // return studentRepository.save(newStudent);
   // }

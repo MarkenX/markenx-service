@@ -126,7 +126,7 @@ public class StudentService {
    * Imports students from CSV file.
    * 
    * CSV format (with header):
-   * firstName,lastName,email,enrollmentCode
+   * firstName,lastName,email
    * 
    * ALL students must be valid or NONE will be imported (transactional).
    * If ANY validation fails, the entire import is rolled back.
@@ -200,10 +200,6 @@ public class StudentService {
         }
         if (studentDto.getLastName() == null || studentDto.getLastName().trim().isEmpty()) {
           validationErrors.put(rowNumber, "El apellido es obligatorio");
-          continue;
-        }
-        if (studentDto.getEnrollmentCode() == null || studentDto.getEnrollmentCode().trim().isEmpty()) {
-          validationErrors.put(rowNumber, "El código de matrícula es obligatorio");
           continue;
         }
 

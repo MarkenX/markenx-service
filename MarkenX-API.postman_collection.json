@@ -133,7 +133,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"newstudent@example.com\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"password\": \"SecurePass123!\",\n  \"enrollmentCode\": \"STU2025A\"\n}"
+							"raw": "{\n  \"email\": \"newstudent@example.com\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"password\": \"SecurePass123!\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8082/api/markenx/admin/students",
@@ -157,7 +157,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"updated@example.com\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"enrollmentCode\": \"UPD2025A\"\n}"
+							"raw": "{\n  \"email\": \"updated@example.com\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8082/api/markenx/admin/students/20",

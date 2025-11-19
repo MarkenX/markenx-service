@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
  * - firstName: Student's first name
  * - lastName: Student's last name
  * - email: Must be @udla.edu.ec domain
- * - enrollmentCode: Student's enrollment code
  */
 @Data
 @NoArgsConstructor
@@ -31,7 +30,4 @@ public class BulkStudentImportDTO {
   @Email(message = "El formato del correo electrónico no es válido")
   @Pattern(regexp = ".*@udla\\.edu\\.ec$", message = "El correo debe pertenecer al dominio @udla.edu.ec")
   private String email;
-
-  @NotBlank(message = "El código de matrícula es obligatorio")
-  private String enrollmentCode;
 }
