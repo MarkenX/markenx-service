@@ -17,6 +17,7 @@ import com.udla.markenx.classroom.application.ports.out.persistance.repositories
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.domain.models.Student;
+import com.udla.markenx.shared.application.port.out.auth.AuthenticationServicePort;
 
 /**
  * Seeder for Student entities.
@@ -30,21 +31,26 @@ public class StudentSeeder implements CommandLineRunner {
 
   private static final int MIN_STUDENTS_PER_COURSE = 5;
   private static final int MAX_STUDENTS_PER_COURSE = 15;
+  private static final String DEFAULT_PASSWORD = "ChangeMe123!";
+  private static final String STUDENT_ROLE = "STUDENT";
 
   private final RandomStudentFactory studentFactory;
   private final StudentRepositoryPort studentRepository;
   private final CourseRepositoryPort courseRepository;
   private final RandomNumberGeneratorPort numberGenerator;
+  private final AuthenticationServicePort authenticationService;
 
   public StudentSeeder(
       RandomStudentFactory studentFactory,
       StudentRepositoryPort studentRepository,
       CourseRepositoryPort courseRepository,
-      RandomNumberGeneratorPort numberGenerator) {
+      RandomNumberGeneratorPort numberGenerator,
+      AuthenticationServicePort authenticationService) {
     this.studentFactory = studentFactory;
     this.studentRepository = studentRepository;
     this.courseRepository = courseRepository;
     this.numberGenerator = numberGenerator;
+    this.authenticationService = authenticationService;
   }
 
   @Override
@@ -79,17 +85,31 @@ public class StudentSeeder implements CommandLineRunner {
         List<Student> students = studentFactory.createRandomStudents(courseId, studentCount);
 
         for (Student student : students) {
+          // Check if user already exists in Keycloak
+          if (!authenticationService.userExists(student.getAcademicEmail())) {
+            // Create user in Keycloak with STUDENT role
+            authenticationService.createUser(
+                student.getAcademicEmail(),
+                DEFAULT_PASSWORD,
+                student.getFirstName(),
+                student.getLastName(),
+                STUDENT_ROLE,
+                false // Don't require password change for seeded data
+            );
+          }
+
           Student savedStudent = studentRepository.save(student);
           totalStudents++;
           if (totalStudents <= 5 || totalStudents % 5 == 0) {
             System.out.println("  ✓ Created: " + savedStudent.getCode() + " - " +
                 savedStudent.getFirstName() + " " + savedStudent.getLastName() +
-                " (" + savedStudent.getAcademicEmail() + ")");
+                " (" + savedStudent.getAcademicEmail() + ") [Password: " + DEFAULT_PASSWORD + "]");
           }
         }
       }
 
       System.out.println("  Total students created: " + totalStudents);
+      System.out.println("  ℹ All students registered in Keycloak with password: " + DEFAULT_PASSWORD);
 
       System.out.println("[3/4] ✓ Students seeded successfully!\n");
     } catch (Exception e) {
