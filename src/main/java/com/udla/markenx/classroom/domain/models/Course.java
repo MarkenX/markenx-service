@@ -53,7 +53,7 @@ public class Course extends DomainBaseModel {
     setName(name);
     this.students = new ArrayList<>();
     this.assignments = new ArrayList<>();
-    this.code = generateCode();
+    this.code = null; // Code will be generated after persistence
   }
 
   public Course(UUID academicTermId, int academicTermYear, String name) {
@@ -64,7 +64,7 @@ public class Course extends DomainBaseModel {
     setName(name);
     this.students = new ArrayList<>();
     this.assignments = new ArrayList<>();
-    this.code = generateCode();
+    this.code = null; // Code will be generated after persistence
   }
 
   // Lightweight constructor for simple DTOs (without loading
@@ -156,6 +156,16 @@ public class Course extends DomainBaseModel {
 
   @Override
   protected String generateCode() {
+    if (sequence == null) {
+      return null; // Code will be generated after persistence
+    }
     return String.format("%s-%d-%04d", PREFIX, academicTermYear, sequence);
+  }
+
+  public static String generateCodeFromId(Long id, int academicTermYear) {
+    if (id == null) {
+      return null;
+    }
+    return String.format("%s-%d-%04d", PREFIX, academicTermYear, id);
   }
 }

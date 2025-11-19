@@ -41,7 +41,7 @@ public class Task extends Assignment {
 		this.academicTermYear = academicTermYear;
 		this.maxAttempts = validateMaxAttempts(maxAttempts);
 		this.minScoreToPass = new Score(minScoreToPass);
-		this.code = generateCode();
+		this.code = null; // Code will be generated after persistence
 	}
 
 	public Task(UUID courseId, int academicTermYear, String title, String summary, LocalDate dueDate, int maxAttempts,
@@ -51,7 +51,7 @@ public class Task extends Assignment {
 		this.academicTermYear = academicTermYear;
 		this.maxAttempts = validateMaxAttempts(maxAttempts);
 		this.minScoreToPass = new Score(minScoreToPass);
-		this.code = generateCode();
+		this.code = null; // Code will be generated after persistence
 	}
 
 	@Override
@@ -88,6 +88,16 @@ public class Task extends Assignment {
 
 	@Override
 	protected String generateCode() {
+		if (serialNumber == null) {
+			return null; // Code will be generated after persistence
+		}
 		return String.format("%s-%d-%04d", PREFIX, academicTermYear, serialNumber);
+	}
+
+	public static String generateCodeFromId(Long id, int academicTermYear) {
+		if (id == null) {
+			return null;
+		}
+		return String.format("%s-%d-%04d", PREFIX, academicTermYear, id);
 	}
 }

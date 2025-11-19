@@ -28,6 +28,16 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
   public Course save(Course course) {
     CourseJpaEntity entity = mapper.toEntity(course);
     CourseJpaEntity saved = jpaRepository.save(entity);
+
+    // Generate code after persistence if it's a new entity
+    if (course.getCode() == null && saved.getId() != null && saved.getAcademicTerm() != null) {
+      String generatedCode = com.udla.markenx.classroom.domain.models.Course.generateCodeFromId(
+          saved.getId(),
+          saved.getAcademicTerm().getAcademicYear());
+      saved.getExternalReference().setCode(generatedCode);
+      saved = jpaRepository.save(saved);
+    }
+
     return mapper.toDomain(saved);
   }
 

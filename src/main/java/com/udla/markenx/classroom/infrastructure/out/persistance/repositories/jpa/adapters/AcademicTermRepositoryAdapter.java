@@ -29,8 +29,18 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
   public AcademicTerm save(AcademicTerm newAcademicTerm) {
     java.util.Objects.requireNonNull(newAcademicTerm, "AcademicTerm cannot be null");
     AcademicTermJpaEntity entity = mapper.toEntity(newAcademicTerm);
-    jpaRepository.save(entity);
-    return newAcademicTerm;
+    AcademicTermJpaEntity saved = jpaRepository.save(entity);
+
+    // Generate code after persistence if it's a new entity
+    if (newAcademicTerm.getCode() == null && saved.getId() != null) {
+      String generatedCode = com.udla.markenx.classroom.domain.models.AcademicTerm.generateCodeFromData(
+          saved.getAcademicYear(),
+          saved.getStartOfTerm());
+      saved.getExternalReference().setCode(generatedCode);
+      saved = jpaRepository.save(saved);
+    }
+
+    return mapper.toDomain(saved);
   }
 
   @Override

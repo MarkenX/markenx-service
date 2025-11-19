@@ -44,7 +44,7 @@ public class AcademicTerm extends DomainBaseModel {
     this.academicYear = validateAcademicYear(academicYear);
     this.termNumber = determineTermNumber(this.startOfTerm);
     this.assignedCourses = new ArrayList<>();
-    this.code = generateCode();
+    this.code = null; // Code will be generated after persistence
   }
 
   public AcademicTerm(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear) {
@@ -55,7 +55,7 @@ public class AcademicTerm extends DomainBaseModel {
     this.academicYear = validateAcademicYear(academicYear);
     this.termNumber = determineTermNumber(this.startOfTerm);
     this.assignedCourses = new ArrayList<>();
-    this.code = generateCode();
+    this.code = null; // Code will be generated after persistence
   }
 
   // Lightweight constructor for simple DTOs (without loading courses)
@@ -181,7 +181,18 @@ public class AcademicTerm extends DomainBaseModel {
 
   @Override
   protected String generateCode() {
+    if (startOfTerm == null) {
+      return null; // Code will be generated after persistence
+    }
     int term = determineTermNumber(startOfTerm);
+    return String.format("%s-%d-%02d", PREFIX, academicYear, term);
+  }
+
+  public static String generateCodeFromData(int academicYear, LocalDate startOfTerm) {
+    if (startOfTerm == null) {
+      return null;
+    }
+    int term = (startOfTerm.getMonthValue() <= 6) ? 1 : 2;
     return String.format("%s-%d-%02d", PREFIX, academicYear, term);
   }
 }

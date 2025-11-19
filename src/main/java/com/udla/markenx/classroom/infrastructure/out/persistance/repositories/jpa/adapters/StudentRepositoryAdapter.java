@@ -119,6 +119,14 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
 
     var entity = mapper.toEntity(student, courseEntity);
     var savedEntity = jpaRepository.save(entity);
+
+    // Generate code after persistence if it's a new entity
+    if (student.getCode() == null && savedEntity.getId() != null) {
+      String generatedCode = com.udla.markenx.classroom.domain.models.Student.generateCodeFromId(savedEntity.getId());
+      savedEntity.getExternalReference().setCode(generatedCode);
+      savedEntity = jpaRepository.save(savedEntity);
+    }
+
     return mapper.toDomain(savedEntity);
   }
 

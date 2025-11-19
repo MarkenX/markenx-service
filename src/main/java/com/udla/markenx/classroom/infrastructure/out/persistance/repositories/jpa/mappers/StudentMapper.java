@@ -127,6 +127,7 @@ public final class StudentMapper implements BaseMapper<Student, StudentJpaEntity
   }
 
   private void mapExternalReference(Student domain, StudentJpaEntity entity) {
+    // Use domain code if available, otherwise will be set after persistence
     entity.setExternalReference(
         externalReferenceHelper.createExternalReference(
             domain.getId(),

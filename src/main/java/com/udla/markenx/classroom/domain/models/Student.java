@@ -82,7 +82,7 @@ public class Student extends Person {
 		this.enrolledCourseId = courseId;
 		this.academicEmail = validateEmail(email);
 		this.assignedTasks = new ArrayList<>();
-		this.code = generateCode();
+		this.code = null; // Code will be generated after persistence
 	}
 
 	public Student(
@@ -95,7 +95,7 @@ public class Student extends Person {
 		this.enrolledCourseId = courseId;
 		this.academicEmail = validateEmail(email);
 		this.assignedTasks = new ArrayList<>();
-		this.code = generateCode();
+		this.code = null; // Code will be generated after persistence
 	}
 
 	// #endregion
@@ -152,6 +152,16 @@ public class Student extends Person {
 
 	@Override
 	protected String generateCode() {
+		if (serialNumber == null) {
+			return null; // Code will be generated after persistence
+		}
 		return String.format("%s-%06d", PREFIX, serialNumber);
+	}
+
+	public static String generateCodeFromId(Long id) {
+		if (id == null) {
+			return null;
+		}
+		return String.format("%s-%06d", PREFIX, id);
 	}
 }

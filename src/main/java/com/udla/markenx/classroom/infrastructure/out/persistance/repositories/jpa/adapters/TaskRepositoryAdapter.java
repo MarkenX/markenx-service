@@ -155,6 +155,17 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 
 		var entity = mapper.toEntity(task, courseEntity);
 		var savedEntity = jpaRepository.save(entity);
+
+		// Generate code after persistence if it's a new entity
+		if (task.getCode() == null && savedEntity.getId() != null && savedEntity.getCourse() != null
+				&& savedEntity.getCourse().getAcademicTerm() != null) {
+			String generatedCode = com.udla.markenx.classroom.domain.models.Task.generateCodeFromId(
+					savedEntity.getId(),
+					savedEntity.getCourse().getAcademicTerm().getAcademicYear());
+			savedEntity.getExternalReference().setCode(generatedCode);
+			savedEntity = jpaRepository.save(savedEntity);
+		}
+
 		return mapper.toDomain(savedEntity);
 	}
 
