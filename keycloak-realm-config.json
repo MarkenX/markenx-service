@@ -109,11 +109,35 @@
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
         "http://localhost:3000/*",
+        "http://localhost:4200/*",
         "https://admin.markenx.com/*"
       ],
       "webOrigins": [
         "http://localhost:3000",
+        "http://localhost:4200",
         "https://admin.markenx.com"
+      ],
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "bearerOnly": false,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "fullScopeAllowed": true
+    },
+    {
+      "clientId": "markenx-student-web",
+      "name": "MarkenX Student Web Application",
+      "description": "Web application for students",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "http://localhost:4201/*",
+        "https://student.markenx.com/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4201",
+        "https://student.markenx.com"
       ],
       "publicClient": true,
       "protocol": "openid-connect",
