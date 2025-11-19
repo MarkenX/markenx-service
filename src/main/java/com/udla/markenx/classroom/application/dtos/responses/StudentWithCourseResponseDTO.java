@@ -30,7 +30,8 @@ public class StudentWithCourseResponseDTO {
   @Schema(description = "Student email", example = "john.doe@udla.edu.ec")
   private String email;
 
-  @Schema(description = "Student status", example = "ENABLED")
+  @Schema(description = "Student status (ADMIN only)", example = "ENABLED")
+  @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
   private String status;
 
   @Schema(description = "Course information")
@@ -52,7 +53,8 @@ public class StudentWithCourseResponseDTO {
     @Schema(description = "Course name", example = "Mathematics 101")
     private String name;
 
-    @Schema(description = "Course status", example = "ENABLED")
+    @Schema(description = "Course status (ADMIN only)", example = "ENABLED")
+    @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
     private String status;
 
     @Schema(description = "Academic term information")

@@ -22,7 +22,8 @@ public class StudentTaskWithDetailsResponseDTO {
   @Schema(description = "Student task code", example = "STT-2025-0001")
   private String studentTaskCode;
 
-  @Schema(description = "Student task status", example = "ENABLED")
+  @Schema(description = "Student task status (ADMIN only)", example = "ENABLED")
+  @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
   private String studentTaskStatus;
 
   @Schema(description = "Number of attempts made by the student", example = "3")
@@ -59,7 +60,8 @@ public class StudentTaskWithDetailsResponseDTO {
     @Schema(description = "Maximum number of attempts allowed", example = "3")
     private Integer maxAttempts;
 
-    @Schema(description = "Task status", example = "ENABLED")
+    @Schema(description = "Task status (ADMIN only)", example = "ENABLED")
+    @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
     private String status;
 
     @Schema(description = "Task start date", example = "2025-01-15T08:00:00")

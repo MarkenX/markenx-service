@@ -3,6 +3,9 @@ package com.udla.markenx.classroom.application.dtos.responses;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+
 public record TaskResponseDTO(
 		UUID id,
 		String code,
@@ -10,5 +13,6 @@ public record TaskResponseDTO(
 		String summary,
 		LocalDate dueDate,
 		int maxAttempts,
-		double minScoreToPass) {
+		double minScoreToPass,
+		@JsonInclude(JsonInclude.Include.NON_NULL) DomainBaseModelStatus status) {
 }

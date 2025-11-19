@@ -3,6 +3,7 @@ package com.udla.markenx.classroom.application.dtos.mappers;
 import com.udla.markenx.classroom.application.dtos.responses.AcademicPeriodResponseDTO;
 import com.udla.markenx.classroom.domain.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.shared.domain.util.SecurityUtils;
 
 public final class AcademicPeriodMapper {
 
@@ -21,6 +22,7 @@ public final class AcademicPeriodMapper {
         domain.getStartOfTerm(),
         domain.getEndOfTerm(),
         domain.getAcademicYear(),
-        domain.getLabel());
+        domain.getLabel(),
+        SecurityUtils.isAdmin() ? domain.getStatus() : null);
   }
 }

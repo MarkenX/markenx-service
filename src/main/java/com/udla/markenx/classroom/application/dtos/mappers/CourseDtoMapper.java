@@ -2,6 +2,7 @@ package com.udla.markenx.classroom.application.dtos.mappers;
 
 import com.udla.markenx.classroom.application.dtos.responses.CourseResponseDTO;
 import com.udla.markenx.classroom.domain.models.Course;
+import com.udla.markenx.shared.domain.util.SecurityUtils;
 
 public class CourseDtoMapper {
 
@@ -12,7 +13,8 @@ public class CourseDtoMapper {
     CourseResponseDTO dto = new CourseResponseDTO(
         domain.getId(),
         domain.getCode(),
-        domain.getName());
+        domain.getName(),
+        SecurityUtils.isAdmin() ? domain.getStatus() : null);
     return dto;
   }
 }

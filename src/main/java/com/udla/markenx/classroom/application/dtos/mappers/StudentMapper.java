@@ -3,6 +3,7 @@ package com.udla.markenx.classroom.application.dtos.mappers;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.classroom.domain.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.classroom.domain.models.Student;
+import com.udla.markenx.shared.domain.util.SecurityUtils;
 
 public final class StudentMapper {
 
@@ -20,6 +21,7 @@ public final class StudentMapper {
         domain.getCode(),
         domain.getFirstName(),
         domain.getLastName(),
-        domain.getAcademicEmail());
+        domain.getAcademicEmail(),
+        SecurityUtils.isAdmin() ? domain.getStatus() : null);
   }
 }

@@ -443,6 +443,9 @@ public class StudentService {
     AcademicTerm academicTerm = academicTermRepository.findById(course.getAcademicTermId())
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", course.getAcademicTermId()));
 
+    // Check if user is admin to include status fields
+    boolean isAdmin = com.udla.markenx.shared.domain.util.SecurityUtils.isAdmin();
+
     // Build response DTO
     return StudentWithCourseResponseDTO.builder()
         .id(student.getId())
@@ -450,12 +453,12 @@ public class StudentService {
         .firstName(student.getFirstName())
         .lastName(student.getLastName())
         .email(student.getAcademicEmail())
-        .status(student.getStatus().name())
+        .status(isAdmin ? student.getStatus().name() : null)
         .course(StudentWithCourseResponseDTO.CourseInfo.builder()
             .id(course.getId())
             .code(course.getCode())
             .name(course.getName())
-            .status(course.getStatus().name())
+            .status(isAdmin ? course.getStatus().name() : null)
             .academicTerm(StudentWithCourseResponseDTO.AcademicTermInfo.builder()
                 .id(academicTerm.getId())
                 .code(academicTerm.getCode())
@@ -498,10 +501,13 @@ public class StudentService {
       AcademicTerm academicTerm = academicTermRepository.findById(course.getAcademicTermId())
           .orElseThrow(() -> new ResourceNotFoundException("Período académico", course.getAcademicTermId()));
 
+      // Check if user is admin to include status fields
+      boolean isAdmin = com.udla.markenx.shared.domain.util.SecurityUtils.isAdmin();
+
       StudentTaskWithDetailsResponseDTO dto = StudentTaskWithDetailsResponseDTO.builder()
           .studentTaskId(studentTask.getId())
           .studentTaskCode(studentTask.getCode())
-          .studentTaskStatus(studentTask.getStatus().name())
+          .studentTaskStatus(isAdmin ? studentTask.getStatus().name() : null)
           .attemptCount(studentTask.getAttempts().size())
           .task(StudentTaskWithDetailsResponseDTO.TaskInfo.builder()
               .id(task.getId())
@@ -511,7 +517,7 @@ public class StudentService {
               .maxScore(100.0)
               .minScoreToPass(task.getMinScoreToPass())
               .maxAttempts(task.getMaxAttempts())
-              .status(task.getStatus().name())
+              .status(isAdmin ? task.getStatus().name() : null)
               .startDate(null) // Task doesn't have start date in domain model
               .endDate(task.getDueDate().atStartOfDay())
               .courseCode(course.getCode())
