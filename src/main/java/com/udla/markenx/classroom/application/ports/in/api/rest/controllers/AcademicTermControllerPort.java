@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
+import jakarta.validation.Valid;
+
 import com.udla.markenx.classroom.application.dtos.requests.CreateAcademicPeriodRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateAcademicTermRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.AcademicPeriodResponseDTO;
-
-import jakarta.validation.Valid;
 
 public interface AcademicTermControllerPort {
 
@@ -22,5 +22,7 @@ public interface AcademicTermControllerPort {
 
   ResponseEntity<Page<AcademicPeriodResponseDTO>> getAllAcademicTerms(Pageable pageable);
 
-  ResponseEntity<Void> deleteAcademicTerm(UUID id);
+  ResponseEntity<Void> disableAcademicTerm(UUID id);
+
+  ResponseEntity<Void> enableAcademicTerm(UUID id);
 }

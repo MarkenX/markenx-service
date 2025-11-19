@@ -1,17 +1,21 @@
 package com.udla.markenx.shared.infrastructure.out.security.keycloak;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.HttpClientErrorException;
-
-import com.udla.markenx.shared.application.port.out.auth.AuthenticationServicePort;
-import com.udla.markenx.classroom.domain.exceptions.DomainException;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import com.udla.markenx.classroom.domain.exceptions.DomainException;
+import com.udla.markenx.shared.application.port.out.auth.AuthenticationServicePort;
 
 /**
  * Keycloak implementation of the authentication service port.
@@ -162,6 +166,46 @@ public class KeycloakAdminAdapter implements AuthenticationServicePort {
       throw new KeycloakException("Error disabling user in Keycloak: " + e.getResponseBodyAsString());
     } catch (Exception e) {
       throw new KeycloakException("Unexpected error disabling user in Keycloak", e);
+    }
+  }
+
+  @Override
+  public void enableUser(String email) {
+    try {
+      String accessToken = getAdminAccessToken();
+
+      // Find user by email
+      HttpHeaders headers = new HttpHeaders();
+      headers.setBearerAuth(accessToken);
+      HttpEntity<Void> searchRequest = new HttpEntity<>(headers);
+
+      String usersUrl = String.format("%s/admin/realms/%s/users?username=%s&exact=true", keycloakUrl, realm, email);
+      ResponseEntity<List> searchResponse = restTemplate.exchange(usersUrl, HttpMethod.GET, searchRequest, List.class);
+
+      List users = searchResponse.getBody();
+      if (users == null || users.isEmpty()) {
+        throw new KeycloakException("User not found with email: " + email);
+      }
+
+      // Get user ID
+      @SuppressWarnings("unchecked")
+      Map<String, Object> user = (Map<String, Object>) users.get(0);
+      String userId = (String) user.get("id");
+
+      // Update user to enable
+      Map<String, Object> updatePayload = new HashMap<>();
+      updatePayload.put("enabled", true);
+
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      HttpEntity<Map<String, Object>> updateRequest = new HttpEntity<>(updatePayload, headers);
+
+      String userUrl = String.format("%s/admin/realms/%s/users/%s", keycloakUrl, realm, userId);
+      restTemplate.exchange(userUrl, HttpMethod.PUT, updateRequest, Void.class);
+
+    } catch (HttpClientErrorException e) {
+      throw new KeycloakException("Error enabling user in Keycloak: " + e.getResponseBodyAsString());
+    } catch (Exception e) {
+      throw new KeycloakException("Unexpected error enabling user in Keycloak", e);
     }
   }
 

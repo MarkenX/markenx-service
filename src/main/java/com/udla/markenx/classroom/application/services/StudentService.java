@@ -100,7 +100,7 @@ public class StudentService {
   }
 
   /**
-   * Deletes (disables) a student.
+   * Disables a student.
    * 
    * This is a soft delete:
    * - Sets status to DISABLED in database
@@ -110,7 +110,7 @@ public class StudentService {
    * @param studentId Student UUID
    */
   @Transactional
-  public void deleteStudent(UUID studentId) {
+  public void disableStudent(UUID studentId) {
     // Find student to get email
     Student student = studentRepository.findByIdIncludingDisabled(studentId)
         .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + studentId));
@@ -120,6 +120,28 @@ public class StudentService {
 
     // Disable in Keycloak
     authenticationService.disableUser(student.getAcademicEmail());
+  }
+
+  /**
+   * Enables a previously disabled student.
+   * 
+   * - Sets status to ENABLED in database
+   * - Enables user in Keycloak
+   * 
+   * @param studentId Student UUID
+   */
+  @Transactional
+  public void enableStudent(UUID studentId) {
+    // Find student to get email
+    Student student = studentRepository.findByIdIncludingDisabled(studentId)
+        .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + studentId));
+
+    // Enable in database
+    student.enable();
+    studentRepository.update(student);
+
+    // Enable in Keycloak
+    authenticationService.enableUser(student.getAcademicEmail());
   }
 
   /**

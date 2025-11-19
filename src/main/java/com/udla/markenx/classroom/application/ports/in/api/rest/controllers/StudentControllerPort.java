@@ -7,11 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.validation.Valid;
+
 import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
-
-import jakarta.validation.Valid;
 
 public interface StudentControllerPort {
 
@@ -21,7 +21,9 @@ public interface StudentControllerPort {
 
   ResponseEntity<StudentResponseDTO> createStudent(@Valid CreateStudentRequestDTO request);
 
-  ResponseEntity<Void> deleteStudent(UUID id);
+  ResponseEntity<Void> disableStudent(UUID id);
+
+  ResponseEntity<Void> enableStudent(UUID id);
 
   ResponseEntity<BulkImportResponseDTO> bulkImportStudents(UUID courseId, MultipartFile file);
 

@@ -76,7 +76,7 @@ public class CourseManagementService {
   }
 
   @Transactional
-  public void deleteCourse(java.util.UUID id) {
+  public void disableCourse(java.util.UUID id) {
     Course course = courseRepository.findByIdIncludingDisabled(id)
         .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
 
@@ -93,6 +93,16 @@ public class CourseManagementService {
     }
 
     course.disable();
+    course.markUpdated();
+    courseRepository.update(course);
+  }
+
+  @Transactional
+  public void enableCourse(java.util.UUID id) {
+    Course course = courseRepository.findByIdIncludingDisabled(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
+
+    course.enable();
     course.markUpdated();
     courseRepository.update(course);
   }

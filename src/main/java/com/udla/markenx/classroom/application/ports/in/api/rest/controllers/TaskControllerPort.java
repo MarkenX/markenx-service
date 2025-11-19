@@ -22,5 +22,7 @@ public interface TaskControllerPort {
 
   ResponseEntity<TaskResponseDTO> updateTask(UUID id, @Valid UpdateTaskRequestDTO request);
 
-  ResponseEntity<Void> deleteTask(UUID id);
+  ResponseEntity<Void> disableTask(UUID id);
+
+  ResponseEntity<Void> enableTask(UUID id);
 }

@@ -44,6 +44,13 @@ public interface AuthenticationServicePort {
   void disableUser(String email);
 
   /**
+   * Enables a user in the authentication system.
+   *
+   * @param email the user's email
+   */
+  void enableUser(String email);
+
+  /**
    * Checks if a user exists in the authentication system by email.
    *
    * @param email the user's email

@@ -69,8 +69,13 @@ public class StudentManagementService {
   }
 
   @Transactional
-  public void deleteStudent(UUID id) {
-    studentService.deleteStudent(id);
+  public void disableStudent(UUID id) {
+    studentService.disableStudent(id);
+  }
+
+  @Transactional
+  public void enableStudent(UUID id) {
+    studentService.enableStudent(id);
   }
 
   // TODO: Implement when Student domain supports update

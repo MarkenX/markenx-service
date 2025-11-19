@@ -83,7 +83,7 @@ public class AcademicTermManagementService {
   }
 
   @Transactional
-  public void deleteAcademicTerm(UUID id) {
+  public void disableAcademicTerm(UUID id) {
     AcademicTerm period = termRepository.findByIdIncludingDisabled(id)
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
 
@@ -94,6 +94,16 @@ public class AcademicTermManagementService {
     }
 
     period.disable();
+    period.markUpdated();
+    termRepository.update(period);
+  }
+
+  @Transactional
+  public void enableAcademicTerm(UUID id) {
+    AcademicTerm period = termRepository.findByIdIncludingDisabled(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
+
+    period.enable();
     period.markUpdated();
     termRepository.update(period);
   }

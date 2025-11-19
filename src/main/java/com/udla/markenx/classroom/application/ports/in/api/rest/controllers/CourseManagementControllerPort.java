@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
+import jakarta.validation.Valid;
+
 import com.udla.markenx.classroom.application.dtos.requests.CreateCourseRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateCourseRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.CourseResponseDTO;
-
-import jakarta.validation.Valid;
 
 public interface CourseManagementControllerPort {
 
@@ -22,5 +22,7 @@ public interface CourseManagementControllerPort {
 
   ResponseEntity<Page<CourseResponseDTO>> getAllCourses(Pageable pageable);
 
-  ResponseEntity<Void> deleteCourse(UUID id);
+  ResponseEntity<Void> disableCourse(UUID id);
+
+  ResponseEntity<Void> enableCourse(UUID id);
 }

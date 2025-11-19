@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -120,19 +119,35 @@ public class TaskController implements TaskControllerPort {
   }
 
   @Override
-  @DeleteMapping("/{id}")
+  @PutMapping("/{id}/disable")
   @PreAuthorize("hasRole('ADMIN')")
-  @Operation(summary = "Delete a task", description = "Disables a task (soft delete). Requires ADMIN role. Task can only be deleted if it has no student assignments (StudentTask dependencies).")
+  @Operation(summary = "Disable a task", description = "Disables a task by setting status to DISABLED. Requires ADMIN role. Task can only be disabled if it has no student assignments (StudentTask dependencies).")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Task deleted successfully"),
-      @ApiResponse(responseCode = "400", description = "Cannot delete task with dependencies"),
+      @ApiResponse(responseCode = "204", description = "Task disabled successfully"),
+      @ApiResponse(responseCode = "400", description = "Cannot disable task with dependencies"),
       @ApiResponse(responseCode = "404", description = "Task not found"),
       @ApiResponse(responseCode = "401", description = "Unauthorized"),
       @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role")
   })
-  public ResponseEntity<Void> deleteTask(
+  public ResponseEntity<Void> disableTask(
       @Parameter(description = "Task ID (UUID)", required = true) @PathVariable UUID id) {
-    taskManagementService.deleteTask(id);
+    taskManagementService.disableTask(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PutMapping("/{id}/enable")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Enable a task", description = "Enables a previously disabled task by setting status to ENABLED. Requires ADMIN role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Task enabled successfully"),
+      @ApiResponse(responseCode = "404", description = "Task not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role")
+  })
+  public ResponseEntity<Void> enableTask(
+      @Parameter(description = "Task ID (UUID)", required = true) @PathVariable UUID id) {
+    taskManagementService.enableTask(id);
     return ResponseEntity.noContent().build();
   }
 }

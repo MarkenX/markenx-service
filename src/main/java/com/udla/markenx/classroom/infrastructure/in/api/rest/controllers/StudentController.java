@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -100,18 +101,34 @@ public class StudentController implements StudentControllerPort {
   }
 
   @Override
-  @org.springframework.web.bind.annotation.DeleteMapping("/{id}")
+  @PutMapping("/{id}/disable")
   @PreAuthorize("hasRole('ADMIN')")
-  @Operation(summary = "Delete (disable) a student", description = "Soft deletes a student by setting status to DISABLED. Student record remains in database but is not visible to non-admins. Keycloak user is NOT deleted. Requires ADMIN role.")
+  @Operation(summary = "Disable a student", description = "Disables a student by setting status to DISABLED. Student record remains in database but is not visible to non-admins. Also disables the user in Keycloak. Requires ADMIN role.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Student disabled successfully"),
       @ApiResponse(responseCode = "404", description = "Student not found"),
       @ApiResponse(responseCode = "401", description = "Unauthorized"),
       @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role")
   })
-  public ResponseEntity<Void> deleteStudent(
+  public ResponseEntity<Void> disableStudent(
       @Parameter(description = "Student ID", required = true) @PathVariable UUID id) {
-    studentManagementService.deleteStudent(id);
+    studentManagementService.disableStudent(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PutMapping("/{id}/enable")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Enable a student", description = "Enables a previously disabled student by setting status to ENABLED. Also enables the user in Keycloak. Requires ADMIN role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Student enabled successfully"),
+      @ApiResponse(responseCode = "404", description = "Student not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden - Requires ADMIN role")
+  })
+  public ResponseEntity<Void> enableStudent(
+      @Parameter(description = "Student ID", required = true) @PathVariable UUID id) {
+    studentManagementService.enableStudent(id);
     return ResponseEntity.noContent().build();
   }
 

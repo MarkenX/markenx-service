@@ -113,7 +113,7 @@ public class TaskManagementService {
    * @param id Task UUID
    */
   @Transactional
-  public void deleteTask(UUID id) {
+  public void disableTask(UUID id) {
     // Find existing task
     Task task = taskRepository.findByIdIncludingDisabled(id)
         .orElseThrow(() -> new ResourceNotFoundException("Tarea", id));
@@ -121,11 +121,29 @@ public class TaskManagementService {
     // Validate no dependencies
     if (taskRepository.hasStudentTaskDependencies(id)) {
       throw new IllegalStateException(
-          "No se puede eliminar la tarea porque tiene asignaciones de estudiantes asociadas");
+          "No se puede deshabilitar la tarea porque tiene asignaciones de estudiantes asociadas");
     }
 
     // Disable task
     task.disable();
+
+    // Save updated task
+    taskRepository.update(task);
+  }
+
+  /**
+   * Enables a previously disabled task.
+   * 
+   * @param id Task UUID
+   */
+  @Transactional
+  public void enableTask(UUID id) {
+    // Find existing task
+    Task task = taskRepository.findByIdIncludingDisabled(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Tarea", id));
+
+    // Enable task
+    task.enable();
 
     // Save updated task
     taskRepository.update(task);

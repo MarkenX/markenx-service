@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,14 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.udla.markenx.classroom.application.dtos.mappers.CourseDtoMapper;
-import com.udla.markenx.classroom.application.dtos.requests.CreateCourseRequestDTO;
-import com.udla.markenx.classroom.application.dtos.requests.UpdateCourseRequestDTO;
-import com.udla.markenx.classroom.application.dtos.responses.CourseResponseDTO;
-import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.CourseManagementControllerPort;
-import com.udla.markenx.classroom.application.services.CourseManagementService;
-import com.udla.markenx.classroom.domain.models.Course;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,6 +25,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import com.udla.markenx.classroom.application.dtos.mappers.CourseDtoMapper;
+import com.udla.markenx.classroom.application.dtos.requests.CreateCourseRequestDTO;
+import com.udla.markenx.classroom.application.dtos.requests.UpdateCourseRequestDTO;
+import com.udla.markenx.classroom.application.dtos.responses.CourseResponseDTO;
+import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.CourseManagementControllerPort;
+import com.udla.markenx.classroom.application.services.CourseManagementService;
+import com.udla.markenx.classroom.domain.models.Course;
 
 @RestController
 @RequestMapping("/api/markenx/courses")
@@ -114,18 +113,35 @@ public class CourseController implements CourseManagementControllerPort {
   }
 
   @Override
-  @DeleteMapping("/{id}")
+  @PutMapping("/{id}/disable")
   @PreAuthorize("hasRole('ADMIN')")
-  @Operation(summary = "Delete a course", description = "Soft deletes a course by disabling it. Requires ADMIN role.")
+  @Operation(summary = "Disable a course", description = "Disables a course by setting status to DISABLED. Requires ADMIN role. Course can only be disabled if it has no enabled tasks.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Course deleted successfully"),
+      @ApiResponse(responseCode = "204", description = "Course disabled successfully"),
+      @ApiResponse(responseCode = "400", description = "Cannot disable course with enabled tasks"),
       @ApiResponse(responseCode = "404", description = "Course not found"),
       @ApiResponse(responseCode = "401", description = "Unauthorized"),
       @ApiResponse(responseCode = "403", description = "Forbidden")
   })
-  public ResponseEntity<Void> deleteCourse(
+  public ResponseEntity<Void> disableCourse(
       @Parameter(description = "Course ID", required = true) @PathVariable UUID id) {
-    courseService.deleteCourse(id);
+    courseService.disableCourse(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @Override
+  @PutMapping("/{id}/enable")
+  @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Enable a course", description = "Enables a previously disabled course by setting status to ENABLED. Requires ADMIN role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Course enabled successfully"),
+      @ApiResponse(responseCode = "404", description = "Course not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden")
+  })
+  public ResponseEntity<Void> enableCourse(
+      @Parameter(description = "Course ID", required = true) @PathVariable UUID id) {
+    courseService.enableCourse(id);
     return ResponseEntity.noContent().build();
   }
 }
