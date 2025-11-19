@@ -1,5 +1,10 @@
 package com.udla.markenx.shared.infrastructure.config;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -8,11 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Converts Keycloak JWT tokens to Spring Security authentication tokens.
@@ -25,6 +25,7 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
   /**
    * Converts a JWT token into a Spring Security authentication token.
    * Combines default authorities with Keycloak realm roles.
+   * Uses email as the principal name instead of the default subject (UUID).
    * 
    * @param jwt the JWT token from Keycloak
    * @return authentication token with all authorities
@@ -36,7 +37,17 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
         defaultGrantedAuthoritiesConverter.convert(jwt).stream(),
         extractResourceRoles(jwt).stream()).collect(Collectors.toList());
 
-    return new JwtAuthenticationToken(jwt, authorities);
+    // Extract email from JWT to use as principal name
+    // Try 'email' claim first, fallback to 'preferred_username', then 'sub'
+    String principalName = jwt.getClaimAsString("email");
+    if (principalName == null || principalName.isEmpty()) {
+      principalName = jwt.getClaimAsString("preferred_username");
+    }
+    if (principalName == null || principalName.isEmpty()) {
+      principalName = jwt.getSubject();
+    }
+
+    return new JwtAuthenticationToken(jwt, authorities, principalName);
   }
 
   /**

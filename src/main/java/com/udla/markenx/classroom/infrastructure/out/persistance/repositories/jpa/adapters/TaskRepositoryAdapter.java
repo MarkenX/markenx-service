@@ -127,6 +127,18 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	}
 
 	@Override
+	public java.util.List<Task> findByCourseId(UUID courseId) {
+		Objects.requireNonNull(courseId, "Course UUID cannot be null");
+		return jpaRepository.findAll().stream()
+				.filter(entity -> entity.getCourse() != null &&
+						entity.getCourse().getExternalReference() != null &&
+						entity.getCourse().getExternalReference().getPublicId().equals(courseId) &&
+						entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+				.map(mapper::toDomain)
+				.toList();
+	}
+
+	@Override
 	public Task save(Task task) {
 		Objects.requireNonNull(task, "Task cannot be null");
 

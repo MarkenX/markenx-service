@@ -1,5 +1,6 @@
 package com.udla.markenx.classroom.infrastructure.in.api.rest.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -28,8 +29,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.udla.markenx.classroom.application.dtos.mappers.StudentMapper;
+import com.udla.markenx.classroom.application.dtos.responses.AttemptResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentTaskWithDetailsResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentWithCourseResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.StudentControllerPort;
 import com.udla.markenx.classroom.application.services.StudentManagementService;
 import com.udla.markenx.classroom.domain.models.Student;
@@ -79,6 +83,52 @@ public class StudentController implements StudentControllerPort {
       @Parameter(description = "Student ID", required = true) @PathVariable UUID id) {
     Student student = studentManagementService.getStudentById(id);
     StudentResponseDTO response = StudentMapper.toDto(student);
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
+  @GetMapping("/me")
+  @PreAuthorize("hasRole('STUDENT')")
+  @Operation(summary = "Get current student profile", description = "Retrieves the complete profile of the authenticated student including their enrolled course and academic term information. Only accessible by STUDENT role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Student profile retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StudentWithCourseResponseDTO.class))),
+      @ApiResponse(responseCode = "404", description = "Student not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden - Requires STUDENT role")
+  })
+  public ResponseEntity<StudentWithCourseResponseDTO> getCurrentStudentProfile() {
+    StudentWithCourseResponseDTO response = studentManagementService.getCurrentStudentProfile();
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
+  @GetMapping("/me/tasks")
+  @PreAuthorize("hasRole('STUDENT')")
+  @Operation(summary = "Get current student's tasks", description = "Retrieves all tasks assigned to the authenticated student with complete task details. Only accessible by STUDENT role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Student tasks retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Student not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden - Requires STUDENT role")
+  })
+  public ResponseEntity<List<StudentTaskWithDetailsResponseDTO>> getCurrentStudentTasks() {
+    List<StudentTaskWithDetailsResponseDTO> response = studentManagementService.getCurrentStudentTasks();
+    return ResponseEntity.ok(response);
+  }
+
+  @Override
+  @GetMapping("/me/tasks/{taskId}/attempts")
+  @PreAuthorize("hasRole('STUDENT')")
+  @Operation(summary = "Get attempts for a specific task", description = "Retrieves all attempts made by the authenticated student for a specific task. Only accessible by STUDENT role.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Task attempts retrieved successfully"),
+      @ApiResponse(responseCode = "404", description = "Student or task not found"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized"),
+      @ApiResponse(responseCode = "403", description = "Forbidden - Requires STUDENT role")
+  })
+  public ResponseEntity<List<AttemptResponseDTO>> getCurrentStudentTaskAttempts(
+      @Parameter(description = "Task ID", required = true) @PathVariable UUID taskId) {
+    List<AttemptResponseDTO> response = studentManagementService.getCurrentStudentTaskAttempts(taskId);
     return ResponseEntity.ok(response);
   }
 

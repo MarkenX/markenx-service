@@ -11,21 +11,41 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udla.markenx.classroom.application.dtos.requests.CreateTaskRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateTaskRequestDTO;
+import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 import com.udla.markenx.classroom.domain.models.Task;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentAssignmentJpaRepository;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.StudentTaskMapper;
 
 @Service
 public class TaskManagementService {
 
   private final TaskRepositoryPort taskRepository;
+  private final StudentRepositoryPort studentRepository;
+  private final StudentAssignmentJpaRepository studentAssignmentRepository;
+  private final StudentTaskMapper studentTaskMapper;
+  private final com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository taskJpaRepository;
+  private final com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository studentJpaRepository;
 
-  public TaskManagementService(TaskRepositoryPort taskRepository) {
+  public TaskManagementService(
+      TaskRepositoryPort taskRepository,
+      StudentRepositoryPort studentRepository,
+      StudentAssignmentJpaRepository studentAssignmentRepository,
+      StudentTaskMapper studentTaskMapper,
+      com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository taskJpaRepository,
+      com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository studentJpaRepository) {
     this.taskRepository = taskRepository;
+    this.studentRepository = studentRepository;
+    this.studentAssignmentRepository = studentAssignmentRepository;
+    this.studentTaskMapper = studentTaskMapper;
+    this.taskJpaRepository = taskJpaRepository;
+    this.studentJpaRepository = studentJpaRepository;
   }
 
   /**
    * Creates a new task for a course.
+   * Automatically assigns the task to all students in the course.
    * 
    * @param request CreateTaskRequestDTO with task details
    * @return Created task
@@ -46,8 +66,49 @@ public class TaskManagementService {
         request.getMinScoreToPass(),
         createdBy);
 
-    // Save and return
-    return taskRepository.save(task);
+    // Save task
+    Task savedTask = taskRepository.save(task);
+
+    // Assign task to all students in the course
+    var students = studentRepository.findByCourseId(request.getCourseId());
+
+    // Get the persisted task entity
+    var taskEntity = taskJpaRepository.findAll().stream()
+        .filter(t -> t.getExternalReference() != null &&
+            t.getExternalReference().getPublicId().equals(savedTask.getId()))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Task entity not found after save"));
+
+    for (var student : students) {
+      // Get the persisted student entity
+      var studentEntity = studentJpaRepository.findAll().stream()
+          .filter(s -> s.getExternalReference() != null &&
+              s.getExternalReference().getPublicId().equals(student.getId()))
+          .findFirst()
+          .orElseThrow(() -> new IllegalStateException("Student entity not found"));
+
+      // Create StudentTaskJpaEntity with persisted entity references
+      com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity studentTaskEntity = new com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity();
+      studentTaskEntity.setAssignment(taskEntity);
+      studentTaskEntity.setStudent(studentEntity);
+      studentTaskEntity
+          .setCurrentStatus(com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus.NOT_STARTED);
+      studentTaskEntity.setCreatedBy(createdBy);
+      studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
+      studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
+      studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED);
+
+      // Create external reference
+      var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
+      externalRef.setPublicId(java.util.UUID.randomUUID());
+      externalRef.setCode("ST-" + student.getSerialNumber() + "-" + savedTask.getId().toString().substring(0, 8));
+      externalRef.setEntityType("StudentTask");
+      studentTaskEntity.setExternalReference(externalRef);
+
+      studentAssignmentRepository.save(studentTaskEntity);
+    }
+
+    return savedTask;
   }
 
   /**

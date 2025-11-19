@@ -1,5 +1,6 @@
 package com.udla.markenx.classroom.application.ports.in.api.rest.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -10,14 +11,23 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.Valid;
 
 import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
+import com.udla.markenx.classroom.application.dtos.responses.AttemptResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentTaskWithDetailsResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentWithCourseResponseDTO;
 
 public interface StudentControllerPort {
 
   ResponseEntity<Page<StudentResponseDTO>> getAllStudents(Pageable pageable);
 
   ResponseEntity<StudentResponseDTO> getStudentById(UUID id);
+
+  ResponseEntity<StudentWithCourseResponseDTO> getCurrentStudentProfile();
+
+  ResponseEntity<List<StudentTaskWithDetailsResponseDTO>> getCurrentStudentTasks();
+
+  ResponseEntity<List<AttemptResponseDTO>> getCurrentStudentTaskAttempts(UUID taskId);
 
   ResponseEntity<StudentResponseDTO> createStudent(@Valid CreateStudentRequestDTO request);
 

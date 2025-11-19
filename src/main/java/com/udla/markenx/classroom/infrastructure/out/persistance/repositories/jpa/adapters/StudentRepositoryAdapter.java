@@ -1,11 +1,14 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.adapters;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import lombok.RequiredArgsConstructor;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.domain.models.Student;
@@ -13,10 +16,6 @@ import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jp
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.CourseJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.StudentMapper;
-
-import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -68,6 +67,18 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   @Override
   public boolean existsByEmail(String email) {
     return jpaRepository.existsByEmail(email);
+  }
+
+  @Override
+  public java.util.List<Student> findByCourseId(UUID courseId) {
+    Objects.requireNonNull(courseId, "Course UUID cannot be null");
+    return jpaRepository.findAll().stream()
+        .filter(entity -> entity.getCourse() != null &&
+            entity.getCourse().getExternalReference() != null &&
+            entity.getCourse().getExternalReference().getPublicId().equals(courseId) &&
+            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+        .map(mapper::toDomainWithoutTasks)
+        .toList();
   }
 
   @Override

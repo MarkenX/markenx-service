@@ -1,5 +1,6 @@
 package com.udla.markenx.classroom.application.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -11,7 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.udla.markenx.classroom.application.dtos.requests.CreateStudentRequestDTO;
+import com.udla.markenx.classroom.application.dtos.responses.AttemptResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentTaskWithDetailsResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentWithCourseResponseDTO;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 import com.udla.markenx.classroom.domain.models.Student;
@@ -51,6 +55,21 @@ public class StudentManagementService {
   public Student getCurrentStudentProfile(String email) {
     return studentRepository.findByEmail(email)
         .orElseThrow(() -> new ResourceNotFoundException("Estudiante con email", email));
+  }
+
+  @Transactional(readOnly = true)
+  public StudentWithCourseResponseDTO getCurrentStudentProfile() {
+    return studentService.getCurrentStudentProfile();
+  }
+
+  @Transactional(readOnly = true)
+  public List<StudentTaskWithDetailsResponseDTO> getCurrentStudentTasks() {
+    return studentService.getCurrentStudentTasks();
+  }
+
+  @Transactional(readOnly = true)
+  public List<AttemptResponseDTO> getCurrentStudentTaskAttempts(UUID taskId) {
+    return studentService.getCurrentStudentTaskAttempts(taskId);
   }
 
   @Transactional

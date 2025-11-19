@@ -3,12 +3,15 @@ package com.udla.markenx.classroom.application.services;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,11 +19,27 @@ import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.udla.markenx.classroom.application.dtos.requests.BulkStudentImportDTO;
+import com.udla.markenx.classroom.application.dtos.responses.AttemptResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentTaskWithDetailsResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.StudentWithCourseResponseDTO;
+import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
+import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.BulkImportException;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEmailException;
+import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
+import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.domain.models.Attempt;
+import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.domain.models.Student;
+import com.udla.markenx.classroom.domain.models.StudentTask;
+import com.udla.markenx.classroom.domain.models.Task;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.AttemptJpaRepository;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentAssignmentJpaRepository;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.AttemptMapper;
+import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.StudentTaskMapper;
 import com.udla.markenx.shared.application.port.out.auth.AuthenticationServicePort;
 
 /**
@@ -39,13 +58,40 @@ public class StudentService {
   private static final String STUDENT_ROLE = "STUDENT";
 
   private final StudentRepositoryPort studentRepository;
+  private final CourseRepositoryPort courseRepository;
+  private final AcademicTermRepositoryPort academicTermRepository;
   private final AuthenticationServicePort authenticationService;
+  private final StudentAssignmentJpaRepository studentAssignmentRepository;
+  private final AttemptJpaRepository attemptRepository;
+  private final StudentTaskMapper studentTaskMapper;
+  private final AttemptMapper attemptMapper;
+  private final com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort taskRepository;
+  private final com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository taskJpaRepository;
+  private final com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository studentJpaRepository;
 
   public StudentService(
       StudentRepositoryPort studentRepository,
-      AuthenticationServicePort authenticationService) {
+      CourseRepositoryPort courseRepository,
+      AcademicTermRepositoryPort academicTermRepository,
+      AuthenticationServicePort authenticationService,
+      StudentAssignmentJpaRepository studentAssignmentRepository,
+      AttemptJpaRepository attemptRepository,
+      StudentTaskMapper studentTaskMapper,
+      com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.AttemptMapper attemptMapper,
+      com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort taskRepository,
+      com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository taskJpaRepository,
+      com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentJpaRepository studentJpaRepository) {
     this.studentRepository = studentRepository;
+    this.courseRepository = courseRepository;
+    this.academicTermRepository = academicTermRepository;
     this.authenticationService = authenticationService;
+    this.studentAssignmentRepository = studentAssignmentRepository;
+    this.attemptRepository = attemptRepository;
+    this.studentTaskMapper = studentTaskMapper;
+    this.attemptMapper = attemptMapper;
+    this.taskRepository = taskRepository;
+    this.taskJpaRepository = taskJpaRepository;
+    this.studentJpaRepository = studentJpaRepository;
   }
 
   /**
@@ -78,6 +124,9 @@ public class StudentService {
       throw new IllegalArgumentException("El usuario ya existe en Keycloak");
     }
 
+    // Get authenticated user as creator
+    String createdBy = getAuthenticatedUsername();
+
     // Create user in Keycloak with STUDENT role
     authenticationService.createUser(
         email,
@@ -85,7 +134,7 @@ public class StudentService {
         firstName,
         lastName,
         STUDENT_ROLE,
-        true // Require password change on first login
+        false // Don't require password change
     );
 
     // Create student domain object with enrolled course
@@ -96,7 +145,48 @@ public class StudentService {
         email);
 
     // Save to database
-    return studentRepository.save(student);
+    Student savedStudent = studentRepository.save(student);
+
+    // Assign all course tasks to the new student
+    var tasks = taskRepository.findByCourseId(courseId);
+
+    // Get the persisted student entity
+    var studentEntity = studentJpaRepository.findAll().stream()
+        .filter(s -> s.getExternalReference() != null &&
+            s.getExternalReference().getPublicId().equals(savedStudent.getId()))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Student entity not found after save"));
+
+    for (Task task : tasks) {
+      // Get the persisted task entity
+      var taskEntity = taskJpaRepository.findAll().stream()
+          .filter(t -> t.getExternalReference() != null &&
+              t.getExternalReference().getPublicId().equals(task.getId()))
+          .findFirst()
+          .orElseThrow(() -> new IllegalStateException("Task entity not found"));
+
+      // Create StudentTaskJpaEntity with persisted entity references
+      com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity studentTaskEntity = new com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity();
+      studentTaskEntity.setAssignment(taskEntity);
+      studentTaskEntity.setStudent(studentEntity);
+      studentTaskEntity
+          .setCurrentStatus(com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus.NOT_STARTED);
+      studentTaskEntity.setCreatedBy(createdBy);
+      studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
+      studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
+      studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED);
+
+      // Create external reference
+      var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
+      externalRef.setPublicId(java.util.UUID.randomUUID());
+      externalRef.setCode("ST-" + savedStudent.getSerialNumber() + "-" + task.getId().toString().substring(0, 8));
+      externalRef.setEntityType("StudentTask");
+      studentTaskEntity.setExternalReference(externalRef);
+
+      studentAssignmentRepository.save(studentTaskEntity);
+    }
+
+    return savedStudent;
   }
 
   /**
@@ -251,7 +341,12 @@ public class StudentService {
     }
 
     // PHASE 2: Create all students in Keycloak and database
+    String createdBy = getAuthenticatedUsername();
     int successCount = 0;
+
+    // Get all course tasks once
+    var courseTasks = taskRepository.findByCourseId(courseId);
+
     for (BulkStudentImportDTO studentDto : students) {
       try {
         // Create user in Keycloak with STUDENT role
@@ -261,7 +356,7 @@ public class StudentService {
             studentDto.getFirstName(),
             studentDto.getLastName(),
             STUDENT_ROLE,
-            true // Require password change on first login
+            false // Don't require password change
         );
 
         // Create student domain object with enrolled course (from parameter)
@@ -272,7 +367,45 @@ public class StudentService {
             studentDto.getEmail());
 
         // Save to database
-        studentRepository.save(student);
+        Student savedStudent = studentRepository.save(student);
+
+        // Get the persisted student entity
+        var studentEntity = studentJpaRepository.findAll().stream()
+            .filter(s -> s.getExternalReference() != null &&
+                s.getExternalReference().getPublicId().equals(savedStudent.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Student entity not found after save"));
+
+        // Assign all course tasks to the new student
+        for (Task task : courseTasks) {
+          // Get the persisted task entity
+          var taskEntity = taskJpaRepository.findAll().stream()
+              .filter(t -> t.getExternalReference() != null &&
+                  t.getExternalReference().getPublicId().equals(task.getId()))
+              .findFirst()
+              .orElseThrow(() -> new IllegalStateException("Task entity not found"));
+
+          // Create StudentTaskJpaEntity with persisted entity references
+          com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity studentTaskEntity = new com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity();
+          studentTaskEntity.setAssignment(taskEntity);
+          studentTaskEntity.setStudent(studentEntity);
+          studentTaskEntity
+              .setCurrentStatus(com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus.NOT_STARTED);
+          studentTaskEntity.setCreatedBy(createdBy);
+          studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
+          studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
+          studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED);
+
+          // Create external reference
+          var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
+          externalRef.setPublicId(java.util.UUID.randomUUID());
+          externalRef.setCode("ST-" + savedStudent.getSerialNumber() + "-" + task.getId().toString().substring(0, 8));
+          externalRef.setEntityType("StudentTask");
+          studentTaskEntity.setExternalReference(externalRef);
+
+          studentAssignmentRepository.save(studentTaskEntity);
+        }
+
         successCount++;
 
       } catch (Exception ex) {
@@ -287,6 +420,162 @@ public class StudentService {
   }
 
   /**
+   * Gets the profile of the currently authenticated student with course
+   * information.
+   * 
+   * @return StudentWithCourseResponseDTO with student, course and academic term
+   *         data
+   */
+  public StudentWithCourseResponseDTO getCurrentStudentProfile() {
+    // Get authenticated user's email from SecurityContext
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName();
+
+    // Find student by email
+    Student student = studentRepository.findByEmail(email)
+        .orElseThrow(() -> new ResourceNotFoundException("Estudiante", email));
+
+    // Find course
+    Course course = courseRepository.findById(student.getEnrolledCourseId())
+        .orElseThrow(() -> new ResourceNotFoundException("Curso", student.getEnrolledCourseId()));
+
+    // Find academic term
+    AcademicTerm academicTerm = academicTermRepository.findById(course.getAcademicTermId())
+        .orElseThrow(() -> new ResourceNotFoundException("Período académico", course.getAcademicTermId()));
+
+    // Build response DTO
+    return StudentWithCourseResponseDTO.builder()
+        .id(student.getId())
+        .code(student.getCode())
+        .firstName(student.getFirstName())
+        .lastName(student.getLastName())
+        .email(student.getAcademicEmail())
+        .status(student.getStatus().name())
+        .course(StudentWithCourseResponseDTO.CourseInfo.builder()
+            .id(course.getId())
+            .code(course.getCode())
+            .name(course.getName())
+            .status(course.getStatus().name())
+            .academicTerm(StudentWithCourseResponseDTO.AcademicTermInfo.builder()
+                .id(academicTerm.getId())
+                .code(academicTerm.getCode())
+                .name(academicTerm.getLabel())
+                .year(academicTerm.getAcademicYear())
+                .build())
+            .build())
+        .build();
+  }
+
+  /**
+   * Gets all tasks assigned to the currently authenticated student.
+   * 
+   * @return List of StudentTaskWithDetailsResponseDTO with task and student task
+   *         information
+   */
+  public List<StudentTaskWithDetailsResponseDTO> getCurrentStudentTasks() {
+    // Get authenticated user's email from SecurityContext
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName();
+
+    // Find student by email
+    Student student = studentRepository.findByEmail(email)
+        .orElseThrow(() -> new ResourceNotFoundException("Estudiante", email));
+
+    // Find all student tasks
+    List<StudentTaskWithDetailsResponseDTO> results = new ArrayList<>();
+    List<StudentTaskJpaEntity> taskEntities = studentAssignmentRepository.findByStudentId(student.getSerialNumber())
+        .stream()
+        .filter(entity -> entity instanceof StudentTaskJpaEntity)
+        .map(entity -> (StudentTaskJpaEntity) entity)
+        .toList();
+
+    for (StudentTaskJpaEntity entity : taskEntities) {
+      StudentTask studentTask = studentTaskMapper.toDomain(entity);
+      Task task = studentTask.getAssignment();
+      Course course = courseRepository.findById(task.getCourseId())
+          .orElseThrow(() -> new ResourceNotFoundException("Curso", task.getCourseId()));
+
+      AcademicTerm academicTerm = academicTermRepository.findById(course.getAcademicTermId())
+          .orElseThrow(() -> new ResourceNotFoundException("Período académico", course.getAcademicTermId()));
+
+      StudentTaskWithDetailsResponseDTO dto = StudentTaskWithDetailsResponseDTO.builder()
+          .studentTaskId(studentTask.getId())
+          .studentTaskCode(studentTask.getCode())
+          .studentTaskStatus(studentTask.getStatus().name())
+          .attemptCount(studentTask.getAttempts().size())
+          .task(StudentTaskWithDetailsResponseDTO.TaskInfo.builder()
+              .id(task.getId())
+              .code(task.getCode())
+              .name(task.getTitle())
+              .description(task.getSummary())
+              .maxScore(100.0)
+              .minScoreToPass(task.getMinScoreToPass())
+              .maxAttempts(task.getMaxAttempts())
+              .status(task.getStatus().name())
+              .startDate(null) // Task doesn't have start date in domain model
+              .endDate(task.getDueDate().atStartOfDay())
+              .courseCode(course.getCode())
+              .courseName(course.getName())
+              .academicTermYear(academicTerm.getAcademicYear())
+              .build())
+          .build();
+
+      results.add(dto);
+    }
+
+    return results;
+  }
+
+  /**
+   * Gets all attempts for a specific task of the currently authenticated student.
+   * 
+   * @param taskId Task UUID
+   * @return List of AttemptResponseDTO
+   */
+  public List<AttemptResponseDTO> getCurrentStudentTaskAttempts(UUID taskId) {
+    // Get authenticated user's email from SecurityContext
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName();
+
+    // Find student by email
+    Student student = studentRepository.findByEmail(email)
+        .orElseThrow(() -> new ResourceNotFoundException("Estudiante", email));
+
+    // Find all student tasks for this student
+    List<StudentTaskJpaEntity> studentTaskEntities = studentAssignmentRepository
+        .findByStudentId(student.getSerialNumber())
+        .stream()
+        .filter(entity -> entity instanceof StudentTaskJpaEntity)
+        .map(entity -> (StudentTaskJpaEntity) entity)
+        .toList();
+
+    // Find the specific student task for this task ID
+    StudentTaskJpaEntity studentTaskEntity = studentTaskEntities.stream()
+        .filter(entity -> {
+          StudentTask st = studentTaskMapper.toDomain(entity);
+          return st.getAssignment().getId().equals(taskId);
+        })
+        .findFirst()
+        .orElseThrow(() -> new ResourceNotFoundException("Tarea asignada", taskId));
+
+    // Get all attempts for this student task
+    return attemptRepository.findByStudentTaskIdOrderByCreatedAtAsc(studentTaskEntity.getId())
+        .stream()
+        .map(attemptEntity -> {
+          Attempt attempt = attemptMapper.toDomain(attemptEntity);
+          return new AttemptResponseDTO(
+              attempt.getId(),
+              attempt.getCode(),
+              attempt.getScore(),
+              attemptEntity.getCreatedAt().toLocalDate(), // Use JPA entity's createdAt field
+              attempt.getTimeSpent(),
+              attempt.getAttemptStatus(),
+              attempt.getResult());
+        })
+        .toList();
+  }
+
+  /**
    * Validates that email belongs to @udla.edu.ec domain.
    */
   private void validateUdlaEmail(String email) {
@@ -298,6 +587,19 @@ public class StudentService {
       throw new InvalidEmailException(
           String.format("El correo '%s' debe pertenecer al dominio @udla.edu.ec", email));
     }
+  }
+
+  /**
+   * Gets the authenticated username from security context.
+   * 
+   * @return Username or "system" if not authenticated
+   */
+  private String getAuthenticatedUsername() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && authentication.isAuthenticated()) {
+      return authentication.getName();
+    }
+    return "system";
   }
 
 }

@@ -31,6 +31,8 @@ public interface TaskRepositoryPort {
 
 	Page<Task> getCourseTasksByDueDate(UUID courseId, RangeDate rangeDate, Pageable pageable);
 
+	java.util.List<Task> findByCourseId(UUID courseId);
+
 	Task save(Task task);
 
 	Task update(Task task);
