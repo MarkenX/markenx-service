@@ -74,11 +74,8 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 			Pageable pageable) {
 		Objects.requireNonNull(status, "Status cannot be null");
 		Objects.requireNonNull(pageable, "Pageable cannot be null");
-		return jpaRepository.findAll(pageable)
-				.map(entity -> entity.getStatus() == status
-						? mapper.toDomain(entity)
-						: null)
-				.map(domain -> domain);
+		return jpaRepository.findByStatus(status, pageable)
+				.map(mapper::toDomain);
 	}
 
 	@Override

@@ -107,11 +107,8 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
   public Page<AcademicTerm> findByStatus(DomainBaseModelStatus status, Pageable pageable) {
     java.util.Objects.requireNonNull(status, "Status cannot be null");
     java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
-    return jpaRepository.findAll(pageable)
-        .map(entity -> entity.getStatus() == status
-            ? mapper.toDomainWithoutCourses(entity)
-            : null)
-        .map(domain -> domain);
+    return jpaRepository.findByStatus(status, pageable)
+        .map(mapper::toDomainWithoutCourses);
   }
 
   @Override

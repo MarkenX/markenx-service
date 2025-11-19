@@ -69,11 +69,8 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
       Pageable pageable) {
     Objects.requireNonNull(status, "Status cannot be null");
     Objects.requireNonNull(pageable, "Pageable cannot be null");
-    return jpaRepository.findAll(pageable)
-        .map(entity -> entity.getStatus() == status
-            ? mapper.toDomainWithoutTasks(entity)
-            : null)
-        .map(domain -> domain);
+    return jpaRepository.findByStatus(status, pageable)
+        .map(mapper::toDomainWithoutTasks);
   }
 
   @Override
