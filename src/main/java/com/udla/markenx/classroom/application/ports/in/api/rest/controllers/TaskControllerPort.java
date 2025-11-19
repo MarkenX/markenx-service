@@ -11,10 +11,13 @@ import jakarta.validation.Valid;
 import com.udla.markenx.classroom.application.dtos.requests.CreateTaskRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateTaskRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.TaskResponseDTO;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 public interface TaskControllerPort {
 
-  ResponseEntity<Page<TaskResponseDTO>> getAllTasks(Pageable pageable);
+  ResponseEntity<Page<TaskResponseDTO>> getAllTasks(
+      DomainBaseModelStatus status,
+      Pageable pageable);
 
   ResponseEntity<TaskResponseDTO> getTaskById(UUID id);
 

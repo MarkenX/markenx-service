@@ -65,6 +65,18 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   }
 
   @Override
+  public Page<Student> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+      Pageable pageable) {
+    Objects.requireNonNull(status, "Status cannot be null");
+    Objects.requireNonNull(pageable, "Pageable cannot be null");
+    return jpaRepository.findAll(pageable)
+        .map(entity -> entity.getStatus() == status
+            ? mapper.toDomainWithoutTasks(entity)
+            : null)
+        .map(domain -> domain);
+  }
+
+  @Override
   public boolean existsByEmail(String email) {
     return jpaRepository.existsByEmail(email);
   }

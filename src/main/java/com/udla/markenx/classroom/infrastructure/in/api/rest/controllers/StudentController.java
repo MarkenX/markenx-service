@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,18 +55,24 @@ public class StudentController implements StudentControllerPort {
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  @Operation(summary = "Get all students", description = "Retrieves a paginated list of students. Admins see all students including disabled ones. "
+  @Operation(summary = "Get all students", description = "Retrieves a paginated list of students. Supports optional status filter (ENABLED/DISABLED). Admins see all students including disabled ones. "
       +
       "Valid sort properties: id, status, createdAt, updatedAt, firstName, lastName, email, identityNumber, studentCode. "
       +
-      "Example: ?page=0&size=10&sort=lastName,asc&sort=firstName,asc")
+      "Example: ?page=0&size=10&sort=lastName,asc&status=DISABLED")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Students retrieved successfully"),
       @ApiResponse(responseCode = "401", description = "Unauthorized")
   })
   public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(
+      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
       @Parameter(hidden = true) Pageable pageable) {
-    Page<Student> students = studentManagementService.getAllStudents(pageable);
+    Page<Student> students;
+    if (status != null) {
+      students = studentManagementService.getStudentsByStatus(status, pageable);
+    } else {
+      students = studentManagementService.getAllStudents(pageable);
+    }
     Page<StudentResponseDTO> response = students.map(StudentMapper::toDto);
     return ResponseEntity.ok(response);
   }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -99,11 +100,17 @@ public class AcademicTermController implements AcademicTermControllerPort {
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  @Operation(summary = "Get all academic terms")
+  @Operation(summary = "Get all academic terms", description = "Retrieves a paginated list of academic terms. Supports optional status filter (ENABLED/DISABLED). Example: ?page=0&size=10&status=DISABLED")
   @ApiResponse(responseCode = "200", description = "Academic terms retrieved successfully")
   public ResponseEntity<Page<AcademicPeriodResponseDTO>> getAllAcademicTerms(
+      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
       @Parameter(hidden = true) Pageable pageable) {
-    Page<AcademicTerm> academicTerms = academicTermService.getAllAcademicTerms(pageable);
+    Page<AcademicTerm> academicTerms;
+    if (status != null) {
+      academicTerms = academicTermService.getAcademicPeriodsByStatus(status, pageable);
+    } else {
+      academicTerms = academicTermService.getAllAcademicTerms(pageable);
+    }
     Page<AcademicPeriodResponseDTO> response = academicTerms.map(AcademicPeriodMapper::toResponseDto);
     return ResponseEntity.ok(response);
   }

@@ -104,6 +104,17 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
   }
 
   @Override
+  public Page<AcademicTerm> findByStatus(DomainBaseModelStatus status, Pageable pageable) {
+    java.util.Objects.requireNonNull(status, "Status cannot be null");
+    java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
+    return jpaRepository.findAll(pageable)
+        .map(entity -> entity.getStatus() == status
+            ? mapper.toDomainWithoutCourses(entity)
+            : null)
+        .map(domain -> domain);
+  }
+
+  @Override
   public void deleteById(UUID id) {
     java.util.Objects.requireNonNull(id, "ID cannot be null");
     jpaRepository.findAll().stream()

@@ -91,6 +91,14 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
   }
 
   @Override
+  public Page<Course> findByStatus(DomainBaseModelStatus status, Pageable pageable) {
+    Objects.requireNonNull(status, "Status cannot be null");
+    Objects.requireNonNull(pageable, "Pageable cannot be null");
+    return jpaRepository.findByStatus(status, pageable)
+        .map(mapper::toDomainWithoutRelations);
+  }
+
+  @Override
   public void deleteById(Long id) {
     Objects.requireNonNull(id, "Course ID cannot be null");
     jpaRepository.findById(id)

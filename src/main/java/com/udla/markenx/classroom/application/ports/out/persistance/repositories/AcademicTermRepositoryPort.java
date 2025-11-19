@@ -24,6 +24,9 @@ public interface AcademicTermRepositoryPort {
 
   Page<AcademicTerm> findAllIncludingDisabled(Pageable pageable);
 
+  Page<AcademicTerm> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+      Pageable pageable);
+
   void deleteById(UUID id);
 
   boolean existsByYearAndSemesterNumber(int year, int semesterNumber);

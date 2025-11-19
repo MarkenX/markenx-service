@@ -75,6 +75,12 @@ public class CourseManagementService {
     return courseRepository.findAll(pageable);
   }
 
+  @Transactional(readOnly = true)
+  public Page<Course> getCoursesByStatus(
+      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+    return courseRepository.findByStatus(status, pageable);
+  }
+
   @Transactional
   public void disableCourse(java.util.UUID id) {
     Course course = courseRepository.findByIdIncludingDisabled(id)

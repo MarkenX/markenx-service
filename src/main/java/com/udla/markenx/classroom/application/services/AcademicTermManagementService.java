@@ -82,6 +82,12 @@ public class AcademicTermManagementService {
     return termRepository.findAll(pageable);
   }
 
+  @Transactional(readOnly = true)
+  public Page<AcademicTerm> getAcademicPeriodsByStatus(
+      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+    return termRepository.findByStatus(status, pageable);
+  }
+
   @Transactional
   public void disableAcademicTerm(UUID id) {
     AcademicTerm period = termRepository.findByIdIncludingDisabled(id)

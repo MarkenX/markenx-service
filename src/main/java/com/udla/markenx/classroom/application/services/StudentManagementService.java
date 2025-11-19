@@ -52,6 +52,12 @@ public class StudentManagementService {
   }
 
   @Transactional(readOnly = true)
+  public Page<Student> getStudentsByStatus(
+      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+    return studentRepository.findByStatus(status, pageable);
+  }
+
+  @Transactional(readOnly = true)
   public Student getCurrentStudentProfile(String email) {
     return studentRepository.findByEmail(email)
         .orElseThrow(() -> new ResourceNotFoundException("Estudiante con email", email));

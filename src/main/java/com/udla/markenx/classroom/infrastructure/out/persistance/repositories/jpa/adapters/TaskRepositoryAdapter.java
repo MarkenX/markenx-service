@@ -70,6 +70,18 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	}
 
 	@Override
+	public Page<Task> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+			Pageable pageable) {
+		Objects.requireNonNull(status, "Status cannot be null");
+		Objects.requireNonNull(pageable, "Pageable cannot be null");
+		return jpaRepository.findAll(pageable)
+				.map(entity -> entity.getStatus() == status
+						? mapper.toDomain(entity)
+						: null)
+				.map(domain -> domain);
+	}
+
+	@Override
 	public Optional<Task> findById(UUID id) {
 		Objects.requireNonNull(id, "Task UUID cannot be null");
 		return jpaRepository.findAll().stream()

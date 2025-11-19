@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,18 +51,24 @@ public class TaskController implements TaskControllerPort {
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  @Operation(summary = "Get all tasks", description = "Retrieves a paginated list of all tasks. Admins can see disabled tasks. "
+  @Operation(summary = "Get all tasks", description = "Retrieves a paginated list of all tasks. Supports optional status filter (ENABLED/DISABLED). Admins can see disabled tasks. "
       +
       "Valid sort properties: id, code, title, dueDate, maxAttempts, minScoreToPass, createdAt, updatedAt. "
       +
-      "Example: ?page=0&size=10&sort=dueDate,asc&sort=title,asc")
+      "Example: ?page=0&size=10&sort=dueDate,asc&status=DISABLED")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Tasks retrieved successfully"),
       @ApiResponse(responseCode = "401", description = "Unauthorized")
   })
   public ResponseEntity<Page<TaskResponseDTO>> getAllTasks(
+      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
       @Parameter(hidden = true) Pageable pageable) {
-    Page<Task> tasks = taskManagementService.getAllTasks(pageable);
+    Page<Task> tasks;
+    if (status != null) {
+      tasks = taskManagementService.getTasksByStatus(status, pageable);
+    } else {
+      tasks = taskManagementService.getAllTasks(pageable);
+    }
     Page<TaskResponseDTO> response = tasks.map(TaskMapper::toResponseDto);
     return ResponseEntity.ok(response);
   }

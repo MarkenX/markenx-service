@@ -167,6 +167,12 @@ public class TaskManagementService {
     return taskRepository.findAll(pageable);
   }
 
+  @Transactional(readOnly = true)
+  public Page<Task> getTasksByStatus(
+      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+    return taskRepository.findByStatus(status, pageable);
+  }
+
   /**
    * Disables a task (soft delete).
    * Validates that no StudentTask dependencies exist.

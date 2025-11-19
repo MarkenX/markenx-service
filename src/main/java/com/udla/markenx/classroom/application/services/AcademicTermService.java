@@ -104,6 +104,14 @@ public class AcademicTermService {
   }
 
   /**
+   * Retrieves academic periods filtered by status.
+   */
+  public Page<AcademicTerm> getAcademicPeriodsByStatus(
+      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+    return periodRepository.findByStatus(status, pageable);
+  }
+
+  /**
    * Deletes an academic period by ID.
    * Fails if the period has associated courses.
    */

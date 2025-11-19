@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -101,13 +102,20 @@ public class CourseController implements CourseManagementControllerPort {
   @Override
   @GetMapping
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-  @Operation(summary = "Get all courses", description = "Retrieves a paginated list of all courses. " +
+  @Operation(summary = "Get all courses", description = "Retrieves a paginated list of all courses. Supports optional status filter (ENABLED/DISABLED). "
+      +
       "Valid sort properties: id, status, createdAt, updatedAt, name, credits, academicTermId. " +
-      "Example: ?page=0&size=10&sort=name,asc")
+      "Example: ?page=0&size=10&sort=name,asc&status=DISABLED")
   @ApiResponse(responseCode = "200", description = "Courses retrieved successfully")
   public ResponseEntity<Page<CourseResponseDTO>> getAllCourses(
+      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
       @Parameter(hidden = true) Pageable pageable) {
-    Page<Course> courses = courseService.getAllCourses(pageable);
+    Page<Course> courses;
+    if (status != null) {
+      courses = courseService.getCoursesByStatus(status, pageable);
+    } else {
+      courses = courseService.getAllCourses(pageable);
+    }
     Page<CourseResponseDTO> response = courses.map(CourseDtoMapper::toResponseDto);
     return ResponseEntity.ok(response);
   }

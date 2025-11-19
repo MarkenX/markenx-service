@@ -20,7 +20,9 @@ public interface AcademicTermControllerPort {
 
   ResponseEntity<AcademicPeriodResponseDTO> getAcademicTermById(UUID id);
 
-  ResponseEntity<Page<AcademicPeriodResponseDTO>> getAllAcademicTerms(Pageable pageable);
+  ResponseEntity<Page<AcademicPeriodResponseDTO>> getAllAcademicTerms(
+      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+      Pageable pageable);
 
   ResponseEntity<Void> disableAcademicTerm(UUID id);
 
