@@ -27,7 +27,7 @@ public class ExternalReferenceJpaEntity {
   private Long id;
 
   // @Column(name = "code", nullable = false, unique = true)
-  @Column(name = "code", nullable = false)
+  @Column(name = "code", nullable = true) // Nullable to allow generation after persistence
   private String code;
 
   @Column(name = "public_id", nullable = false, unique = true, updatable = false)

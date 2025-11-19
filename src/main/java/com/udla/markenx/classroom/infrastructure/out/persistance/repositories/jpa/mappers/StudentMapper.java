@@ -1,5 +1,6 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -116,14 +117,14 @@ public final class StudentMapper implements BaseMapper<Student, StudentJpaEntity
 
   private List<StudentTask> mapTasksToDomain(StudentJpaEntity entity) {
     if (entity.getStudentAssignments() == null) {
-      return List.of();
+      return new ArrayList<>();
     }
 
     return entity.getStudentAssignments().stream()
         .filter(StudentTaskJpaEntity.class::isInstance)
         .map(StudentTaskJpaEntity.class::cast)
         .map(studentTaskMapper::toDomain)
-        .toList();
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
   }
 
   private void mapExternalReference(Student domain, StudentJpaEntity entity) {
@@ -165,7 +166,7 @@ public final class StudentMapper implements BaseMapper<Student, StudentJpaEntity
           taskEntity.setStudent(entity);
           return taskEntity;
         })
-        .toList();
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
 
     entity.setStudentAssignments(tasks);
   }

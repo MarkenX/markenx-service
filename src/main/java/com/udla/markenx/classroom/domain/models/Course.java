@@ -42,7 +42,7 @@ public class Course extends DomainBaseModel {
     setName(name);
     this.students = requireStudents(students);
     this.assignments = new ArrayList<>(requireAssignments(assignments));
-    this.code = requireCode(code);
+    this.code = code; // Allow null, will be generated after persistence
   }
 
   public Course(UUID academicTermId, int academicTermYear, String name, String createdBy) {
@@ -87,7 +87,7 @@ public class Course extends DomainBaseModel {
     setName(name);
     this.students = new ArrayList<>();
     this.assignments = new ArrayList<>();
-    this.code = requireCode(code);
+    this.code = code; // Allow null, will be generated after persistence
   }
 
   public String getCode() {

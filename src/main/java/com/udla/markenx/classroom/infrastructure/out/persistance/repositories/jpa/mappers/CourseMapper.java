@@ -1,5 +1,6 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -171,7 +172,7 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
           entity.setCourse(target);
           return entity;
         })
-        .toList();
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
 
     target.getAssignments().addAll(assignments);
   }
@@ -185,7 +186,7 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
           entity.setCourse(target);
           return entity;
         })
-        .toList();
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
 
     target.getStudents().addAll(students);
   }
@@ -218,12 +219,12 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
   private List<Student> mapStudentsToDomain(CourseJpaEntity entity) {
     return entity.getStudents().stream()
         .map(studentMapper::toDomain)
-        .toList();
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
   }
 
   private List<Assignment> mapAssignmentsToDomain(CourseJpaEntity entity) {
     return entity.getAssignments().stream()
         .map(assignmentMapper::toDomain)
-        .toList();
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
   }
 }

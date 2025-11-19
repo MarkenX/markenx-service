@@ -33,7 +33,7 @@ public class AcademicTerm extends DomainBaseModel {
     this.academicYear = validateAcademicYear(academicYear);
     this.termNumber = determineTermNumber(this.startOfTerm);
     this.assignedCourses = requireAssignedCourses(assignedCourses);
-    this.code = requireCode(code);
+    this.code = code; // Allow null, will be generated after persistence
   }
 
   public AcademicTerm(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear, String createdBy) {
@@ -68,7 +68,7 @@ public class AcademicTerm extends DomainBaseModel {
     this.academicYear = validateAcademicYear(academicYear);
     this.termNumber = termNumber;
     this.assignedCourses = new ArrayList<>();
-    this.code = requireCode(code);
+    this.code = code; // Allow null, will be generated after persistence
   }
 
   public String getCode() {
@@ -132,7 +132,8 @@ public class AcademicTerm extends DomainBaseModel {
   }
 
   private List<Course> requireAssignedCourses(List<Course> courses) {
-    return List.copyOf(EntityValidator.ensureNotNull(CLAZZ, courses, "assignedCourses"));
+    // Return mutable list for Hibernate, getter will return immutable copy
+    return new ArrayList<>(EntityValidator.ensureNotNull(CLAZZ, courses, "assignedCourses"));
   }
 
   private int validateAcademicYear(int academicYear) {

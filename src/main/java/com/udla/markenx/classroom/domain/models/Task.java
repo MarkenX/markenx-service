@@ -31,7 +31,7 @@ public class Task extends Assignment {
 		this.academicTermYear = academicTermYear;
 		this.maxAttempts = validateMaxAttempts(maxAttempts);
 		this.minScoreToPass = new Score(minScoreToPass);
-		this.code = requireCode(code);
+		this.code = code; // Allow null, will be generated after persistence
 	}
 
 	public Task(UUID courseId, int academicTermYear, String title, String summary, LocalDate dueDate, int maxAttempts,

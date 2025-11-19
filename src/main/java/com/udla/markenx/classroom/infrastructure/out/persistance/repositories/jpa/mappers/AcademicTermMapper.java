@@ -25,7 +25,7 @@ public final class AcademicTermMapper {
 
     List<Course> courses = courseEntities.stream()
         .map(courseMapper::toDomain)
-        .toList();
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
 
     return new AcademicTerm(
         entity.getExternalReference() != null ? entity.getExternalReference().getPublicId()

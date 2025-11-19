@@ -73,6 +73,10 @@ public abstract class DomainBaseModel {
   }
 
   protected String requireCode(String code) {
+    // Allow null for codes that will be generated after persistence
+    if (code == null) {
+      return null;
+    }
     return EntityValidator.ensureNotNullOrEmpty(getClass(), code, "code");
   }
 

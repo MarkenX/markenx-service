@@ -46,7 +46,7 @@ public class Student extends Person {
 		this.enrolledCourseId = enrolledCourseId;
 		this.academicEmail = validateEmail(email);
 		this.assignedTasks = requireStudentTasks(assignedTasks);
-		this.code = requireCode(code);
+		this.code = code; // Allow null, will be generated after persistence
 	}
 
 	// Lightweight constructor for simple DTOs (without loading tasks)
@@ -67,7 +67,7 @@ public class Student extends Person {
 		this.enrolledCourseId = enrolledCourseId;
 		this.academicEmail = validateEmail(email);
 		this.assignedTasks = new ArrayList<>();
-		this.code = requireCode(code);
+		this.code = code; // Allow null, will be generated after persistence
 	}
 
 	public Student(
