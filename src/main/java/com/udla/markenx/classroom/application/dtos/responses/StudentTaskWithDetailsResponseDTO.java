@@ -26,6 +26,10 @@ public class StudentTaskWithDetailsResponseDTO {
   @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
   private String studentTaskStatus;
 
+  @Schema(description = "Assignment status", example = "IN_PROGRESS", allowableValues = { "NOT_STARTED", "IN_PROGRESS",
+      "COMPLETED", "OUTDATED", "FAILED" })
+  private String assignmentStatus;
+
   @Schema(description = "Number of attempts made by the student", example = "3")
   private Integer attemptCount;
 

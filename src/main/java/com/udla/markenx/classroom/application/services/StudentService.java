@@ -501,13 +501,15 @@ public class StudentService {
       AcademicTerm academicTerm = academicTermRepository.findById(course.getAcademicTermId())
           .orElseThrow(() -> new ResourceNotFoundException("Período académico", course.getAcademicTermId()));
 
-      // Check if user is admin to include status fields
+      // Check if user is admin to include task status field (task status is still
+      // admin-only)
       boolean isAdmin = com.udla.markenx.shared.domain.util.SecurityUtils.isAdmin();
 
       StudentTaskWithDetailsResponseDTO dto = StudentTaskWithDetailsResponseDTO.builder()
           .studentTaskId(studentTask.getId())
           .studentTaskCode(studentTask.getCode())
           .studentTaskStatus(isAdmin ? studentTask.getStatus().name() : null)
+          .assignmentStatus(studentTask.getAssignmentStatus().name())
           .attemptCount(studentTask.getAttempts().size())
           .task(StudentTaskWithDetailsResponseDTO.TaskInfo.builder()
               .id(task.getId())
