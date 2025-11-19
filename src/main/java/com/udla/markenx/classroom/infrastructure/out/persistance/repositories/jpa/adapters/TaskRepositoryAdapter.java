@@ -1,12 +1,14 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.adapters;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Repository;
+
+import lombok.RequiredArgsConstructor;
 
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
 import com.udla.markenx.classroom.domain.models.Task;
@@ -14,15 +16,13 @@ import com.udla.markenx.classroom.domain.valueobjects.RangeDate;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.TaskJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.TaskMapper;
 
-import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
-
 @Repository
 @RequiredArgsConstructor
 public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	private final TaskJpaRepository jpaRepository;
 	private final TaskMapper mapper;
+	private final com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentAssignmentJpaRepository studentAssignmentRepository;
+	private final com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.CourseJpaRepository courseJpaRepository;
 
 	@Override
 	public Page<Task> getTasksByCourseId(Long courseId, Pageable pageable) {
@@ -124,6 +124,73 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 					return null;
 				})
 				.map(domain -> domain);
+	}
+
+	@Override
+	public Task save(Task task) {
+		Objects.requireNonNull(task, "Task cannot be null");
+
+		// Find course entity if task has a courseId
+		com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity courseEntity = null;
+		if (task.getCourseId() != null) {
+			courseEntity = courseJpaRepository.findAll().stream()
+					.filter(c -> c.getExternalReference() != null &&
+							c.getExternalReference().getPublicId().equals(task.getCourseId()))
+					.findFirst()
+					.orElseThrow(
+							() -> new IllegalArgumentException("Curso no encontrado con ID: " + task.getCourseId()));
+		}
+
+		var entity = mapper.toEntity(task, courseEntity);
+		var savedEntity = jpaRepository.save(entity);
+		return mapper.toDomain(savedEntity);
+	}
+
+	@Override
+	public Task update(Task task) {
+		Objects.requireNonNull(task, "Task cannot be null");
+		Objects.requireNonNull(task.getId(), "Task ID cannot be null for update");
+
+		// Find existing entity by UUID
+		var existingEntity = jpaRepository.findAll().stream()
+				.filter(entity -> entity.getExternalReference() != null &&
+						entity.getExternalReference().getPublicId().equals(task.getId()))
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("Task not found with ID: " + task.getId()));
+
+		// Update entity with new values
+		existingEntity.setStatus(task.getStatus());
+		existingEntity.setTitle(task.getTitle());
+		existingEntity.setSummary(task.getSummary());
+		existingEntity.setDueDate(task.getDueDate());
+		existingEntity.setMaxAttempts(task.getMaxAttempts());
+		existingEntity.setMinScoreToPass(task.getMinScoreToPass());
+		existingEntity.setUpdatedBy(task.getUpdatedBy());
+		existingEntity.setUpdatedAt(task.getUpdatedAtDateTime());
+
+		var updatedEntity = jpaRepository.save(existingEntity);
+		return mapper.toDomain(updatedEntity);
+	}
+
+	@Override
+	public boolean hasStudentTaskDependencies(UUID taskId) {
+		Objects.requireNonNull(taskId, "Task UUID cannot be null");
+
+		// Find the task entity by UUID to get its internal ID
+		var taskEntity = jpaRepository.findAll().stream()
+				.filter(entity -> entity.getExternalReference() != null &&
+						entity.getExternalReference().getPublicId().equals(taskId))
+				.findFirst()
+				.orElse(null);
+
+		if (taskEntity == null) {
+			return false;
+		}
+
+		// Check if there are any StudentAssignment records for this task
+		return studentAssignmentRepository.findAll().stream()
+				.anyMatch(sa -> sa.getAssignment() != null &&
+						sa.getAssignment().getId().equals(taskEntity.getId()));
 	}
 
 }

@@ -30,4 +30,10 @@ public interface TaskRepositoryPort {
 	Page<Task> getCourseTasksByDueDate(Long courseId, RangeDate rangeDate, Pageable pageable);
 
 	Page<Task> getCourseTasksByDueDate(UUID courseId, RangeDate rangeDate, Pageable pageable);
+
+	Task save(Task task);
+
+	Task update(Task task);
+
+	boolean hasStudentTaskDependencies(UUID taskId);
 }

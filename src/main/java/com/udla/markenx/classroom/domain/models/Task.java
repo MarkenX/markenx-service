@@ -4,12 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import lombok.EqualsAndHashCode;
+
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.classroom.domain.valueobjects.Score;
 import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
-
-import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class Task extends Assignment {
@@ -26,7 +26,7 @@ public class Task extends Assignment {
 	public Task(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, int academicTermYear,
 			String title, String summary, LocalDate dueDate, int maxAttempts, double minScoreToPass, String createdBy,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
-		super(courseId, code, sequence, status, title, summary, dueDate, createdBy, createdAt, updatedAt);
+		super(id, code, sequence, status, title, summary, dueDate, createdBy, createdAt, updatedAt);
 		this.courseId = courseId;
 		this.academicTermYear = academicTermYear;
 		this.maxAttempts = validateMaxAttempts(maxAttempts);

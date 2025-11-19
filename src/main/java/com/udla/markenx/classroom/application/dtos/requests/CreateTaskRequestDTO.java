@@ -20,6 +20,10 @@ public class CreateTaskRequestDTO {
   @NotNull(message = "El ID del curso es obligatorio")
   private UUID courseId;
 
+  @NotNull(message = "El año del periodo académico es obligatorio")
+  @Positive(message = "El año del periodo académico debe ser positivo")
+  private Integer academicTermYear;
+
   @NotBlank(message = "El título es obligatorio")
   private String title;
 
