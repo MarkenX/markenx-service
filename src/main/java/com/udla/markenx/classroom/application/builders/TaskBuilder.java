@@ -20,6 +20,8 @@ public class TaskBuilder {
   private LocalDate dueDate;
   private int maxAttempts;
   private double minScoreToPass;
+  private String createdBy;
+  private boolean allowPastDate;
 
   public TaskBuilder(RandomAssignmentDataGeneratorPort randomGenerator) {
     this.randomGenerator = randomGenerator;
@@ -33,6 +35,8 @@ public class TaskBuilder {
     this.dueDate = null;
     this.maxAttempts = -1;
     this.minScoreToPass = -1;
+    this.createdBy = null;
+    this.allowPastDate = false;
     return this;
   }
 
@@ -96,7 +100,25 @@ public class TaskBuilder {
     return this;
   }
 
+  public TaskBuilder setCreatedBy(String createdBy) {
+    this.createdBy = createdBy;
+    return this;
+  }
+
+  /**
+   * Permite crear tareas con fechas en el pasado (para seeders/datos históricos).
+   * Omite la validación de fecha futura.
+   */
+  public TaskBuilder allowPastDates() {
+    this.allowPastDate = true;
+    return this;
+  }
+
   public Task build() {
+    if (allowPastDate && createdBy != null) {
+      return new Task(courseId, academicTermYear, title, summary, dueDate, maxAttempts, minScoreToPass, createdBy,
+          true);
+    }
     return new Task(courseId, academicTermYear, title, summary, dueDate, maxAttempts, minScoreToPass);
   }
 }

@@ -25,7 +25,12 @@ public abstract class Assignment extends DomainBaseModel {
 		this.serialNumber = sequence;
 		setTitle(title);
 		setSummary(summary);
-		setDueDate(dueDate);
+		// Constructor de rehidratación: no validar fecha futura (datos ya persistidos
+		// son válidos)
+		if (dueDate == null) {
+			throw new InvalidEntityException(getClass(), "dueDate", "no puede ser nulo.");
+		}
+		this.dueDate = dueDate;
 	}
 
 	public Assignment(String title, String summary, LocalDate dueDate, String createdBy) {
@@ -42,6 +47,28 @@ public abstract class Assignment extends DomainBaseModel {
 		setTitle(title);
 		setSummary(summary);
 		setDueDate(dueDate);
+	}
+
+	/**
+	 * Constructor para crear datos históricos/seeders que permite fechas en el
+	 * pasado.
+	 * Evita la validación de fecha futura para simulación de datos históricos.
+	 */
+	protected Assignment(String title, String summary, LocalDate dueDate, boolean skipFutureDateValidation,
+			String createdBy) {
+		super(createdBy);
+		this.serialNumber = null;
+		setTitle(title);
+		setSummary(summary);
+		if (skipFutureDateValidation) {
+			// Para seeders/datos históricos: asignar directamente sin validar fecha futura
+			if (dueDate == null) {
+				throw new InvalidEntityException(getClass(), "dueDate", "no puede ser nulo.");
+			}
+			this.dueDate = dueDate;
+		} else {
+			setDueDate(dueDate);
+		}
 	}
 
 	public abstract String getCode();

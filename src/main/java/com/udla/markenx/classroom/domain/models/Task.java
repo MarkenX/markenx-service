@@ -54,6 +54,23 @@ public class Task extends Assignment {
 		this.code = null; // Code will be generated after persistence
 	}
 
+	/**
+	 * Constructor para crear tareas con fechas históricas (en el pasado).
+	 * Útil para seeders y datos de prueba que simulan tareas completadas.
+	 * 
+	 * @param allowPastDate true para permitir fechas en el pasado (omite validación
+	 *                      de fecha futura)
+	 */
+	public Task(UUID courseId, int academicTermYear, String title, String summary, LocalDate dueDate,
+			int maxAttempts, double minScoreToPass, String createdBy, boolean allowPastDate) {
+		super(title, summary, dueDate, allowPastDate, createdBy);
+		this.courseId = courseId;
+		this.academicTermYear = academicTermYear;
+		this.maxAttempts = validateMaxAttempts(maxAttempts);
+		this.minScoreToPass = new Score(minScoreToPass);
+		this.code = null; // Code will be generated after persistence
+	}
+
 	@Override
 	public String getCode() {
 		return this.code;

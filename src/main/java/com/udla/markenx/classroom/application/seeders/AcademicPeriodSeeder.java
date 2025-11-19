@@ -12,7 +12,7 @@ import com.udla.markenx.classroom.application.factories.RandomAcademicPeriodFact
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 
 @Component
-@Profile("dev")
+@Profile("dev-old-disabled")
 public class AcademicPeriodSeeder implements CommandLineRunner {
 
 	private final RandomAcademicPeriodFactory factory;
