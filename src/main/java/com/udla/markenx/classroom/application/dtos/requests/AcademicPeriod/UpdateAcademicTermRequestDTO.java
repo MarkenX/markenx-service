@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.application.dtos.requests;
+package com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod;
 
 import java.time.LocalDate;
 

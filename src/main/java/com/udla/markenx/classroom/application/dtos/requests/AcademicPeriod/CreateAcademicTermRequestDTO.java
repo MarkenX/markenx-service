@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.application.dtos.requests;
+package com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod;
 
 import java.time.LocalDate;
 
@@ -9,14 +9,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * DTO for creating a new Academic Period.
- */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateAcademicPeriodRequestDTO {
+public class CreateAcademicTermRequestDTO {
 
   @NotNull(message = "La fecha de inicio es obligatoria")
   private LocalDate startDate;

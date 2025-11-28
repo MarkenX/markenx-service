@@ -26,8 +26,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import com.udla.markenx.classroom.application.dtos.mappers.AcademicPeriodMapper;
-import com.udla.markenx.classroom.application.dtos.requests.CreateAcademicPeriodRequestDTO;
-import com.udla.markenx.classroom.application.dtos.requests.UpdateAcademicTermRequestDTO;
+import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.CreateAcademicTermRequestDTO;
+import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.UpdateAcademicTermRequestDTO;
 import com.udla.markenx.classroom.application.dtos.responses.AcademicPeriodResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.AcademicTermControllerPort;
 import com.udla.markenx.classroom.application.services.AcademicTermManagementService;
@@ -57,7 +57,7 @@ public class AcademicTermController implements AcademicTermControllerPort {
       @ApiResponse(responseCode = "403", description = "Forbidden")
   })
   public ResponseEntity<AcademicPeriodResponseDTO> createAcademicTerm(
-      @Parameter(description = "Academic term creation data", required = true) @Valid @RequestBody CreateAcademicPeriodRequestDTO request) {
+      @Parameter(description = "Academic term creation data", required = true) @Valid @RequestBody CreateAcademicTermRequestDTO request) {
     AcademicTerm academicTerm = academicTermService.createAcademicTerm(request);
     AcademicPeriodResponseDTO response = AcademicPeriodMapper.toResponseDto(academicTerm);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);

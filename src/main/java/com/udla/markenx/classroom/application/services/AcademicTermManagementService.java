@@ -10,8 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.application.dtos.requests.CreateAcademicPeriodRequestDTO;
-import com.udla.markenx.classroom.application.dtos.requests.UpdateAcademicTermRequestDTO;
+import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.CreateAcademicTermRequestDTO;
+import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.UpdateAcademicTermRequestDTO;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
@@ -28,7 +28,7 @@ public class AcademicTermManagementService {
   }
 
   @Transactional
-  public AcademicTerm createAcademicTerm(CreateAcademicPeriodRequestDTO request) {
+  public AcademicTerm createAcademicTerm(CreateAcademicTermRequestDTO request) {
     AcademicPeriodDomainService.validateTermDates(request.getStartDate(), request.getEndDate());
 
     List<AcademicTerm> existingPeriodsInYear = termRepository.findAllPeriods().stream()
