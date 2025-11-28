@@ -113,21 +113,31 @@ public class StudentTask extends StudentAssignment<Task> {
 
   @Override
   public void updateStatus() {
-    if (assignment.isOverdue()) {
-      this.assignmentStatus = AssignmentStatus.OUTDATED;
+    // Si ya se alcanzó el score mínimo para aprobar, entonces es COMPLETED
+    if (didAnyAttemptPass()) {
+      this.assignmentStatus = AssignmentStatus.COMPLETED;
       return;
     }
+
+    // Si la tarea ya pasó (vencida)
+    if (assignment.isOverdue()) {
+      // Si tiene intentos pero ninguno aprobado, entonces FAILED
+      if (!isNotStarted()) {
+        this.assignmentStatus = AssignmentStatus.FAILED;
+      } else {
+        // Si no tiene intentos y ya venció, entonces OUTDATED
+        this.assignmentStatus = AssignmentStatus.OUTDATED;
+      }
+      return;
+    }
+
+    // Si la tarea está en el futuro o presente
     if (isNotStarted()) {
       this.assignmentStatus = AssignmentStatus.NOT_STARTED;
       return;
     }
-    if (didAnyAttemptPass()) {
-      this.assignmentStatus = AssignmentStatus.COMPLETED;
-      return;
-    } else if (isOverMaxAttempts()) {
-      this.assignmentStatus = AssignmentStatus.FAILED;
-      return;
-    }
+
+    // Si tiene intentos pero no ha aprobado y no ha vencido
     this.assignmentStatus = AssignmentStatus.IN_PROGRESS;
   }
 

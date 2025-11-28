@@ -28,7 +28,11 @@ public interface StudentControllerPort {
 
   ResponseEntity<StudentWithCourseResponseDTO> getCurrentStudentProfile();
 
-  ResponseEntity<List<StudentTaskWithDetailsResponseDTO>> getCurrentStudentTasks();
+  ResponseEntity<Page<StudentTaskWithDetailsResponseDTO>> getCurrentStudentTasks(
+      com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus status,
+      java.time.LocalDate startDate,
+      java.time.LocalDate endDate,
+      Pageable pageable);
 
   ResponseEntity<List<AttemptResponseDTO>> getCurrentStudentTaskAttempts(UUID taskId);
 

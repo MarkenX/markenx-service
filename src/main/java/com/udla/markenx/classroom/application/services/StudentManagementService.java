@@ -69,8 +69,12 @@ public class StudentManagementService {
   }
 
   @Transactional(readOnly = true)
-  public List<StudentTaskWithDetailsResponseDTO> getCurrentStudentTasks() {
-    return studentService.getCurrentStudentTasks();
+  public org.springframework.data.domain.Page<StudentTaskWithDetailsResponseDTO> getCurrentStudentTasks(
+      com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus status,
+      java.time.LocalDate startDate,
+      java.time.LocalDate endDate,
+      org.springframework.data.domain.Pageable pageable) {
+    return studentService.getCurrentStudentTasks(status, startDate, endDate, pageable);
   }
 
   @Transactional(readOnly = true)

@@ -165,12 +165,21 @@ public class StudentService {
           .findFirst()
           .orElseThrow(() -> new IllegalStateException("Task entity not found"));
 
+      // Create domain StudentTask
+      StudentTask studentTask = new StudentTask(
+          task,
+          savedStudent.getId(),
+          savedStudent.getSerialNumber(),
+          createdBy);
+
+      // Calculate correct assignment status
+      studentTask.updateStatus();
+
       // Create StudentTaskJpaEntity with persisted entity references
       com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity studentTaskEntity = new com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity();
       studentTaskEntity.setAssignment(taskEntity);
       studentTaskEntity.setStudent(studentEntity);
-      studentTaskEntity
-          .setCurrentStatus(com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus.NOT_STARTED);
+      studentTaskEntity.setCurrentStatus(studentTask.getAssignmentStatus());
       studentTaskEntity.setCreatedBy(createdBy);
       studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
       studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
@@ -178,8 +187,8 @@ public class StudentService {
 
       // Create external reference
       var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
-      externalRef.setPublicId(java.util.UUID.randomUUID());
-      externalRef.setCode("ST-" + savedStudent.getSerialNumber() + "-" + task.getId().toString().substring(0, 8));
+      externalRef.setPublicId(studentTask.getId());
+      externalRef.setCode(studentTask.getCode());
       externalRef.setEntityType("StudentTask");
       studentTaskEntity.setExternalReference(externalRef);
 
@@ -385,12 +394,21 @@ public class StudentService {
               .findFirst()
               .orElseThrow(() -> new IllegalStateException("Task entity not found"));
 
+          // Create domain StudentTask
+          StudentTask studentTask = new StudentTask(
+              task,
+              savedStudent.getId(),
+              savedStudent.getSerialNumber(),
+              createdBy);
+
+          // Calculate correct assignment status
+          studentTask.updateStatus();
+
           // Create StudentTaskJpaEntity with persisted entity references
           com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity studentTaskEntity = new com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity();
           studentTaskEntity.setAssignment(taskEntity);
           studentTaskEntity.setStudent(studentEntity);
-          studentTaskEntity
-              .setCurrentStatus(com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus.NOT_STARTED);
+          studentTaskEntity.setCurrentStatus(studentTask.getAssignmentStatus());
           studentTaskEntity.setCreatedBy(createdBy);
           studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
           studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
@@ -398,8 +416,8 @@ public class StudentService {
 
           // Create external reference
           var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
-          externalRef.setPublicId(java.util.UUID.randomUUID());
-          externalRef.setCode("ST-" + savedStudent.getSerialNumber() + "-" + task.getId().toString().substring(0, 8));
+          externalRef.setPublicId(studentTask.getId());
+          externalRef.setCode(studentTask.getCode());
           externalRef.setEntityType("StudentTask");
           studentTaskEntity.setExternalReference(externalRef);
 
@@ -472,10 +490,18 @@ public class StudentService {
   /**
    * Gets all tasks assigned to the currently authenticated student.
    * 
-   * @return List of StudentTaskWithDetailsResponseDTO with task and student task
+   * @param status    Optional filter by assignment status
+   * @param startDate Optional filter by start date (inclusive)
+   * @param endDate   Optional filter by end date (inclusive)
+   * @param pageable  Pagination parameters
+   * @return Page of StudentTaskWithDetailsResponseDTO with task and student task
    *         information
    */
-  public List<StudentTaskWithDetailsResponseDTO> getCurrentStudentTasks() {
+  public org.springframework.data.domain.Page<StudentTaskWithDetailsResponseDTO> getCurrentStudentTasks(
+      com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus status,
+      java.time.LocalDate startDate,
+      java.time.LocalDate endDate,
+      org.springframework.data.domain.Pageable pageable) {
     // Get authenticated user's email from SecurityContext
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String email = authentication.getName();
@@ -484,26 +510,38 @@ public class StudentService {
     Student student = studentRepository.findByEmail(email)
         .orElseThrow(() -> new ResourceNotFoundException("Estudiante", email));
 
-    // Find all student tasks
-    List<StudentTaskWithDetailsResponseDTO> results = new ArrayList<>();
+    // Find all student tasks and apply filters
+    List<StudentTaskWithDetailsResponseDTO> allResults = new ArrayList<>();
     List<StudentTaskJpaEntity> taskEntities = studentAssignmentRepository.findByStudentId(student.getSerialNumber())
         .stream()
         .filter(entity -> entity instanceof StudentTaskJpaEntity)
         .map(entity -> (StudentTaskJpaEntity) entity)
         .toList();
 
+    boolean isAdmin = com.udla.markenx.shared.domain.util.SecurityUtils.isAdmin();
+
     for (StudentTaskJpaEntity entity : taskEntities) {
       StudentTask studentTask = studentTaskMapper.toDomain(entity);
       Task task = studentTask.getAssignment();
+
+      // Apply filters
+      if (status != null && studentTask.getAssignmentStatus() != status) {
+        continue;
+      }
+
+      if (startDate != null && task.getDueDate().isBefore(startDate)) {
+        continue;
+      }
+
+      if (endDate != null && task.getDueDate().isAfter(endDate)) {
+        continue;
+      }
+
       Course course = courseRepository.findById(task.getCourseId())
           .orElseThrow(() -> new ResourceNotFoundException("Curso", task.getCourseId()));
 
       AcademicTerm academicTerm = academicTermRepository.findById(course.getAcademicTermId())
           .orElseThrow(() -> new ResourceNotFoundException("Período académico", course.getAcademicTermId()));
-
-      // Check if user is admin to include task status field (task status is still
-      // admin-only)
-      boolean isAdmin = com.udla.markenx.shared.domain.util.SecurityUtils.isAdmin();
 
       StudentTaskWithDetailsResponseDTO dto = StudentTaskWithDetailsResponseDTO.builder()
           .studentTaskId(studentTask.getId())
@@ -528,10 +566,21 @@ public class StudentService {
               .build())
           .build();
 
-      results.add(dto);
+      allResults.add(dto);
     }
 
-    return results;
+    // Apply pagination manually
+    int start = (int) pageable.getOffset();
+    int end = Math.min((start + pageable.getPageSize()), allResults.size());
+
+    List<StudentTaskWithDetailsResponseDTO> pageContent = start >= allResults.size()
+        ? new ArrayList<>()
+        : allResults.subList(start, end);
+
+    return new org.springframework.data.domain.PageImpl<>(
+        pageContent,
+        pageable,
+        allResults.size());
   }
 
   /**

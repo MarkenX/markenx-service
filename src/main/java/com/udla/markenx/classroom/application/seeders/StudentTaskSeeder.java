@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
 import com.udla.markenx.classroom.domain.models.Student;
+import com.udla.markenx.classroom.domain.models.StudentTask;
 import com.udla.markenx.classroom.domain.models.Task;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity;
@@ -127,15 +128,25 @@ public class StudentTaskSeeder implements CommandLineRunner {
               .findFirst()
               .orElseThrow(() -> new RuntimeException("Student entity not found: " + student.getCode()));
 
-          // Create entity directly
+          // Create domain StudentTask
+          StudentTask studentTask = new StudentTask(
+              task,
+              student.getId(),
+              student.getSerialNumber(),
+              "SYSTEM");
+
+          // Calculate the correct assignment status based on task due date and attempts
+          studentTask.updateStatus();
+
+          // Convert to entity
           StudentTaskJpaEntity entity = new StudentTaskJpaEntity();
           entity.setExternalReference(
               externalReferenceHelper.createExternalReference(
-                  UUID.randomUUID(),
-                  null, // Code will be generated
+                  studentTask.getId(),
+                  null, // Code will be generated after save
                   "STUDENT_TASK"));
-          entity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED);
-          entity.setCurrentStatus(com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus.NOT_STARTED);
+          entity.setStatus(studentTask.getStatus());
+          entity.setCurrentStatus(studentTask.getAssignmentStatus());
           entity.setAssignment(taskEntity);
           entity.setStudent(studentEntity);
           entity.setCreatedBy("SYSTEM");

@@ -14,6 +14,7 @@ import com.udla.markenx.classroom.application.dtos.requests.UpdateTaskRequestDTO
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
+import com.udla.markenx.classroom.domain.models.StudentTask;
 import com.udla.markenx.classroom.domain.models.Task;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.StudentAssignmentJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.StudentTaskMapper;
@@ -87,12 +88,21 @@ public class TaskManagementService {
           .findFirst()
           .orElseThrow(() -> new IllegalStateException("Student entity not found"));
 
+      // Create domain StudentTask
+      StudentTask studentTask = new StudentTask(
+          savedTask,
+          student.getId(),
+          student.getSerialNumber(),
+          createdBy);
+
+      // Calculate correct assignment status
+      studentTask.updateStatus();
+
       // Create StudentTaskJpaEntity with persisted entity references
       com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity studentTaskEntity = new com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentTaskJpaEntity();
       studentTaskEntity.setAssignment(taskEntity);
       studentTaskEntity.setStudent(studentEntity);
-      studentTaskEntity
-          .setCurrentStatus(com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus.NOT_STARTED);
+      studentTaskEntity.setCurrentStatus(studentTask.getAssignmentStatus());
       studentTaskEntity.setCreatedBy(createdBy);
       studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
       studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
@@ -100,8 +110,8 @@ public class TaskManagementService {
 
       // Create external reference
       var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
-      externalRef.setPublicId(java.util.UUID.randomUUID());
-      externalRef.setCode("ST-" + student.getSerialNumber() + "-" + savedTask.getId().toString().substring(0, 8));
+      externalRef.setPublicId(studentTask.getId());
+      externalRef.setCode(studentTask.getCode());
       externalRef.setEntityType("StudentTask");
       studentTaskEntity.setExternalReference(externalRef);
 

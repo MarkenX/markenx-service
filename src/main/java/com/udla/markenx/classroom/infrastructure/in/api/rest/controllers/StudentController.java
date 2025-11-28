@@ -111,15 +111,20 @@ public class StudentController implements StudentControllerPort {
   @Override
   @GetMapping("/me/tasks")
   @PreAuthorize("hasRole('STUDENT')")
-  @Operation(summary = "Get current student's tasks", description = "Retrieves all tasks assigned to the authenticated student with complete task details. Only accessible by STUDENT role.")
+  @Operation(summary = "Get current student's tasks", description = "Retrieves all tasks assigned to the authenticated student with complete task details. Supports filtering by assignment status and date range. Only accessible by STUDENT role. Example: ?page=0&size=5&status=NOT_STARTED&startDate=2025-11-03&endDate=2025-11-12")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Student tasks retrieved successfully"),
       @ApiResponse(responseCode = "404", description = "Student not found"),
       @ApiResponse(responseCode = "401", description = "Unauthorized"),
       @ApiResponse(responseCode = "403", description = "Forbidden - Requires STUDENT role")
   })
-  public ResponseEntity<List<StudentTaskWithDetailsResponseDTO>> getCurrentStudentTasks() {
-    List<StudentTaskWithDetailsResponseDTO> response = studentManagementService.getCurrentStudentTasks();
+  public ResponseEntity<Page<StudentTaskWithDetailsResponseDTO>> getCurrentStudentTasks(
+      @io.swagger.v3.oas.annotations.Parameter(description = "Filter by assignment status", example = "NOT_STARTED") @org.springframework.web.bind.annotation.RequestParam(required = false) com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus status,
+      @io.swagger.v3.oas.annotations.Parameter(description = "Filter by start date (inclusive)", example = "2025-11-03") @org.springframework.web.bind.annotation.RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate startDate,
+      @io.swagger.v3.oas.annotations.Parameter(description = "Filter by end date (inclusive)", example = "2025-11-12") @org.springframework.web.bind.annotation.RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate endDate,
+      @io.swagger.v3.oas.annotations.Parameter(hidden = true) Pageable pageable) {
+    Page<StudentTaskWithDetailsResponseDTO> response = studentManagementService.getCurrentStudentTasks(status,
+        startDate, endDate, pageable);
     return ResponseEntity.ok(response);
   }
 
