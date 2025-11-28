@@ -20,12 +20,13 @@ public abstract class DomainBaseModel {
 
   public DomainBaseModel(
       UUID id,
+      String code,
       DomainBaseModelStatus status,
       String createdBy,
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
     this.id = requireId(id);
-    this.code = generateCode();
+    this.code = code;
     this.status = requireStatus(status);
     this.auditInfo = requireAuditInfo(new AuditInfo(createdBy, createdAt, updatedAt));
   }

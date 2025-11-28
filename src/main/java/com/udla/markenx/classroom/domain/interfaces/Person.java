@@ -13,7 +13,7 @@ public abstract class Person extends DomainBaseModel {
 
 	public Person(UUID id, String code, DomainBaseModelStatus status, String firstName, String lastName, String createdBy,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
-		super(id, status, createdBy, createdAt, updatedAt);
+		super(id, code, status, createdBy, createdAt, updatedAt);
 		this.firstName = EntityValidator.ensureNotNullOrEmpty(getClass(), firstName, "firstName");
 		this.lastName = EntityValidator.ensureNotNullOrEmpty(getClass(), lastName, "lastName");
 	}

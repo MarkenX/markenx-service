@@ -21,8 +21,10 @@ public class AcademicTerm extends DomainBaseModel {
 
   private final List<Course> assignedCourses;
 
+  // Rehidradatación BD [No eliminar]
   public AcademicTerm(
       UUID id,
+      String code,
       DomainBaseModelStatus status,
       LocalDate startOfTerm,
       LocalDate endOfTerm,
@@ -32,7 +34,26 @@ public class AcademicTerm extends DomainBaseModel {
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
 
-    super(id, status, createdBy, createdAt, updatedAt);
+    super(id, code, status, createdBy, createdAt, updatedAt);
+
+    this.startOfTerm = EntityValidator.ensureNotNull(AcademicTerm.class, startOfTerm, "startOfTerm");
+    this.endOfTerm = EntityValidator.ensureNotNull(AcademicTerm.class, endOfTerm, "endOfTerm");
+
+    this.academicYear = academicYear;
+    this.termNumber = termNumber;
+    this.assignedCourses = new ArrayList<>();
+  }
+
+  // Para crear nuevo periodo académico
+  public AcademicTerm(
+      UUID id,
+      LocalDate startOfTerm,
+      LocalDate endOfTerm,
+      int academicYear,
+      int termNumber,
+      String createdBy) {
+
+    super(createdBy);
 
     this.startOfTerm = EntityValidator.ensureNotNull(AcademicTerm.class, startOfTerm, "startOfTerm");
     this.endOfTerm = EntityValidator.ensureNotNull(AcademicTerm.class, endOfTerm, "endOfTerm");
@@ -50,14 +71,11 @@ public class AcademicTerm extends DomainBaseModel {
       String createdBy) {
     return new AcademicTerm(
         UUID.randomUUID(),
-        DomainBaseModelStatus.ENABLED,
         startOfTerm,
         endOfTerm,
         academicYear,
         termNumber,
-        createdBy,
-        LocalDateTime.now(),
-        LocalDateTime.now());
+        createdBy);
   }
 
   public LocalDate getStartOfTerm() {
