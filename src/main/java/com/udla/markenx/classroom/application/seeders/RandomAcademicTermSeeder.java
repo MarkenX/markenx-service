@@ -8,7 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.application.commands.CreateAcademicTermCommand;
+import com.udla.markenx.classroom.application.commands.academicterm.CreateAcademicTermCommand;
 import com.udla.markenx.classroom.application.services.AcademicTermService;
 
 import lombok.RequiredArgsConstructor;

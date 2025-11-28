@@ -10,8 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.application.commands.CreateAcademicTermCommand;
-import com.udla.markenx.classroom.application.commands.UpdateAcademicTermCommand;
+import com.udla.markenx.classroom.application.commands.academicterm.CreateAcademicTermCommand;
+import com.udla.markenx.classroom.application.commands.academicterm.UpdateAcademicTermCommand;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 import com.udla.markenx.classroom.domain.factories.AcademicTermFactory;

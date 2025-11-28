@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.application.commands;
+package com.udla.markenx.classroom.application.commands.academicterm;
 
 import java.time.LocalDate;
 

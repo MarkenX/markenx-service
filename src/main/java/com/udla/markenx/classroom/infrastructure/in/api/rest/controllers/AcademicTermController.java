@@ -25,8 +25,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-import com.udla.markenx.classroom.application.commands.CreateAcademicTermCommand;
-import com.udla.markenx.classroom.application.commands.UpdateAcademicTermCommand;
+import com.udla.markenx.classroom.application.commands.academicterm.CreateAcademicTermCommand;
+import com.udla.markenx.classroom.application.commands.academicterm.UpdateAcademicTermCommand;
 import com.udla.markenx.classroom.application.dtos.mappers.AcademicPeriodMapper;
 import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.CreateAcademicTermRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.UpdateAcademicTermRequestDTO;
