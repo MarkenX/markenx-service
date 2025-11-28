@@ -26,9 +26,9 @@ public abstract class DomainBaseModel {
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
     this.id = requireId(id);
+    this.code = generateCode();
     this.status = requireStatus(status);
     this.auditInfo = requireAuditInfo(new AuditInfo(createdBy, createdAt, updatedAt));
-    this.code = code;
   }
 
   public DomainBaseModel(String createdBy) {

@@ -19,7 +19,7 @@ public class AcademicTerm extends DomainBaseModel {
   private int academicYear;
   private int termNumber;
 
-  private final List<Course> assignedCourses = new ArrayList<>();
+  private final List<Course> assignedCourses;
 
   public AcademicTerm(
       UUID id,
@@ -40,6 +40,7 @@ public class AcademicTerm extends DomainBaseModel {
 
     this.academicYear = academicYear;
     this.termNumber = termNumber;
+    this.assignedCourses = new ArrayList<>();
   }
 
   public static AcademicTerm createNew(
@@ -82,10 +83,16 @@ public class AcademicTerm extends DomainBaseModel {
   }
 
   public void applyUpdate(LocalDate start, LocalDate end, int year, int termNumber) {
+    EntityValidator.ensureNotNull(AcademicTerm.class, start, "startOfTerm");
+    EntityValidator.ensureNotNull(AcademicTerm.class, end, "endOfTerm");
+
     this.startOfTerm = start;
     this.endOfTerm = end;
     this.academicYear = year;
     this.termNumber = termNumber;
+
+    regenerateCode();
+    markUpdated();
   }
 
   public String getLabel() {
@@ -109,13 +116,5 @@ public class AcademicTerm extends DomainBaseModel {
   @Override
   protected String generateCode() {
     return String.format("%s-%d-%02d", PREFIX, academicYear, termNumber);
-  }
-
-  public static String generateCodeFromData(int academicYear, LocalDate startOfTerm) {
-    if (startOfTerm == null)
-      return null;
-
-    int term = startOfTerm.getMonthValue() <= 6 ? 1 : 2;
-    return String.format("%s-%d-%02d", PREFIX, academicYear, term);
   }
 }
