@@ -33,7 +33,7 @@ public class AcademicTerm extends DomainBaseModel {
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
 
-    super(id, code, status, createdBy, createdAt, updatedAt);
+    super(id, status, createdBy, createdAt, updatedAt);
 
     this.startOfTerm = EntityValidator.ensureNotNull(AcademicTerm.class, startOfTerm, "startOfTerm");
     this.endOfTerm = EntityValidator.ensureNotNull(AcademicTerm.class, endOfTerm, "endOfTerm");

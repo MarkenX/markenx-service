@@ -20,7 +20,6 @@ public abstract class DomainBaseModel {
 
   public DomainBaseModel(
       UUID id,
-      String code,
       DomainBaseModelStatus status,
       String createdBy,
       LocalDateTime createdAt,

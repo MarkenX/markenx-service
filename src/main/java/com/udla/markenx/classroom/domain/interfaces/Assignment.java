@@ -21,7 +21,7 @@ public abstract class Assignment extends DomainBaseModel {
 
 	public Assignment(UUID id, String code, Long sequence, DomainBaseModelStatus status, String title, String summary,
 			LocalDate dueDate, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-		super(id, code, status, createdBy, createdAt, updatedAt);
+		super(id, status, createdBy, createdAt, updatedAt);
 		this.serialNumber = sequence;
 		setTitle(title);
 		setSummary(summary);

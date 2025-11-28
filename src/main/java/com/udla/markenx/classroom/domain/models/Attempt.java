@@ -32,7 +32,7 @@ public class Attempt extends DomainBaseModel {
 			Long studentSequence,
 			Long taskSequence, double taskMinScoreToPass, double score, Duration timeSpent, AttemptResult result,
 			AttemptStatus attemptStatus, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-		super(id, code, status, createdBy, createdAt, updatedAt);
+		super(id, status, createdBy, createdAt, updatedAt);
 		this.sequence = sequence;
 		this.studentTaskId = studentTaskId;
 		this.studentSequence = studentSequence;

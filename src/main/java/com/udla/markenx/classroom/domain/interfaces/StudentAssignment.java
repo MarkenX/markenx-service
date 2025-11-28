@@ -29,7 +29,7 @@ public abstract class StudentAssignment<A extends Assignment> extends DomainBase
       String createdBy,
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
-    super(id, code, status, createdBy, createdAt, updatedAt);
+    super(id, status, createdBy, createdAt, updatedAt);
     this.assignment = assignment;
     this.studentId = studentId;
     this.studentSerialNumber = studentSerialNumber;

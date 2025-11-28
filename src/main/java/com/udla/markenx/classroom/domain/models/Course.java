@@ -35,7 +35,7 @@ public class Course extends DomainBaseModel {
       String createdBy,
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
-    super(id, code, status, createdBy, createdAt, updatedAt);
+    super(id, status, createdBy, createdAt, updatedAt);
     this.sequence = serialNumber;
     this.academicTermId = academicTermId;
     this.academicTermYear = academicTermYear;
@@ -80,7 +80,7 @@ public class Course extends DomainBaseModel {
       String createdBy,
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
-    super(id, code, status, createdBy, createdAt, updatedAt);
+    super(id, status, createdBy, createdAt, updatedAt);
     this.sequence = serialNumber;
     this.academicTermId = academicTermId;
     this.academicTermYear = academicTermYear;

@@ -30,7 +30,7 @@ public class Stage extends DomainBaseModel {
       String createdBy,
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
-    super(id, code, status, createdBy, createdAt, updatedAt);
+    super(id, status, createdBy, createdAt, updatedAt);
     this.name = requireName(name);
     this.description = description;
     this.budget = budget;
