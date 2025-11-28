@@ -60,7 +60,7 @@ public class CourseSeeder implements CommandLineRunner {
       }
 
       // Get academic terms
-      Page<AcademicTerm> termsPage = academicTermRepository.findAll(Pageable.unpaged());
+      Page<AcademicTerm> termsPage = academicTermRepository.findAllPaged(Pageable.unpaged());
       List<AcademicTerm> terms = termsPage.getContent();
 
       if (terms.isEmpty()) {

@@ -48,6 +48,7 @@ public class AcademicTermBuilder {
   }
 
   public AcademicTerm build() {
-    return new AcademicTerm(startOfTerm, endOfTerm, academicYear);
+    // return new AcademicTerm(startOfTerm, endOfTerm, academicYear, "");
+    return null;
   }
 }

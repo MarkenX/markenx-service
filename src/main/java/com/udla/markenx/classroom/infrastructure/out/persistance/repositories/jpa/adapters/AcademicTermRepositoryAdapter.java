@@ -1,6 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.adapters;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,7 +41,7 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
       saved = jpaRepository.save(saved);
     }
 
-    return mapper.toDomain(saved);
+    return mapper.toDomain(saved, true);
   }
 
   @Override
@@ -64,7 +65,7 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
     existingEntity.setUpdatedAt(existingAcademicTerm.getUpdatedAtDateTime());
 
     AcademicTermJpaEntity saved = jpaRepository.save(existingEntity);
-    return mapper.toDomain(saved);
+    return mapper.toDomain(saved, true);
   }
 
   @Override
@@ -74,7 +75,7 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
             entity.getExternalReference().getPublicId().equals(id) &&
             entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
         .findFirst()
-        .map(mapper::toDomain);
+        .map(entity -> mapper.toDomain(entity, true));
   }
 
   @Override
@@ -83,15 +84,15 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
         .filter(entity -> entity.getExternalReference() != null &&
             entity.getExternalReference().getPublicId().equals(id))
         .findFirst()
-        .map(mapper::toDomain);
+        .map(entity -> mapper.toDomain(entity, true));
   }
 
   @Override
-  public Page<AcademicTerm> findAll(Pageable pageable) {
+  public Page<AcademicTerm> findAllPaged(Pageable pageable) {
     java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
         .map(entity -> entity.getStatus() == DomainBaseModelStatus.ENABLED
-            ? mapper.toDomainWithoutCourses(entity)
+            ? mapper.toDomain(entity, false)
             : null)
         .map(domain -> domain);
   }
@@ -100,53 +101,47 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
   public Page<AcademicTerm> findAllIncludingDisabled(Pageable pageable) {
     java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
-        .map(mapper::toDomainWithoutCourses);
+        .map(entity -> mapper.toDomain(entity, false));
   }
 
   @Override
   public Page<AcademicTerm> findByStatus(DomainBaseModelStatus status, Pageable pageable) {
-    java.util.Objects.requireNonNull(status, "Status cannot be null");
-    java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
+    Objects.requireNonNull(status, "Status cannot be null");
+    Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findByStatus(status, pageable)
-        .map(mapper::toDomainWithoutCourses);
+        .map(entity -> mapper.toDomain(entity, false));
   }
 
   @Override
-  public void deleteById(UUID id) {
-    java.util.Objects.requireNonNull(id, "ID cannot be null");
-    jpaRepository.findAll().stream()
-        .filter(entity -> entity.getExternalReference() != null &&
-            entity.getExternalReference().getPublicId().equals(id))
-        .findFirst()
-        .ifPresent(entity -> {
-          // Soft delete: change status to DISABLED
-          entity.setStatus(DomainBaseModelStatus.DISABLED);
-          jpaRepository.save(entity);
-        });
+  public List<AcademicTerm> findByAcademicYear(int academicYear) {
+    Objects.requireNonNull(academicYear, "Academic year cannot be null");
+    return jpaRepository.findByAcademicYear(academicYear).stream()
+        .map(entity -> mapper.toDomain(entity, false))
+        .toList();
   }
 
   @Override
-  public boolean existsByYearAndSemesterNumber(int year, int semesterNumber) {
+  public boolean existsByAcademicYearAndSemesterNumber(int year, int semesterNumber) {
     return jpaRepository.findAll().stream()
         .anyMatch(entity -> entity.getAcademicYear() == year && entity.getTermNumber() == semesterNumber);
   }
 
   @Override
-  public long countByYear(int year) {
+  public long countByAcademicYear(int year) {
     return jpaRepository.findAll().stream()
         .filter(entity -> entity.getAcademicYear() == year)
         .count();
   }
 
   @Override
-  public List<AcademicTerm> findAllPeriods() {
+  public List<AcademicTerm> findAll() {
     return jpaRepository.findAll().stream()
-        .map(mapper::toDomainWithoutCourses)
+        .map(entity -> mapper.toDomain(entity, false))
         .toList();
   }
 
   @Override
-  public int countCoursesByPeriodId(UUID periodId) {
+  public int countCoursesByTermId(UUID periodId) {
     return jpaRepository.findAll().stream()
         .filter(entity -> entity.getExternalReference() != null &&
             entity.getExternalReference().getPublicId().equals(periodId))
@@ -160,7 +155,7 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
   }
 
   @Override
-  public List<Course> findCoursesByPeriodId(UUID periodId) {
+  public List<Course> findCoursesByTermId(UUID periodId) {
     return java.util.List.of();
   }
 }

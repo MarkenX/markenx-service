@@ -36,7 +36,7 @@ public class StudentTask extends StudentAssignment<Task> {
     // super(id, code, status, task, student, createdBy, createdAt, updatedAt);
     super(id, code, status, task, studentId, studentSerialNumber, createdBy, createdAt, updatedAt);
     this.attempts = requireAttempts(attempts);
-    this.code = requireCode(code);
+    this.code = code;
   }
 
   // public StudentTask(Student student, Task task, String createdBy) {

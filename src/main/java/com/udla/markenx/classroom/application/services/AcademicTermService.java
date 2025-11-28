@@ -1,145 +1,135 @@
 package com.udla.markenx.classroom.application.services;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.udla.markenx.classroom.application.commands.CreateAcademicTermCommand;
+import com.udla.markenx.classroom.application.commands.UpdateAcademicTermCommand;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
-import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
+import com.udla.markenx.classroom.domain.factories.AcademicTermFactory;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
-import com.udla.markenx.classroom.domain.services.AcademicPeriodDomainService;
+import com.udla.markenx.classroom.domain.services.AcademicTermDomainService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AcademicTermService {
 
-  private final AcademicTermRepositoryPort periodRepository;
+  private final AcademicTermRepositoryPort repository;
+  private final AcademicTermDomainService domainService;
+  private final AcademicTermFactory factory;
 
-  public AcademicTermService(AcademicTermRepositoryPort periodRepository) {
-    this.periodRepository = periodRepository;
+  @Transactional
+  public AcademicTerm createAcademicTerm(CreateAcademicTermCommand command) {
+
+    List<AcademicTerm> existingTerms = repository.findByAcademicYear(command.academicYear());
+
+    AcademicTerm newTerm = factory.create(
+        command.startOfTerm(),
+        command.endOfTerm(),
+        command.academicYear(),
+        command.createdBy(),
+        existingTerms);
+
+    return repository.save(newTerm);
   }
 
   @Transactional
-  public AcademicTerm createAcademicPeriod(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear) {
-    AcademicPeriodDomainService.validateTermDates(startOfTerm, endOfTerm);
+  public AcademicTerm createHistoricalAcademicTerm(CreateAcademicTermCommand command) {
 
-    List<AcademicTerm> existingPeriodsInYear = periodRepository.findAllPeriods().stream()
-        .filter(p -> p.getAcademicYear() == academicYear)
-        .toList();
+    List<AcademicTerm> existingTerms = repository.findByAcademicYear(command.academicYear());
 
-    // Determine semester number using domain service
-    int termNumber = AcademicPeriodDomainService.determineSemesterNumber(existingPeriodsInYear, startOfTerm);
+    AcademicTerm newTerm = factory.createHistorical(
+        command.startOfTerm(),
+        command.endOfTerm(),
+        command.academicYear(),
+        command.createdBy(),
+        existingTerms);
 
-    // Check if this year/semester combination already exists
-    if (periodRepository.existsByYearAndSemesterNumber(academicYear, termNumber)) {
-      throw new InvalidEntityException(
-          AcademicTerm.class,
-          String.format("Ya existe un período para el %s semestre del año %d",
-              termNumber == 1 ? "primer" : "segundo", academicYear));
+    return repository.save(newTerm);
+  }
+
+  @Transactional
+  public AcademicTerm updateAcademicTerm(UpdateAcademicTermCommand command) {
+    AcademicTerm existing = repository
+        .findByIdIncludingDisabled(command.id())
+        .orElseThrow(() -> new ResourceNotFoundException("Período académico", command.id()));
+
+    List<AcademicTerm> existingTerms = repository.findByAcademicYear(command.academicYear());
+
+    domainService.validateUpdate(
+        existing,
+        command.startOfTerm(),
+        command.endOfTerm(),
+        command.academicYear(),
+        existingTerms);
+
+    return repository.update(existing);
+  }
+
+  @Transactional(readOnly = true)
+  public AcademicTerm getAcademicTermById(UUID id) {
+    if (isAdmin()) {
+      return repository.findByIdIncludingDisabled(id)
+          .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
     }
-
-    // Create domain object (this validates dates and year match)
-    AcademicTerm newPeriod = new AcademicTerm(startOfTerm, endOfTerm, academicYear, "");
-
-    // Check for overlaps with existing periods using domain service
-    List<AcademicTerm> allPeriods = periodRepository.findAllPeriods();
-    AcademicPeriodDomainService.validateNoOverlaps(newPeriod, allPeriods, null);
-
-    // Save and return
-    return periodRepository.save(newPeriod);
+    return repository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
   }
 
-  /**
-   * Updates an existing academic period (dates and year can be updated).
-   */
-  // @Transactional
-  // public AcademicTerm updateAcademicPeriod(Long id, LocalDate startDate,
-  // LocalDate endDate, Integer year) {
-  // // Find existing period
-  // AcademicTerm existing = periodRepository.findById(id)
-  // .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
-
-  // // Validate new dates using domain service
-  // if (startDate != null && endDate != null) {
-  // AcademicPeriodDomainService.validateTermDates(startDate, endDate);
-  // }
-
-  // // Update dates
-  // if (startDate != null) {
-  // existing.setStartOfTerm(startDate);
-  // }
-  // if (endDate != null) {
-  // existing.setEndOfTerm(endDate);
-  // }
-
-  // // Update year if provided
-  // if (year != null) {
-  // existing.setAcademicYear(year);
-  // }
-
-  // // Check for overlaps (excluding this period) using domain service
-  // List<AcademicTerm> allPeriods = periodRepository.findAllPeriods();
-  // AcademicPeriodDomainService.validateNoOverlaps(existing, allPeriods, id);
-
-  // // Save and return
-  // return periodRepository.update(existing);
-  // }
-
-  /**
-   * Retrieves an academic period by ID.
-   */
-  // public AcademicTerm getAcademicPeriodById(Long id) {
-  // return periodRepository.findById(id)
-  // .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
-  // }
-
-  /**
-   * Retrieves all academic periods with pagination.
-   */
-  public Page<AcademicTerm> getAllAcademicPeriods(Pageable pageable) {
-    return periodRepository.findAll(pageable);
+  @Transactional(readOnly = true)
+  public Page<AcademicTerm> getAllAcademicTerms(Pageable pageable) {
+    if (isAdmin()) {
+      return repository.findAllIncludingDisabled(pageable);
+    }
+    return repository.findAllPaged(pageable);
   }
 
-  /**
-   * Retrieves academic periods filtered by status.
-   */
+  @Transactional(readOnly = true)
   public Page<AcademicTerm> getAcademicPeriodsByStatus(
       com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
-    return periodRepository.findByStatus(status, pageable);
+    return repository.findByStatus(status, pageable);
   }
 
-  /**
-   * Deletes an academic period by ID.
-   * Fails if the period has associated courses.
-   */
-  // @Transactional
-  // public void deleteAcademicPeriod(Long id) {
-  // // Check if period exists
-  // periodRepository.findById(id)
-  // .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
+  @Transactional
+  public void disableAcademicTerm(UUID id) {
+    AcademicTerm period = repository.findByIdIncludingDisabled(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
 
-  // // Check if period has courses
-  // int coursesCount = periodRepository.countCoursesByPeriodId(id);
-  // if (coursesCount > 0) {
-  // throw new PeriodHasCoursesException(id, coursesCount);
-  // }
+    // Verificar si el período académico tiene cursos habilitados
+    int enabledCoursesCount = repository.countCoursesByTermId(id);
+    if (enabledCoursesCount > 0) {
+      throw new com.udla.markenx.classroom.domain.exceptions.PeriodHasCoursesException(id, enabledCoursesCount);
+    }
 
-  // // Delete
-  // periodRepository.deleteById(id);
-  // }
+    period.disable();
+    period.markUpdated();
+    repository.update(period);
+  }
 
-  /**
-   * Retrieves all courses for a specific academic period.
-   */
-  // public List<Course> getCoursesByPeriodId(Long periodId) {
-  // // Verify period exists
-  // periodRepository.findById(periodId)
-  // .orElseThrow(() -> new ResourceNotFoundException("Período académico",
-  // periodId));
+  @Transactional
+  public void enableAcademicTerm(UUID id) {
+    AcademicTerm period = repository.findByIdIncludingDisabled(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Período académico", id));
 
-  // return periodRepository.findCoursesByPeriodId(periodId);
-  // }
+    period.enable();
+    period.markUpdated();
+    repository.update(period);
+  }
+
+  private boolean isAdmin() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication != null &&
+        authentication.getAuthorities().stream()
+            .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+  }
 }

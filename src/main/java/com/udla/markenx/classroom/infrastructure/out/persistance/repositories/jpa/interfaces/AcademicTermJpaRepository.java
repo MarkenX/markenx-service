@@ -1,5 +1,7 @@
 package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +13,5 @@ public interface AcademicTermJpaRepository extends JpaRepository<AcademicTermJpa
 
   Page<AcademicTermJpaEntity> findByStatus(DomainBaseModelStatus status, Pageable pageable);
 
-  // boolean existsByYearAndSemesterNumber(int year, int semesterNumber);
-
-  // long countByYear(int year);
+  List<AcademicTermJpaEntity> findByAcademicYear(int academicYear);
 }

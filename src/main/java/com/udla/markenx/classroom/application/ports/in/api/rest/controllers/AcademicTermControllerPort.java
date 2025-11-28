@@ -10,7 +10,7 @@ import jakarta.validation.Valid;
 
 import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.CreateAcademicTermRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.UpdateAcademicTermRequestDTO;
-import com.udla.markenx.classroom.application.dtos.responses.AcademicPeriodResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.AcademicTermResponseDTO;
 import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 /**
@@ -30,7 +30,7 @@ public interface AcademicTermControllerPort {
    * @return a {@link ResponseEntity} containing the created academic term
    *         information
    */
-  ResponseEntity<AcademicPeriodResponseDTO> createAcademicTerm(@Valid CreateAcademicTermRequestDTO request);
+  ResponseEntity<AcademicTermResponseDTO> createAcademicTerm(@Valid CreateAcademicTermRequestDTO request);
 
   /**
    * Updates an existing academic term identified by its unique ID.
@@ -41,7 +41,7 @@ public interface AcademicTermControllerPort {
    * @return a {@link ResponseEntity} containing the updated academic term
    *         information
    */
-  ResponseEntity<AcademicPeriodResponseDTO> updateAcademicTerm(UUID id, @Valid UpdateAcademicTermRequestDTO request);
+  ResponseEntity<AcademicTermResponseDTO> updateAcademicTerm(UUID id, @Valid UpdateAcademicTermRequestDTO request);
 
   /**
    * Retrieves the academic term associated with the given ID.
@@ -49,7 +49,7 @@ public interface AcademicTermControllerPort {
    * @param id the identifier of the academic term
    * @return a {@link ResponseEntity} containing the academic term details
    */
-  ResponseEntity<AcademicPeriodResponseDTO> getAcademicTermById(UUID id);
+  ResponseEntity<AcademicTermResponseDTO> getAcademicTermById(UUID id);
 
   /**
    * Retrieves all academic terms filtered by status and paginated.
@@ -60,7 +60,7 @@ public interface AcademicTermControllerPort {
    * @return a {@link ResponseEntity} containing a paginated list of academic
    *         terms
    */
-  ResponseEntity<Page<AcademicPeriodResponseDTO>> getAllAcademicTerms(DomainBaseModelStatus status, Pageable pageable);
+  ResponseEntity<Page<AcademicTermResponseDTO>> getAllAcademicTerms(DomainBaseModelStatus status, Pageable pageable);
 
   /**
    * Disables an academic term, preventing it from being used or displayed

@@ -25,12 +25,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+import com.udla.markenx.classroom.application.commands.CreateAcademicTermCommand;
+import com.udla.markenx.classroom.application.commands.UpdateAcademicTermCommand;
 import com.udla.markenx.classroom.application.dtos.mappers.AcademicPeriodMapper;
 import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.CreateAcademicTermRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.UpdateAcademicTermRequestDTO;
-import com.udla.markenx.classroom.application.dtos.responses.AcademicPeriodResponseDTO;
+import com.udla.markenx.classroom.application.dtos.responses.AcademicTermResponseDTO;
 import com.udla.markenx.classroom.application.ports.in.api.rest.controllers.AcademicTermControllerPort;
-import com.udla.markenx.classroom.application.services.AcademicTermManagementService;
+import com.udla.markenx.classroom.application.services.AcademicTermService;
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
 
 @RestController
@@ -40,26 +42,33 @@ import com.udla.markenx.classroom.domain.models.AcademicTerm;
 @SecurityRequirement(name = "bearerAuth")
 public class AcademicTermController implements AcademicTermControllerPort {
 
-  private final AcademicTermManagementService academicTermService;
+  private final AcademicTermService academicTermService;
 
-  public AcademicTermController(AcademicTermManagementService academicTermService) {
+  public AcademicTermController(AcademicTermService academicTermService) {
     this.academicTermService = academicTermService;
   }
 
   @Override
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
-  @Operation(summary = "Create a new academic term", description = "Creates a new academic period/term. Requires ADMIN role.")
+  @Operation(summary = "Create a new academic term", description = "Creates a new academic term. Requires ADMIN role.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Academic term created successfully"),
       @ApiResponse(responseCode = "400", description = "Invalid input"),
       @ApiResponse(responseCode = "401", description = "Unauthorized"),
       @ApiResponse(responseCode = "403", description = "Forbidden")
   })
-  public ResponseEntity<AcademicPeriodResponseDTO> createAcademicTerm(
+  public ResponseEntity<AcademicTermResponseDTO> createAcademicTerm(
       @Parameter(description = "Academic term creation data", required = true) @Valid @RequestBody CreateAcademicTermRequestDTO request) {
-    AcademicTerm academicTerm = academicTermService.createAcademicTerm(request);
-    AcademicPeriodResponseDTO response = AcademicPeriodMapper.toResponseDto(academicTerm);
+
+    var command = new CreateAcademicTermCommand(
+        request.getStartOfTerm(),
+        request.getEndOfTerm(),
+        request.getAcademicYear(),
+        "ADMIN");
+
+    AcademicTerm academicTerm = academicTermService.createAcademicTerm(command);
+    AcademicTermResponseDTO response = AcademicPeriodMapper.toResponseDto(academicTerm);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
@@ -73,11 +82,19 @@ public class AcademicTermController implements AcademicTermControllerPort {
       @ApiResponse(responseCode = "401", description = "Unauthorized"),
       @ApiResponse(responseCode = "403", description = "Forbidden")
   })
-  public ResponseEntity<AcademicPeriodResponseDTO> updateAcademicTerm(
+  public ResponseEntity<AcademicTermResponseDTO> updateAcademicTerm(
       @Parameter(description = "Academic term ID", required = true) @PathVariable UUID id,
       @Parameter(description = "Updated academic term data", required = true) @Valid @RequestBody UpdateAcademicTermRequestDTO request) {
-    AcademicTerm academicTerm = academicTermService.updateAcademicTerm(id, request);
-    AcademicPeriodResponseDTO response = AcademicPeriodMapper.toResponseDto(academicTerm);
+
+    var command = new UpdateAcademicTermCommand(
+        id,
+        request.getStartDate(),
+        request.getEndDate(),
+        request.getYear(),
+        "ADMIN");
+
+    AcademicTerm academicTerm = academicTermService.updateAcademicTerm(command);
+    AcademicTermResponseDTO response = AcademicPeriodMapper.toResponseDto(academicTerm);
     return ResponseEntity.ok(response);
   }
 
@@ -90,10 +107,10 @@ public class AcademicTermController implements AcademicTermControllerPort {
       @ApiResponse(responseCode = "404", description = "Academic term not found"),
       @ApiResponse(responseCode = "401", description = "Unauthorized")
   })
-  public ResponseEntity<AcademicPeriodResponseDTO> getAcademicTermById(
+  public ResponseEntity<AcademicTermResponseDTO> getAcademicTermById(
       @Parameter(description = "Academic term ID", required = true) @PathVariable UUID id) {
     AcademicTerm academicTerm = academicTermService.getAcademicTermById(id);
-    AcademicPeriodResponseDTO response = AcademicPeriodMapper.toResponseDto(academicTerm);
+    AcademicTermResponseDTO response = AcademicPeriodMapper.toResponseDto(academicTerm);
     return ResponseEntity.ok(response);
   }
 
@@ -102,7 +119,7 @@ public class AcademicTermController implements AcademicTermControllerPort {
   @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
   @Operation(summary = "Get all academic terms", description = "Retrieves a paginated list of academic terms. Supports optional status filter (ENABLED/DISABLED). Example: ?page=0&size=10&status=DISABLED")
   @ApiResponse(responseCode = "200", description = "Academic terms retrieved successfully")
-  public ResponseEntity<Page<AcademicPeriodResponseDTO>> getAllAcademicTerms(
+  public ResponseEntity<Page<AcademicTermResponseDTO>> getAllAcademicTerms(
       @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
       @Parameter(hidden = true) Pageable pageable) {
     Page<AcademicTerm> academicTerms;
@@ -111,7 +128,7 @@ public class AcademicTermController implements AcademicTermControllerPort {
     } else {
       academicTerms = academicTermService.getAllAcademicTerms(pageable);
     }
-    Page<AcademicPeriodResponseDTO> response = academicTerms.map(AcademicPeriodMapper::toResponseDto);
+    Page<AcademicTermResponseDTO> response = academicTerms.map(AcademicPeriodMapper::toResponseDto);
     return ResponseEntity.ok(response);
   }
 

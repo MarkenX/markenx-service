@@ -42,7 +42,7 @@ public class Attempt extends DomainBaseModel {
 		this.timeSpent = validateDuration(timeSpent);
 		this.attemptStatus = requireAttemptStatus(attemptStatus);
 		this.result = determineResult();
-		this.code = requireCode(code);
+		this.code = code;
 	}
 
 	public Attempt(Long studentSequence, Long taskSequence, double taskMinScoreToPass, double score,

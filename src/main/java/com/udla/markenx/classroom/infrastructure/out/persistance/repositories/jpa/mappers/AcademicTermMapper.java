@@ -2,8 +2,8 @@ package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.j
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
@@ -20,35 +20,11 @@ public final class AcademicTermMapper {
 
   private final CourseMapper courseMapper;
 
-  public @NonNull AcademicTerm toDomain(@NonNull AcademicTermJpaEntity entity) {
-    List<CourseJpaEntity> courseEntities = entity.getCourses() != null ? entity.getCourses() : List.of();
+  public AcademicTerm toDomain(AcademicTermJpaEntity entity, boolean includeCourses) {
 
-    List<Course> courses = courseEntities.stream()
-        .map(courseMapper::toDomain)
-        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
-
-    return new AcademicTerm(
-        entity.getExternalReference() != null ? entity.getExternalReference().getPublicId()
-            : java.util.UUID.randomUUID(),
-        entity.getExternalReference() != null ? entity.getExternalReference().getCode() : "",
-        entity.getStatus(),
-        entity.getStartOfTerm(),
-        entity.getEndOfTerm(),
-        entity.getAcademicYear(),
-        courses,
-        entity.getCreatedBy(),
-        entity.getCreatedAt(),
-        entity.getUpdatedAt());
-  }
-
-  /**
-   * Lightweight mapping without loading courses - optimized for list/simple DTOs
-   */
-  public @NonNull AcademicTerm toDomainWithoutCourses(@NonNull AcademicTermJpaEntity entity) {
-    return new AcademicTerm(
-        entity.getExternalReference() != null ? entity.getExternalReference().getPublicId()
-            : java.util.UUID.randomUUID(),
-        entity.getExternalReference() != null ? entity.getExternalReference().getCode() : "",
+    var domain = new AcademicTerm(
+        extractId(entity),
+        extractCode(entity),
         entity.getStatus(),
         entity.getStartOfTerm(),
         entity.getEndOfTerm(),
@@ -57,19 +33,24 @@ public final class AcademicTermMapper {
         entity.getCreatedBy(),
         entity.getCreatedAt(),
         entity.getUpdatedAt());
+
+    if (includeCourses && entity.getCourses() != null && !entity.getCourses().isEmpty()) {
+      List<Course> courses = entity.getCourses().stream().map(courseMapper::toDomain).toList();
+      courses.forEach(domain::addCourse);
+    }
+
+    return domain;
   }
 
-  public @NonNull AcademicTermJpaEntity toEntity(@NonNull AcademicTerm domain) {
+  public AcademicTermJpaEntity toEntity(AcademicTerm domain) {
     AcademicTermJpaEntity entity = new AcademicTermJpaEntity();
 
-    // ----- External Reference -----
     ExternalReferenceJpaEntity ref = new ExternalReferenceJpaEntity();
     ref.setPublicId(domain.getId());
     ref.setCode(domain.getCode());
-    ref.setEntityType("ACADEMIC_TERM");
-    entity.setExternalReference(ref);
+    ref.setEntityType(AcademicTerm.class.getSimpleName());
 
-    // ----- Simple Fields -----
+    entity.setExternalReference(ref);
     entity.setStatus(domain.getStatus());
     entity.setStartOfTerm(domain.getStartOfTerm());
     entity.setEndOfTerm(domain.getEndOfTerm());
@@ -79,32 +60,38 @@ public final class AcademicTermMapper {
     entity.setCreatedAt(domain.getCreatedAtDateTime());
     entity.setUpdatedAt(domain.getUpdatedAtDateTime());
     entity.setUpdatedBy(domain.getUpdatedBy());
-
-    // ----- Courses (children) -----
-    List<CourseJpaEntity> courses = entity.getCourses();
-    if (courses == null) {
-      courses = new ArrayList<>();
-      entity.setCourses(courses);
-    } else {
-      courses.clear();
-    }
-
-    if (domain.getAssignedCourses() != null) {
-      for (Course courseDomain : domain.getAssignedCourses()) {
-
-        if (courseDomain == null)
-          continue; // defensivo
-
-        // Use toEntityWithoutParent to avoid database lookup during cascade
-        CourseJpaEntity courseEntity = courseMapper.toEntityWithoutParent(courseDomain);
-
-        // maintain bidirectional relationship
-        courseEntity.setAcademicTerm(entity);
-
-        courses.add(courseEntity);
-      }
-    }
+    entity.setCourses(mapCourses(domain, entity));
 
     return entity;
+  }
+
+  private List<CourseJpaEntity> mapCourses(AcademicTerm domain, AcademicTermJpaEntity parent) {
+    if (domain.getAssignedCourses() == null)
+      return List.of();
+
+    List<CourseJpaEntity> result = new ArrayList<>();
+
+    for (Course course : domain.getAssignedCourses()) {
+      if (course == null)
+        continue;
+
+      CourseJpaEntity c = courseMapper.toEntityWithoutParent(course);
+      c.setAcademicTerm(parent);
+      result.add(c);
+    }
+
+    return result;
+  }
+
+  private UUID extractId(AcademicTermJpaEntity entity) {
+    return entity.getExternalReference() != null
+        ? entity.getExternalReference().getPublicId()
+        : UUID.randomUUID();
+  }
+
+  private String extractCode(AcademicTermJpaEntity entity) {
+    return entity.getExternalReference() != null
+        ? entity.getExternalReference().getCode()
+        : null;
   }
 }

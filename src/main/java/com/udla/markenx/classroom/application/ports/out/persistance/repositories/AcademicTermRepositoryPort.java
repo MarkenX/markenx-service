@@ -9,33 +9,33 @@ import org.springframework.data.domain.Pageable;
 
 import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
+import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 public interface AcademicTermRepositoryPort {
 
-  AcademicTerm save(AcademicTerm period);
+  List<AcademicTerm> findAll();
 
-  AcademicTerm update(AcademicTerm period);
-
-  Optional<AcademicTerm> findById(UUID id);
-
-  Optional<AcademicTerm> findByIdIncludingDisabled(UUID id);
-
-  Page<AcademicTerm> findAll(Pageable pageable);
+  Page<AcademicTerm> findAllPaged(Pageable pageable);
 
   Page<AcademicTerm> findAllIncludingDisabled(Pageable pageable);
 
-  Page<AcademicTerm> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
-      Pageable pageable);
+  Page<AcademicTerm> findByStatus(DomainBaseModelStatus entityStatus, Pageable pageable);
 
-  void deleteById(UUID id);
+  List<AcademicTerm> findByAcademicYear(int academicYear);
 
-  boolean existsByYearAndSemesterNumber(int year, int semesterNumber);
+  Optional<AcademicTerm> findById(UUID academicTermId);
 
-  long countByYear(int year);
+  Optional<AcademicTerm> findByIdIncludingDisabled(UUID academicTermId);
 
-  List<AcademicTerm> findAllPeriods();
+  AcademicTerm save(AcademicTerm academicTerm);
 
-  int countCoursesByPeriodId(UUID periodId);
+  AcademicTerm update(AcademicTerm academicTerm);
 
-  List<Course> findCoursesByPeriodId(UUID periodId);
+  boolean existsByAcademicYearAndSemesterNumber(int academicYear, int termNumber);
+
+  long countByAcademicYear(int academicYear);
+
+  int countCoursesByTermId(UUID academicTermId);
+
+  List<Course> findCoursesByTermId(UUID academicTermId);
 }

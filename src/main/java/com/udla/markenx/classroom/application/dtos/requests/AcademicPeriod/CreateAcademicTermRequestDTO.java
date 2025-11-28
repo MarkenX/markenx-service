@@ -16,11 +16,11 @@ import lombok.Setter;
 public class CreateAcademicTermRequestDTO {
 
   @NotNull(message = "La fecha de inicio es obligatoria")
-  private LocalDate startDate;
+  private LocalDate startOfTerm;
 
   @NotNull(message = "La fecha de fin es obligatoria")
-  private LocalDate endDate;
+  private LocalDate endOfTerm;
 
   @NotNull(message = "El año es obligatorio")
-  private Integer year;
+  private Integer academicYear;
 }

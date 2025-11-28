@@ -2,198 +2,120 @@ package com.udla.markenx.classroom.domain.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
 import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
 
 public class AcademicTerm extends DomainBaseModel {
-  private static final Class<AcademicTerm> CLAZZ = AcademicTerm.class;
+
   private static final String PREFIX = "AT";
 
-  private final String code;
   private LocalDate startOfTerm;
   private LocalDate endOfTerm;
   private int academicYear;
   private int termNumber;
-  private final List<Course> assignedCourses;
 
-  public AcademicTerm(UUID id, String code, DomainBaseModelStatus status, LocalDate startOfTerm, LocalDate endOfTerm,
-      int academicYear, List<Course> assignedCourses, String createdBy, LocalDateTime createdAt,
+  private final List<Course> assignedCourses = new ArrayList<>();
+
+  public AcademicTerm(
+      UUID id,
+      String code,
+      DomainBaseModelStatus status,
+      LocalDate startOfTerm,
+      LocalDate endOfTerm,
+      int academicYear,
+      int termNumber,
+      String createdBy,
+      LocalDateTime createdAt,
       LocalDateTime updatedAt) {
+
     super(id, code, status, createdBy, createdAt, updatedAt);
-    this.startOfTerm = requireStartOfTerm(startOfTerm);
-    this.endOfTerm = requireEndOfTerm(endOfTerm);
-    validateChronology(this.startOfTerm, this.endOfTerm);
-    this.academicYear = validateAcademicYear(academicYear);
-    this.termNumber = determineTermNumber(this.startOfTerm);
-    this.assignedCourses = requireAssignedCourses(assignedCourses);
-    this.code = code; // Allow null, will be generated after persistence
-  }
 
-  public AcademicTerm(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear, String createdBy) {
-    super(createdBy);
-    this.startOfTerm = requireStartOfTerm(startOfTerm);
-    this.endOfTerm = requireEndOfTerm(endOfTerm);
-    validateChronology(this.startOfTerm, this.endOfTerm);
-    this.academicYear = validateAcademicYear(academicYear);
-    this.termNumber = determineTermNumber(this.startOfTerm);
-    this.assignedCourses = new ArrayList<>();
-    this.code = null; // Code will be generated after persistence
-  }
+    this.startOfTerm = EntityValidator.ensureNotNull(AcademicTerm.class, startOfTerm, "startOfTerm");
+    this.endOfTerm = EntityValidator.ensureNotNull(AcademicTerm.class, endOfTerm, "endOfTerm");
 
-  public AcademicTerm(LocalDate startOfTerm, LocalDate endOfTerm, int academicYear) {
-    super();
-    this.startOfTerm = requireStartOfTerm(startOfTerm);
-    this.endOfTerm = requireEndOfTerm(endOfTerm);
-    validateChronology(this.startOfTerm, this.endOfTerm);
-    this.academicYear = validateAcademicYear(academicYear);
-    this.termNumber = determineTermNumber(this.startOfTerm);
-    this.assignedCourses = new ArrayList<>();
-    this.code = null; // Code will be generated after persistence
-  }
-
-  // Lightweight constructor for simple DTOs (without loading courses)
-  public AcademicTerm(UUID id, String code, DomainBaseModelStatus status, LocalDate startOfTerm, LocalDate endOfTerm,
-      int academicYear, int termNumber, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-    super(id, code, status, createdBy, createdAt, updatedAt);
-    this.startOfTerm = requireStartOfTerm(startOfTerm);
-    this.endOfTerm = requireEndOfTerm(endOfTerm);
-    validateChronology(this.startOfTerm, this.endOfTerm);
-    this.academicYear = validateAcademicYear(academicYear);
+    this.academicYear = academicYear;
     this.termNumber = termNumber;
-    this.assignedCourses = new ArrayList<>();
-    this.code = code; // Allow null, will be generated after persistence
   }
 
-  public String getCode() {
-    return this.code;
+  public static AcademicTerm createNew(
+      LocalDate startOfTerm,
+      LocalDate endOfTerm,
+      int academicYear,
+      int termNumber,
+      String createdBy) {
+    return new AcademicTerm(
+        UUID.randomUUID(),
+        null,
+        DomainBaseModelStatus.ENABLED,
+        startOfTerm,
+        endOfTerm,
+        academicYear,
+        termNumber,
+        createdBy,
+        LocalDateTime.now(),
+        LocalDateTime.now());
   }
 
   public LocalDate getStartOfTerm() {
-    return this.startOfTerm;
+    return startOfTerm;
   }
 
   public LocalDate getEndOfTerm() {
-    return this.endOfTerm;
+    return endOfTerm;
   }
 
   public int getAcademicYear() {
-    return this.academicYear;
-  }
-
-  public int getTermNumber() {
-    return this.termNumber;
-  }
-
-  public List<Course> getAssignedCourses() {
-    return List.copyOf(this.assignedCourses);
-  }
-
-  public String getLabel() {
-    String semesterLabel = this.termNumber == 1 ? "1er Semestre" : "2do Semestre";
-    return String.format("%s - %d", semesterLabel, this.academicYear);
-  }
-
-  public void setStartOfTerm(LocalDate startDate) {
-    LocalDate validated = requireStartOfTerm(startDate);
-    validateChronology(validated, this.endOfTerm);
-    this.startOfTerm = validated;
-    updateTermNumber();
-  }
-
-  public void setEndOfTerm(LocalDate endDate) {
-    LocalDate validated = requireEndOfTerm(endDate);
-    validateChronology(this.startOfTerm, validated);
-    this.endOfTerm = endDate;
-  }
-
-  public void setAcademicYear(int year) {
-    this.academicYear = validateAcademicYear(year);
-  }
-
-  private LocalDate requireStartOfTerm(LocalDate startOfTerm) {
-    return EntityValidator.ensureNotNull(CLAZZ, startOfTerm, "startOfTerm");
-  }
-
-  private LocalDate requireEndOfTerm(LocalDate endOfTerm) {
-    return EntityValidator.ensureNotNull(CLAZZ, endOfTerm, "endOfTerm");
-  }
-
-  private void validateChronology(LocalDate start, LocalDate end) {
-    if (end.isBefore(start)) {
-      throw new InvalidEntityException(CLAZZ, "debe ser la fecha actual.");
-    }
-  }
-
-  private List<Course> requireAssignedCourses(List<Course> courses) {
-    // Return mutable list for Hibernate, getter will return immutable copy
-    return new ArrayList<>(EntityValidator.ensureNotNull(CLAZZ, courses, "assignedCourses"));
-  }
-
-  private int validateAcademicYear(int academicYear) {
-    int currentYear = LocalDate.now().getYear();
-    int nextYear = currentYear + 1;
-
-    if (academicYear < currentYear || academicYear > nextYear) {
-      throw new InvalidEntityException(CLAZZ,
-          String.format("El año debe ser el año actual (%d) o el siguiente (%d)", currentYear, nextYear));
-    }
-
-    int startYear = this.startOfTerm.getYear();
-    int endYear = this.endOfTerm.getYear();
-
-    if (academicYear != startYear && academicYear != endYear) {
-      throw new InvalidEntityException(CLAZZ,
-          String.format("El año %d no corresponde con las fechas del período (inicia en %d, termina en %d)",
-              academicYear, startYear, endYear));
-    }
-
     return academicYear;
   }
 
-  private int determineTermNumber(LocalDate startOfTerm) {
-    int month = startOfTerm.getMonthValue();
-    return (month <= 6) ? 1 : 2;
+  public int getTermNumber() {
+    return termNumber;
   }
 
-  public void updateTermNumber() {
-    this.termNumber = determineTermNumber(this.startOfTerm);
+  public List<Course> getAssignedCourses() {
+    return List.copyOf(assignedCourses);
+  }
+
+  public void applyUpdate(LocalDate start, LocalDate end, int year, int termNumber) {
+    this.startOfTerm = start;
+    this.endOfTerm = end;
+    this.academicYear = year;
+    this.termNumber = termNumber;
+  }
+
+  public String getLabel() {
+    return String.format("%s Semestre - %d",
+        termNumber == 1 ? "1er" : "2do", academicYear);
   }
 
   public boolean overlapsWith(AcademicTerm other) {
-    if (other == null) {
+    if (other == null)
       return false;
-    }
-    return !this.startOfTerm.isAfter(other.endOfTerm) && !this.endOfTerm.isBefore(other.startOfTerm);
+    return !this.startOfTerm.isAfter(other.endOfTerm)
+        && !this.endOfTerm.isBefore(other.startOfTerm);
   }
 
   public boolean addCourse(Course course) {
-    if (course == null) {
+    if (course == null)
       return false;
-    }
-    return this.assignedCourses.add(course);
+    return assignedCourses.add(course);
   }
 
   @Override
   protected String generateCode() {
-    if (startOfTerm == null) {
-      return null; // Code will be generated after persistence
-    }
-    int term = determineTermNumber(startOfTerm);
-    return String.format("%s-%d-%02d", PREFIX, academicYear, term);
+    return String.format("%s-%d-%02d", PREFIX, academicYear, termNumber);
   }
 
   public static String generateCodeFromData(int academicYear, LocalDate startOfTerm) {
-    if (startOfTerm == null) {
+    if (startOfTerm == null)
       return null;
-    }
-    int term = (startOfTerm.getMonthValue() <= 6) ? 1 : 2;
+
+    int term = startOfTerm.getMonthValue() <= 6 ? 1 : 2;
     return String.format("%s-%d-%02d", PREFIX, academicYear, term);
   }
 }
