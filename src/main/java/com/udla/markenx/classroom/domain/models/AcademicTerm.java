@@ -23,7 +23,6 @@ public class AcademicTerm extends DomainBaseModel {
 
   public AcademicTerm(
       UUID id,
-      String code,
       DomainBaseModelStatus status,
       LocalDate startOfTerm,
       LocalDate endOfTerm,
@@ -51,7 +50,6 @@ public class AcademicTerm extends DomainBaseModel {
       String createdBy) {
     return new AcademicTerm(
         UUID.randomUUID(),
-        null,
         DomainBaseModelStatus.ENABLED,
         startOfTerm,
         endOfTerm,
