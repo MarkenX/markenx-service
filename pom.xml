@@ -114,6 +114,12 @@
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.launchdarkly</groupId>
+			<artifactId>launchdarkly-java-server-sdk</artifactId>
+			<version>6.1.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

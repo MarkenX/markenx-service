@@ -35,14 +35,16 @@ public abstract class DomainBaseModel {
     this.id = UUID.randomUUID();
     this.status = DomainBaseModelStatus.ENABLED;
     this.auditInfo = new AuditInfo(createdBy);
-    this.code = generateCode();
+    // Code generation deferred to subclass after field initialization
+    this.code = null;
   }
 
   public DomainBaseModel() {
     this.id = UUID.randomUUID();
     this.status = DomainBaseModelStatus.ENABLED;
     this.auditInfo = new AuditInfo();
-    this.code = generateCode();
+    // Code generation deferred to subclass after field initialization
+    this.code = null;
   }
 
   @NonNull
