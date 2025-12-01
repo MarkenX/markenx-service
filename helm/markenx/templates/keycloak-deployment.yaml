@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-keycloak
+  labels:
+    app: keycloak
+    {{- include "markenx.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for MySQL to be ready..."
+              until nc -z {{ .Release.Name }}-mysql 3306; do
+                echo "MySQL is unavailable - sleeping"
+                sleep 5
+              done
+              echo "MySQL is up - waiting for it to accept connections..."
+              sleep 10
+              echo "MySQL is ready!"
+
+      containers:
+        - name: keycloak
+          image: "{{ .Values.keycloak.image.repository }}:{{ .Values.keycloak.image.tag }}"
+          imagePullPolicy: {{ .Values.keycloak.image.pullPolicy }}
+          args:
+            {{- toYaml .Values.keycloak.command | nindent 12 }}
+          env:
+            # Ensure KC_DB_URL always points to this release's MySQL service
+            - name: KC_DB_URL
+              value: {{ printf "jdbc:mysql://%s-mysql:3306/keycloak_db" .Release.Name | quote }}
+            {{- /* Render other envs except KC_DB_URL to avoid duplicates */}}
+            {{- range $i, $e := .Values.keycloak.extraEnv }}
+            {{- if ne (get $e "name") "KC_DB_URL" }}
+            - name: {{ get $e "name" }}
+              value: {{ (get $e "value") | quote }}
+            {{- end }}
+            {{- end }}
+          
+          ports:
+            - name: http
+              containerPort: {{ .Values.keycloak.service.port }}
+              protocol: TCP
+          
+          {{- if .Values.keycloak.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.keycloak.livenessProbe | nindent 12 }}
+          {{- end }}
+          
+          {{- if .Values.keycloak.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.keycloak.readinessProbe | nindent 12 }}
+          {{- end }}
+          
+          resources:
+            {{- toYaml .Values.keycloak.resources | nindent 12 }}
+          
+          volumeMounts:
+            - name: keycloak-realm-config
+              mountPath: /opt/keycloak/data/import
+              readOnly: true
+      
+      volumes:
+        - name: keycloak-realm-config
+          configMap:
+            name: {{ .Release.Name }}-keycloak-realm

@@ -14,34 +14,93 @@ service:
   type: ClusterIP
   port: 8080
 
-resources: {}
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: prod
+  - name: SPRING_DATASOURCE_URL
+    value: jdbc:mysql://{{ .Release.Name }}-mysql:3306/markenx_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+  - name: SPRING_DATASOURCE_USERNAME
+    value: markenx_user
+  - name: SPRING_DATASOURCE_PASSWORD
+    value: markenx_password_2025!
+  - name: KEYCLOAK_AUTH_SERVER_URL
+    value: http://{{ .Release.Name }}-keycloak:7080
+  - name: KEYCLOAK_REALM
+    value: markenx
+  - name: KEYCLOAK_ADMIN_USERNAME
+    value: admin
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    value: admin123
+  - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+    value: http://{{ .Release.Name }}-keycloak:7080/realms/markenx
+  - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+    value: http://{{ .Release.Name }}-keycloak:7080/realms/markenx/protocol/openid-connect/certs
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8080
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8080
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
 
 mysql:
   enabled: true
-  rootPassword: secret
-  database: markenxdb
-  user: markenx
-  password: markenxpass
+  auth:
+    rootPassword: root_password_2025!
+    database: markenx_db
+    username: markenx_user
+    password: markenx_password_2025!
+  initdbScripts:
+    init.sql: |
+      CREATE DATABASE IF NOT EXISTS keycloak_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+      CREATE USER IF NOT EXISTS 'keycloak_user'@'%' IDENTIFIED BY 'keycloak_password_2025!';
+      GRANT ALL PRIVILEGES ON keycloak_db.* TO 'keycloak_user'@'%';
+      FLUSH PRIVILEGES;
+  primary:
+    persistence:
+      enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi
 
 keycloak:
+  enabled: true
   image:
     repository: quay.io/keycloak/keycloak
     tag: 25.0.6
     pullPolicy: IfNotPresent
-    pullSecrets: []
-  postgresql:
-    enabled: false
-  keycloakConfigCli:
-    image:
-      repository: quay.io/keycloak/keycloak-config-cli
-      tag: latest
-      pullPolicy: IfNotPresent
-      pullSecrets: []
+  replicas: 1
+  service:
+    type: ClusterIP
+    port: 7080
   extraEnv:
     - name: KC_DB
       value: mysql
     - name: KC_DB_URL
-      value: jdbc:mysql://markenx-mysql:3306/keycloak_db
+      value: jdbc:mysql://{{ .Release.Name }}-mysql:3306/keycloak_db
     - name: KC_DB_USERNAME
       value: keycloak_user
     - name: KC_DB_PASSWORD
@@ -50,18 +109,37 @@ keycloak:
       value: admin
     - name: KEYCLOAK_ADMIN_PASSWORD
       value: admin123
-  extraContainers: []
-  extraInitContainers:
-    - name: wait-for-mysql
-      image: bitnami/kubectl:latest
-      command:
-        - sh
-        - -c
-        - |
-          until nc -z markenx-mysql 3306; do
-            echo "Waiting for MySQL..."
-            sleep 5
-          done
+    - name: KC_HEALTH_ENABLED
+      value: "true"
+    - name: KC_HTTP_PORT
+      value: "7080"
+  command:
+    - start-dev
+    - --http-port=7080
+    - --import-realm
+  livenessProbe:
+    httpGet:
+      path: /health/live
+      port: 7080
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 5
+  readinessProbe:
+    httpGet:
+      path: /health/ready
+      port: 7080
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 10
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
 
 serviceAccount:
   create: true

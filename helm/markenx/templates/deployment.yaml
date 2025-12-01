@@ -36,16 +36,35 @@ spec:
       {{- end }}
 
       initContainers:
-        - name: wait-for-dependencies
+        - name: wait-for-mysql
           image: busybox:1.36
           command:
             - sh
             - -c
             - |
-              echo "Waiting for MySQL..."
-              until nc -z mysql 3306; do sleep 5; done
-              echo "Waiting for Keycloak..."
-              until nc -z keycloak {{ .Values.keycloak.port }}; do sleep 5; done
+              echo "Waiting for MySQL to be ready..."
+              until nc -z {{ .Release.Name }}-mysql 3306; do
+                echo "MySQL is unavailable - sleeping"
+                sleep 5
+              done
+              echo "MySQL is up - checking if accepting connections..."
+              sleep 10
+              echo "MySQL is ready!"
+        
+        - name: wait-for-keycloak
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for Keycloak to be ready..."
+              until nc -z {{ .Release.Name }}-keycloak 7080; do
+                echo "Keycloak is unavailable - sleeping"
+                sleep 5
+              done
+              echo "Keycloak port is open - waiting for health endpoint..."
+              sleep 30
+              echo "Keycloak should be ready!"
 
       containers:
         - name: {{ .Chart.Name }}
@@ -57,6 +76,33 @@ spec:
 
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ (index (.Values | default dict) "springProfile") | default "prod" | quote }}
+            - name: SPRING_DATASOURCE_URL
+              value: {{ printf "jdbc:mysql://%s-mysql:3306/%s?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC" .Release.Name .Values.mysql.auth.database | quote }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.mysql.auth.username | quote }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.mysql.auth.password | quote }}
+            - name: KEYCLOAK_AUTH_SERVER_URL
+              value: {{ printf "http://%s-keycloak:%d" .Release.Name (int .Values.keycloak.service.port) | quote }}
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: {{ printf "http://%s-keycloak:%d/realms/markenx" .Release.Name (int .Values.keycloak.service.port) | quote }}
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+              value: {{ printf "http://%s-keycloak:%d/realms/markenx/protocol/openid-connect/certs" .Release.Name (int .Values.keycloak.service.port) | quote }}
+            - name: KEYCLOAK_REALM
+              value: "markenx"
+            {{- /* Include any extra envs except the computed ones above */}}
+            {{- $skip := list "SPRING_PROFILES_ACTIVE" "SPRING_DATASOURCE_URL" "SPRING_DATASOURCE_USERNAME" "SPRING_DATASOURCE_PASSWORD" "KEYCLOAK_AUTH_SERVER_URL" "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI" "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI" "KEYCLOAK_REALM" }}
+            {{- range $i, $e := .Values.env }}
+            {{- $name := (get $e "name") -}}
+            {{- if and $name (not (has $name $skip)) }}
+            - name: {{ $name }}
+              value: {{ (get $e "value") | quote }}
+            {{- end }}
+            {{- end }}
 
           ports:
             - name: http

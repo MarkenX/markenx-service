@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-mysql-init
+  labels:
+    app: mysql
+    {{- include "markenx.labels" . | nindent 4 }}
+data:
+  init.sql: |
+{{ .Files.Get "init.final.sql" | indent 4 }}
