@@ -35,6 +35,18 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 
+      initContainers:
+        - name: wait-for-dependencies
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for MySQL..."
+              until nc -z mysql 3306; do sleep 5; done
+              echo "Waiting for Keycloak..."
+              until nc -z keycloak {{ .Values.keycloak.port }}; do sleep 5; done
+
       containers:
         - name: {{ .Chart.Name }}
 
@@ -48,7 +60,7 @@ spec:
 
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
 
           {{- with .Values.livenessProbe }}
