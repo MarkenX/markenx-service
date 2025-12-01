@@ -5,7 +5,7 @@ orbs:
 
 defaults: &job_defaults
   docker:
-    - image: 'cimg/openjdk:17.0'
+    - image: "cimg/openjdk:17.0"
   working_directory: ~/project
 
 jobs:
@@ -44,6 +44,22 @@ jobs:
           name: Analyze on SonarCloud
           command: mvn clean verify sonar:sonar -Dsonar.token=$SONAR_TOKEN
 
+  docker_build_push:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t markenx/markenx:latest .
+      - run:
+          name: Push Docker image
+          command: |
+            echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
+            docker push markenx/markenx:latest
+
   notify_slack:
     docker:
       - image: cimg/base:stable
@@ -63,7 +79,6 @@ jobs:
                 }
               ]
             }
-
 
 workflows:
   main:
@@ -88,10 +103,19 @@ workflows:
             branches:
               only: main
 
-      - notify_slack:
+      - docker_build_push:
           requires:
+            - build
             - test
             - sonar
+          context: DockerHub
+          filters:
+            branches:
+              only: main
+
+      - notify_slack:
+          requires:
+            - docker_build_push
           context: Slack
           filters:
             branches:
