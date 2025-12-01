@@ -24,12 +24,17 @@ mysql:
   password: markenxpass
 
 keycloak:
-  enabled: true
-  image: quay.io/keycloak/keycloak:25.0.6
-  port: 7080
-  adminUser: admin
-  adminPassword: admin
-  realmImportConfigMap: keycloak-realm-config
+  image:
+    repository: quay.io/keycloak/keycloak
+    tag: 25.0.6
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  keycloakConfigCli:
+    image:
+      repository: quay.io/keycloak/keycloak-config-cli
+      tag: latest
+      pullPolicy: IfNotPresent
+      pullSecrets: []
 
 podAnnotations: {}
 podLabels: {}
