@@ -29,12 +29,39 @@ keycloak:
     tag: 25.0.6
     pullPolicy: IfNotPresent
     pullSecrets: []
+  postgresql:
+    enabled: false
   keycloakConfigCli:
     image:
       repository: quay.io/keycloak/keycloak-config-cli
       tag: latest
       pullPolicy: IfNotPresent
       pullSecrets: []
+  extraEnv:
+    - name: KC_DB
+      value: mysql
+    - name: KC_DB_URL
+      value: jdbc:mysql://markenx-mysql:3306/keycloak_db
+    - name: KC_DB_USERNAME
+      value: keycloak_user
+    - name: KC_DB_PASSWORD
+      value: keycloak_password_2025!
+    - name: KEYCLOAK_ADMIN
+      value: admin
+    - name: KEYCLOAK_ADMIN_PASSWORD
+      value: admin123
+  extraContainers: []
+  extraInitContainers:
+    - name: wait-for-mysql
+      image: bitnami/kubectl:latest
+      command:
+        - sh
+        - -c
+        - |
+          until nc -z markenx-mysql 3306; do
+            echo "Waiting for MySQL..."
+            sleep 5
+          done
 
 serviceAccount:
   create: true
