@@ -36,6 +36,12 @@ keycloak:
       pullPolicy: IfNotPresent
       pullSecrets: []
 
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+  automount: true
+
 podAnnotations: {}
 podLabels: {}
 nodeSelector: {}
