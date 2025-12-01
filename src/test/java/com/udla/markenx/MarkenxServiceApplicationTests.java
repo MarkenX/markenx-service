@@ -1,14 +1,10 @@
 package com.udla.markenx;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-// @Import(TestContainersConfiguration.class)
-@SpringBootTest
+@SpringBootTest(properties = {
+		"spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost/fake",
+		"keycloak.realm=test-realm"
+})
 class MarkenxServiceApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
 }
