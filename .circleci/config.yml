@@ -49,6 +49,8 @@ jobs:
       - image: cimg/base:stable
     steps:
       - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          event: always
           custom: |
             {
               "blocks": [
@@ -61,6 +63,7 @@ jobs:
                 }
               ]
             }
+
 
 workflows:
   main:
