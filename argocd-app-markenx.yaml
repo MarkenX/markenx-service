@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: markenx
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/markenx/markenx-service.git
+    targetRevision: main
+    path: helm/markenx
+
+    helm:
+      valueFiles:
+        - values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: markenx
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
