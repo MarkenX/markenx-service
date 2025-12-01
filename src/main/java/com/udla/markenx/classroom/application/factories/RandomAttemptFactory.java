@@ -1,0 +1,56 @@
+package com.udla.markenx.classroom.application.factories;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import com.udla.markenx.classroom.application.builders.AttemptBuilder;
+import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
+import com.udla.markenx.classroom.domain.models.Attempt;
+import com.udla.markenx.classroom.domain.models.StudentTask;
+import com.udla.markenx.classroom.domain.valueobjects.enums.AttemptStatus;
+
+@Component
+public class RandomAttemptFactory {
+
+  private final AttemptBuilder attemptBuilder;
+  private final RandomNumberGeneratorPort numberGenerator;
+
+  public RandomAttemptFactory(
+      AttemptBuilder attemptBuilder,
+      RandomNumberGeneratorPort numberGenerator) {
+    this.attemptBuilder = attemptBuilder;
+    this.numberGenerator = numberGenerator;
+  }
+
+  public Attempt createRandomAttempt(StudentTask studentTask, double minScoreToPass) {
+    Attempt attempt = attemptBuilder
+        .reset()
+        .setStudentSequence(studentTask.getAssignment().getSerialNumber())
+        .setTaskSequence(studentTask.getAssignment().getSerialNumber())
+        .setTaskMinSocreToPass(minScoreToPass)
+        .setAttemptStatus(AttemptStatus.COMPLETED)
+        .randomScore()
+        .randomDuration()
+        .build();
+    return attempt;
+  }
+
+  public List<Attempt> createRandomAttempts(StudentTask studentTask, double minScoreToPass, int count) {
+    List<Attempt> attempts = new ArrayList<>();
+    for (int i = 0; i < count; i++) {
+      attempts.add(createRandomAttempt(studentTask, minScoreToPass));
+    }
+    return attempts;
+  }
+
+  public List<Attempt> createRandomAttemptsUpTo(StudentTask studentTask, double minScoreToPass, int maxAttempts) {
+    if (maxAttempts <= 0) {
+      throw new IllegalArgumentException("El límite debe ser mayor que cero");
+    }
+
+    int count = numberGenerator.positiveIntegerBetween(1, maxAttempts);
+    return createRandomAttempts(studentTask, minScoreToPass, count);
+  }
+}

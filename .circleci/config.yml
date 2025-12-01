@@ -35,7 +35,7 @@ jobs:
       - checkout
       - run:
           name: Analyze on SonarCloud
-          command: mvn clean verify sonar:sonar -Dsonar.login=$SONAR_TOKEN
+          command: mvn clean verify sonar:sonar -Dsonar.token=$SONAR_TOKEN
 
   notify_slack:
     docker:
@@ -55,14 +55,21 @@ jobs:
               ]
             }
 
-
 workflows:
   main:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: main
+
       - test:
           requires:
             - build
+          filters:
+            branches:
+              only: main
+
       - sonar:
           requires:
             - build
@@ -70,8 +77,12 @@ workflows:
           filters:
             branches:
               only: main
+
       - notify_slack:
           requires:
             - test
             - sonar
           context: Slack
+          filters:
+            branches:
+              only: main
