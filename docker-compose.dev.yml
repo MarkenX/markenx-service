@@ -61,9 +61,10 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+      LAUNCHDARKLY_SDK_KEY: ${LAUNCHDARKLY_SDK_KEY:-sdk-9177cd48-da72-4f44-9d5e-4b5105478d5b}
     ports:
       - "8082:8080"
-      - "5005:5005" # For remote debugging
+      - "5005:5005" # For remote debugging 
     networks:
       - shared_network
 

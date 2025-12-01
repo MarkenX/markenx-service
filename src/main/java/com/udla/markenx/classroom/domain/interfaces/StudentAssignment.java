@@ -29,12 +29,16 @@ public abstract class StudentAssignment<A extends Assignment> extends DomainBase
       String createdBy,
       LocalDateTime createdAt,
       LocalDateTime updatedAt) {
-    super(id, code, status, createdBy, createdAt, updatedAt);
+    super(id, code != null ? code : "", status, createdBy, createdAt, updatedAt);
     this.assignment = assignment;
     this.studentId = studentId;
     this.studentSerialNumber = studentSerialNumber;
     // this.student = student;
     this.assignmentStatus = AssignmentStatus.NOT_STARTED;
+    // Generate code if not provided
+    if (code == null) {
+      setCode(generateCode());
+    }
   }
 
   // public StudentAssignment(A assignment, Student student, String createdBy) {
@@ -49,6 +53,8 @@ public abstract class StudentAssignment<A extends Assignment> extends DomainBase
     this.studentSerialNumber = studentSerialNumber;
     // this.student = student;
     this.assignmentStatus = AssignmentStatus.NOT_STARTED;
+    // Generate code after all fields are initialized
+    setCode(generateCode());
   }
 
   // public StudentAssignment(A assignment, Student student) {
@@ -62,6 +68,8 @@ public abstract class StudentAssignment<A extends Assignment> extends DomainBase
     this.studentSerialNumber = studentSerialNumber;
     // this.student = student;
     this.assignmentStatus = AssignmentStatus.NOT_STARTED;
+    // Generate code after all fields are initialized
+    setCode(generateCode());
   }
 
   // public Student getStudent() {

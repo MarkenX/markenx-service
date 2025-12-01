@@ -61,6 +61,9 @@ public class AcademicTerm extends DomainBaseModel {
     this.academicYear = academicYear;
     this.termNumber = termNumber;
     this.assignedCourses = new ArrayList<>();
+
+    // Generate code after all fields are initialized
+    setCode(generateCode());
   }
 
   public static AcademicTerm createNew(
