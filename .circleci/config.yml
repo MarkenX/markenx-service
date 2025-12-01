@@ -46,19 +46,19 @@ jobs:
 
   docker_build_push:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/base:current
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Build Docker image
-          command: |
-            docker build -t markenx/markenx:latest .
+          command: docker build -t markenx/markenx:latest .
+      - run:
+          name: Login to DockerHub
+          command: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
       - run:
           name: Push Docker image
-          command: |
-            echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
-            docker push markenx/markenx:latest
+          command: docker push markenx/markenx:latest
 
   notify_slack:
     docker:
