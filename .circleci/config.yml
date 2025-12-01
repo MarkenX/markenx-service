@@ -7,14 +7,15 @@ defaults: &job_defaults
   docker:
     - image: 'cimg/openjdk:17.0'
   working_directory: ~/project
-  steps:
-    - checkout
 
 jobs:
   build:
     <<: *job_defaults
     steps:
       - checkout
+      - run:
+          name: Ensure full Git history for SonarCloud
+          command: git fetch --unshallow || git fetch --all --tags
       - run:
           name: Build Application
           command: mvn clean package -DskipTests
@@ -23,6 +24,9 @@ jobs:
     <<: *job_defaults
     steps:
       - checkout
+      - run:
+          name: Ensure full Git history for SonarCloud
+          command: git fetch --unshallow || git fetch --all --tags
       - run:
           name: Run Tests
           command: mvn test
@@ -33,6 +37,9 @@ jobs:
     <<: *job_defaults
     steps:
       - checkout
+      - run:
+          name: Ensure full Git history for SonarCloud
+          command: git fetch --unshallow || git fetch --all --tags
       - run:
           name: Analyze on SonarCloud
           command: mvn clean verify sonar:sonar -Dsonar.token=$SONAR_TOKEN
