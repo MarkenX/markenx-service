@@ -7,6 +7,8 @@ metadata:
     {{- include "markenx.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: keycloak
@@ -16,20 +18,20 @@ spec:
         app: keycloak
     spec:
       initContainers:
-        - name: wait-for-mysql
+        - name: wait-for-postgresql
           image: busybox:1.36
           command:
             - sh
             - -c
             - |
-              echo "Waiting for MySQL to be ready..."
-              until nc -z {{ .Release.Name }}-mysql 3306; do
-                echo "MySQL is unavailable - sleeping"
+              echo "Waiting for PostgreSQL to be ready..."
+              until nc -z {{ .Release.Name }}-postgresql 5432; do
+                echo "PostgreSQL is unavailable - sleeping"
                 sleep 5
               done
-              echo "MySQL is up - waiting for it to accept connections..."
+              echo "PostgreSQL is up - waiting for it to accept connections..."
               sleep 10
-              echo "MySQL is ready!"
+              echo "PostgreSQL is ready!"
 
       containers:
         - name: keycloak
@@ -38,9 +40,9 @@ spec:
           args:
             {{- toYaml .Values.keycloak.command | nindent 12 }}
           env:
-            # Ensure KC_DB_URL always points to this release's MySQL service
+            # Ensure KC_DB_URL always points to this release's PostgreSQL service
             - name: KC_DB_URL
-              value: {{ printf "jdbc:mysql://%s-mysql:3306/keycloak_db" .Release.Name | quote }}
+              value: {{ printf "jdbc:postgresql://%s-postgresql:5432/keycloak_db" .Release.Name | quote }}
             {{- /* Render other envs except KC_DB_URL to avoid duplicates */}}
             {{- range $i, $e := .Values.keycloak.extraEnv }}
             {{- if ne (get $e "name") "KC_DB_URL" }}
