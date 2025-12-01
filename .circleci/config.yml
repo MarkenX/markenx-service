@@ -55,23 +55,34 @@ jobs:
               ]
             }
 
-
 workflows:
   main:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: feat/catalogo-estado-asignaciones
+
       - test:
           requires:
             - build
+          filters:
+            branches:
+              only: feat/catalogo-estado-asignaciones
+
       - sonar:
           requires:
             - build
           context: SonarCloud
           filters:
             branches:
-              only: main
+              only: feat/catalogo-estado-asignaciones
+
       - notify_slack:
           requires:
             - test
             - sonar
           context: Slack
+          filters:
+            branches:
+              only: feat/catalogo-estado-asignaciones
