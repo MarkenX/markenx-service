@@ -1,0 +1,9 @@
+dependencies:
+- name: mysql
+  repository: https://charts.bitnami.com/bitnami
+  version: 14.0.3
+- name: keycloak
+  repository: https://charts.bitnami.com/bitnami
+  version: 18.0.1
+digest: sha256:c88695f47b5423a697f84ecfff31824e1608925d310ceba637fbc07780f5a318
+generated: "2025-12-01T11:35:35.917695-05:00"

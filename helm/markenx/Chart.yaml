@@ -7,8 +7,8 @@ appVersion: "1.0.0"
 
 dependencies:
   - name: mysql
-    version: "8.0.*"
+    version: "14.0.3"
     repository: "https://charts.bitnami.com/bitnami"
   - name: keycloak
-    version: "15.0.*"
+    version: "18.0.1"
     repository: "https://charts.bitnami.com/bitnami"
