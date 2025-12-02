@@ -143,6 +143,9 @@ public class StudentTask extends StudentAssignment<Task> {
 
   @Override
   protected String generateCode() {
+    if (assignment == null || assignment.getSerialNumber() == null || studentSerialNumber == null) {
+      return null; // Code will be generated after persistence
+    }
     return String.format("%s-%s-STD%s", PREFIX, assignment.getSerialNumber(), studentSerialNumber);
   }
 }
