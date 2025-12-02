@@ -16,7 +16,7 @@ service:
 
 env:
   - name: SPRING_PROFILES_ACTIVE
-    value: dev
+    value: "dev"
   - name: SPRING_DATASOURCE_URL
     value: jdbc:mysql://{{ .Release.Name }}-mysql:3306/markenx_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
   - name: SPRING_DATASOURCE_USERNAME
