@@ -82,7 +82,13 @@ spec:
 
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: {{ (index (.Values | default dict) "springProfile") | default "prod" | quote }}
+              {{- $profile := "prod" }}
+              {{- range .Values.env }}
+              {{- if eq .name "SPRING_PROFILES_ACTIVE" }}
+              {{- $profile = .value }}
+              {{- end }}
+              {{- end }}
+              value: {{ $profile | quote }}
             - name: SPRING_DATASOURCE_URL
               value: {{ printf "jdbc:mysql://%s-mysql:3306/%s?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC" .Release.Name .Values.mysql.auth.database | quote }}
             - name: SPRING_DATASOURCE_USERNAME
