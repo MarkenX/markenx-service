@@ -1,12 +1,12 @@
 package com.udla.markenx.shared.domain.valueobjects;
 
-public enum DomainBaseModelStatus {
+public enum EntityStatus {
   ENABLED("Habilitado"),
   DISABLED("Deshabilitado");
 
   private final String label;
 
-  DomainBaseModelStatus(String label) {
+  EntityStatus(String label) {
     this.label = label;
   }
 

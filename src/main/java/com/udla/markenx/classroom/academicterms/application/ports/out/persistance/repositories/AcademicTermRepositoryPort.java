@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.application.ports.out.persistance.repositories;
+package com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,9 +7,9 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public interface AcademicTermRepositoryPort {
 
@@ -19,7 +19,7 @@ public interface AcademicTermRepositoryPort {
 
   Page<AcademicTerm> findAllIncludingDisabled(Pageable pageable);
 
-  Page<AcademicTerm> findByStatus(DomainBaseModelStatus entityStatus, Pageable pageable);
+  Page<AcademicTerm> findByStatus(EntityStatus entityStatus, Pageable pageable);
 
   List<AcademicTerm> findByAcademicYear(int academicYear);
 

@@ -9,13 +9,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicTermJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.AcademicTermMapper;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,11 +54,11 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
         .orElseThrow(() -> new RuntimeException("AcademicTerm not found with id: " + existingAcademicTerm.getId()));
 
     // Update fields
-    existingEntity.setStartOfTerm(existingAcademicTerm.getStartOfTerm());
-    existingEntity.setEndOfTerm(existingAcademicTerm.getEndOfTerm());
+    existingEntity.setStartOfTerm(existingAcademicTerm.getTermStartDate());
+    existingEntity.setEndOfTerm(existingAcademicTerm.getTermEndDate());
     existingEntity.setAcademicYear(existingAcademicTerm.getAcademicYear());
     existingEntity.setTermNumber(existingAcademicTerm.getTermNumber());
-    existingEntity.setStatus(existingAcademicTerm.getStatus());
+    existingEntity.setStatus(existingAcademicTerm.getTermStatus());
     existingEntity.setUpdatedBy(existingAcademicTerm.getUpdatedBy());
     existingEntity.setUpdatedAt(existingAcademicTerm.getUpdatedAtDateTime());
 
@@ -71,7 +71,7 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
     return jpaRepository.findAll().stream()
         .filter(entity -> entity.getExternalReference() != null &&
             entity.getExternalReference().getPublicId().equals(id) &&
-            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
         .findFirst()
         .map(entity -> mapper.toDomain(entity, true));
   }
@@ -89,7 +89,7 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
   public Page<AcademicTerm> findAllPaged(Pageable pageable) {
     java.util.Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
-        .map(entity -> entity.getStatus() == DomainBaseModelStatus.ENABLED
+        .map(entity -> entity.getStatus() == EntityStatus.ENABLED
             ? mapper.toDomain(entity, false)
             : null)
         .map(domain -> domain);
@@ -103,7 +103,7 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
   }
 
   @Override
-  public Page<AcademicTerm> findByStatus(DomainBaseModelStatus status, Pageable pageable) {
+  public Page<AcademicTerm> findByStatus(EntityStatus status, Pageable pageable) {
     Objects.requireNonNull(status, "Status cannot be null");
     Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findByStatus(status, pageable)
@@ -146,7 +146,7 @@ public class AcademicTermRepositoryAdapter implements AcademicTermRepositoryPort
         .findFirst()
         .map(entity -> entity.getCourses() != null
             ? (int) entity.getCourses().stream()
-                .filter(course -> course.getStatus() == DomainBaseModelStatus.ENABLED)
+                .filter(course -> course.getStatus() == EntityStatus.ENABLED)
                 .count()
             : 0)
         .orElse(0);

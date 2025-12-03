@@ -9,8 +9,8 @@ import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 
 import com.udla.markenx.classroom.domain.exceptions.InvalidEmailException;
 import com.udla.markenx.classroom.domain.interfaces.Person;
-import com.udla.markenx.shared.domain.util.validator.EntityValidator;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public class Student extends Person {
 	// #region Constants
@@ -32,7 +32,7 @@ public class Student extends Person {
 			UUID id,
 			String code,
 			Long serialNumber,
-			DomainBaseModelStatus status,
+			EntityStatus status,
 			UUID enrolledCourseId,
 			String firstName,
 			String lastName,
@@ -54,7 +54,7 @@ public class Student extends Person {
 			UUID id,
 			String code,
 			Long serialNumber,
-			DomainBaseModelStatus status,
+			EntityStatus status,
 			UUID enrolledCourseId,
 			String firstName,
 			String lastName,

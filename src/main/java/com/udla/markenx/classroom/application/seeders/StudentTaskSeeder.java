@@ -145,7 +145,7 @@ public class StudentTaskSeeder implements CommandLineRunner {
                   studentTask.getId(),
                   null, // Code will be generated after save
                   "STUDENT_TASK"));
-          entity.setStatus(studentTask.getStatus());
+          entity.setStatus(studentTask.getEntityStatus());
           entity.setCurrentStatus(studentTask.getAssignmentStatus());
           entity.setAssignment(taskEntity);
           entity.setStudent(studentEntity);

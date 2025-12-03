@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 import java.util.Optional;
 
@@ -17,5 +17,5 @@ public interface StudentJpaRepository extends JpaRepository<StudentJpaEntity, Lo
 
   Page<StudentJpaEntity> findByCourseId(Long courseId, Pageable pageable);
 
-  Page<StudentJpaEntity> findByStatus(DomainBaseModelStatus status, Pageable pageable);
+  Page<StudentJpaEntity> findByStatus(EntityStatus status, Pageable pageable);
 }

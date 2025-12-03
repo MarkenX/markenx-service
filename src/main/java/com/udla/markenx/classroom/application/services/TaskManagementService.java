@@ -106,7 +106,7 @@ public class TaskManagementService {
       studentTaskEntity.setCreatedBy(createdBy);
       studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
       studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
-      studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED);
+      studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED);
 
       // Create external reference
       var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
@@ -179,7 +179,7 @@ public class TaskManagementService {
 
   @Transactional(readOnly = true)
   public Page<Task> getTasksByStatus(
-      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+      com.udla.markenx.shared.domain.valueobjects.EntityStatus status, Pageable pageable) {
     return taskRepository.findByStatus(status, pageable);
   }
 

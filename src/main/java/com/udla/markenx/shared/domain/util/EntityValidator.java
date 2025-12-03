@@ -1,4 +1,4 @@
-package com.udla.markenx.shared.domain.util.validator;
+package com.udla.markenx.shared.domain.util;
 
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.exceptions.NullFieldException;

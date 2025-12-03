@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.classroom.domain.valueobjects.Score;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 @EqualsAndHashCode(callSuper = true)
 public class Task extends Assignment {
@@ -23,7 +23,7 @@ public class Task extends Assignment {
 	private int maxAttempts;
 	private Score minScoreToPass;
 
-	public Task(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID courseId, int academicTermYear,
+	public Task(UUID id, String code, Long sequence, EntityStatus status, UUID courseId, int academicTermYear,
 			String title, String summary, LocalDate dueDate, int maxAttempts, double minScoreToPass, String createdBy,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(id, code, sequence, status, title, summary, dueDate, createdBy, createdAt, updatedAt);

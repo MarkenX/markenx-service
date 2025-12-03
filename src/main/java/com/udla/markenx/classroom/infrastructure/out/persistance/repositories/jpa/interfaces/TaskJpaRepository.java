@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.TaskJpaEntity;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public interface TaskJpaRepository extends JpaRepository<TaskJpaEntity, Long> {
 	Page<TaskJpaEntity> findByCourseId(Long courseId, Pageable pageable);
 
-	Page<TaskJpaEntity> findByStatus(DomainBaseModelStatus status, Pageable pageable);
+	Page<TaskJpaEntity> findByStatus(EntityStatus status, Pageable pageable);
 
 	// Page<TaskJpaEntity> findByCourseIdAndCurrentStatus(Long courseId,
 	// AssignmentStatus currentStatus,

@@ -7,9 +7,9 @@ import java.util.UUID;
 
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.interfaces.StudentAssignment;
-import com.udla.markenx.shared.domain.util.validator.EntityValidator;
 import com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public class StudentTask extends StudentAssignment<Task> {
   private static final Class<StudentTask> CLAZZ = StudentTask.class;
@@ -25,7 +25,7 @@ public class StudentTask extends StudentAssignment<Task> {
   public StudentTask(
       UUID id,
       String code,
-      DomainBaseModelStatus status,
+      EntityStatus status,
       Task task,
       UUID studentId,
       Long studentSerialNumber,

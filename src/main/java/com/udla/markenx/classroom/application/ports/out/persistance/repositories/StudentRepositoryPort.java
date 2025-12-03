@@ -25,7 +25,7 @@ public interface StudentRepositoryPort {
 
   Page<Student> findAllIncludingDisabled(Pageable pageable);
 
-  Page<Student> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+  Page<Student> findByStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus status,
       Pageable pageable);
 
   boolean existsByEmail(String email);

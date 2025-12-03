@@ -3,7 +3,7 @@ package com.udla.markenx.classroom.application.dtos.responses;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public record StudentResponseDTO(
 		UUID id,
@@ -11,5 +11,5 @@ public record StudentResponseDTO(
 		String firstName,
 		String lastName,
 		String email,
-		@JsonInclude(JsonInclude.Include.NON_NULL) DomainBaseModelStatus status) {
+		@JsonInclude(JsonInclude.Include.NON_NULL) EntityStatus status) {
 }

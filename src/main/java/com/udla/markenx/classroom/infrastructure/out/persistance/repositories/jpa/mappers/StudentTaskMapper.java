@@ -129,7 +129,7 @@ public class StudentTaskMapper implements BaseMapper<StudentTask, StudentTaskJpa
   }
 
   private void mapBasicFields(StudentTask domain, StudentTaskJpaEntity entity) {
-    entity.setStatus(domain.getStatus());
+    entity.setStatus(domain.getEntityStatus());
     entity.setCurrentStatus(domain.getAssignmentStatus());
     entity.setCreatedBy(domain.getCreatedBy());
     entity.setCreatedAt(domain.getCreatedAtDateTime());

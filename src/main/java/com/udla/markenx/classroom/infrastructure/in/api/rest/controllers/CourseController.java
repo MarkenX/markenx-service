@@ -108,7 +108,7 @@ public class CourseController implements CourseManagementControllerPort {
       "Example: ?page=0&size=10&sort=name,asc&status=DISABLED")
   @ApiResponse(responseCode = "200", description = "Courses retrieved successfully")
   public ResponseEntity<Page<CourseResponseDTO>> getAllCourses(
-      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.EntityStatus status,
       @Parameter(hidden = true) Pageable pageable) {
     Page<Course> courses;
     if (status != null) {

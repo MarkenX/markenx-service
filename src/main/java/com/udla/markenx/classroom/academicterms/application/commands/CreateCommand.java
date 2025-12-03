@@ -1,8 +1,8 @@
-package com.udla.markenx.classroom.application.commands.academicterm;
+package com.udla.markenx.classroom.academicterms.application.commands;
 
 import java.time.LocalDate;
 
-public record CreateAcademicTermCommand(
+public record CreateCommand(
 		LocalDate startOfTerm,
 		LocalDate endOfTerm,
 		Integer academicYear,

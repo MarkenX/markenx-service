@@ -13,7 +13,7 @@ import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.CourseJpaRepository;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.mappers.CourseMapper;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,7 +55,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
 
     // Update only modifiable fields
     existingEntity.setName(course.getName());
-    existingEntity.setStatus(course.getStatus());
+    existingEntity.setStatus(course.getEntityStatus());
     existingEntity.setUpdatedBy(course.getUpdatedBy());
     existingEntity.setUpdatedAt(course.getUpdatedAtDateTime());
 
@@ -67,7 +67,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
   public Optional<Course> findById(Long id) {
     Objects.requireNonNull(id, "Course ID cannot be null");
     return jpaRepository.findById(id)
-        .filter(entity -> entity.getStatus() == DomainBaseModelStatus.ENABLED)
+        .filter(entity -> entity.getStatus() == EntityStatus.ENABLED)
         .map(mapper::toDomain);
   }
 
@@ -80,7 +80,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
   @Override
   public Page<Course> findAll(Pageable pageable) {
     Objects.requireNonNull(pageable, "Pageable cannot be null");
-    return jpaRepository.findByStatus(DomainBaseModelStatus.ENABLED, pageable)
+    return jpaRepository.findByStatus(EntityStatus.ENABLED, pageable)
         .map(mapper::toDomainWithoutRelations);
   }
 
@@ -91,7 +91,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
   }
 
   @Override
-  public Page<Course> findByStatus(DomainBaseModelStatus status, Pageable pageable) {
+  public Page<Course> findByStatus(EntityStatus status, Pageable pageable) {
     Objects.requireNonNull(status, "Status cannot be null");
     Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findByStatus(status, pageable)
@@ -104,7 +104,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
     jpaRepository.findById(id)
         .ifPresent(entity -> {
           // Soft delete: change status to DISABLED
-          entity.setStatus(DomainBaseModelStatus.DISABLED);
+          entity.setStatus(EntityStatus.DISABLED);
           jpaRepository.save(entity);
         });
   }
@@ -115,7 +115,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
     return jpaRepository.findAll().stream()
         .filter(entity -> entity.getExternalReference() != null &&
             entity.getExternalReference().getPublicId().equals(id) &&
-            entity.getStatus() == DomainBaseModelStatus.ENABLED)
+            entity.getStatus() == EntityStatus.ENABLED)
         .findFirst()
         .map(mapper::toDomain);
   }
@@ -138,7 +138,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
             entity.getExternalReference().getPublicId().equals(id))
         .findFirst()
         .ifPresent(entity -> {
-          entity.setStatus(DomainBaseModelStatus.DISABLED);
+          entity.setStatus(EntityStatus.DISABLED);
           jpaRepository.save(entity);
         });
   }

@@ -16,12 +16,12 @@ import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseD
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentTaskWithDetailsResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentWithCourseResponseDTO;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public interface StudentControllerPort {
 
   ResponseEntity<Page<StudentResponseDTO>> getAllStudents(
-      DomainBaseModelStatus status,
+      EntityStatus status,
       Pageable pageable);
 
   ResponseEntity<StudentResponseDTO> getStudentById(UUID id);

@@ -7,12 +7,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.application.dtos.requests.CreateCourseRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateCourseRequestDTO;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
 
 @Service
@@ -33,7 +33,7 @@ public class CourseManagementService {
     AcademicTerm academicTerm = academicPeriodRepository.findByIdIncludingDisabled(request.getAcademicPeriodId())
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", request.getAcademicPeriodId()));
 
-    if (academicTerm.getStatus() != com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED) {
+    if (academicTerm.getTermStatus() != com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED) {
       throw new com.udla.markenx.classroom.domain.exceptions.InvalidEntityException(
           "No se puede crear un curso para un período académico deshabilitado");
     }
@@ -77,7 +77,7 @@ public class CourseManagementService {
 
   @Transactional(readOnly = true)
   public Page<Course> getCoursesByStatus(
-      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+      com.udla.markenx.shared.domain.valueobjects.EntityStatus status, Pageable pageable) {
     return courseRepository.findByStatus(status, pageable);
   }
 
@@ -89,7 +89,7 @@ public class CourseManagementService {
     // Verificar si el curso tiene tareas habilitadas
     long enabledTasksCount = course.getAssignments().stream()
         .filter(assignment -> assignment
-            .getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+            .getEntityStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
         .count();
 
     if (enabledTasksCount > 0) {

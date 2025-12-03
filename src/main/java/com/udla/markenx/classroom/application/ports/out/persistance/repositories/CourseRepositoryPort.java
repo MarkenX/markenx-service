@@ -26,7 +26,7 @@ public interface CourseRepositoryPort {
 
   Page<Course> findAllIncludingDisabled(Pageable pageable);
 
-  Page<Course> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+  Page<Course> findByStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus status,
       Pageable pageable);
 
   void deleteById(Long id);

@@ -2,7 +2,7 @@ package com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity;
 
 import java.time.LocalDateTime;
 
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -37,7 +37,7 @@ public abstract class BaseJpaEntity {
   @Enumerated(EnumType.STRING)
   // @Column(name = "status", nullable = false)
   @Column(name = "status")
-  private DomainBaseModelStatus status;
+  private EntityStatus status;
 
   // @Column(name = "created_by", nullable = false, updatable = false)
   @Column(name = "created_by")

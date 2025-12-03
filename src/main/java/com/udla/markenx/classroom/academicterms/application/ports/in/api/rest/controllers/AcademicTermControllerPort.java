@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.application.ports.in.api.rest.controllers;
+package com.udla.markenx.classroom.academicterms.application.ports.in.api.rest.controllers;
 
 import java.util.UUID;
 
@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 
 import jakarta.validation.Valid;
 
-import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.CreateAcademicTermRequestDTO;
-import com.udla.markenx.classroom.application.dtos.requests.AcademicPeriod.UpdateAcademicTermRequestDTO;
-import com.udla.markenx.classroom.application.dtos.responses.AcademicTermResponseDTO;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.classroom.academicterms.application.dtos.ResponseDTO;
+import com.udla.markenx.classroom.academicterms.application.dtos.CreateRequestDTO;
+import com.udla.markenx.classroom.academicterms.application.dtos.UpdateRequestDTO;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 /**
  * Port interface that defines operations for managing academic terms.
@@ -30,7 +30,7 @@ public interface AcademicTermControllerPort {
    * @return a {@link ResponseEntity} containing the created academic term
    *         information
    */
-  ResponseEntity<AcademicTermResponseDTO> createAcademicTerm(@Valid CreateAcademicTermRequestDTO request);
+  ResponseEntity<ResponseDTO> createAcademicTerm(@Valid CreateRequestDTO request);
 
   /**
    * Updates an existing academic term identified by its unique ID.
@@ -41,7 +41,7 @@ public interface AcademicTermControllerPort {
    * @return a {@link ResponseEntity} containing the updated academic term
    *         information
    */
-  ResponseEntity<AcademicTermResponseDTO> updateAcademicTerm(UUID id, @Valid UpdateAcademicTermRequestDTO request);
+  ResponseEntity<ResponseDTO> updateAcademicTerm(UUID id, @Valid UpdateRequestDTO request);
 
   /**
    * Retrieves the academic term associated with the given ID.
@@ -49,7 +49,7 @@ public interface AcademicTermControllerPort {
    * @param id the identifier of the academic term
    * @return a {@link ResponseEntity} containing the academic term details
    */
-  ResponseEntity<AcademicTermResponseDTO> getAcademicTermById(UUID id);
+  ResponseEntity<ResponseDTO> getAcademicTermById(UUID id);
 
   /**
    * Retrieves all academic terms filtered by status and paginated.
@@ -60,7 +60,7 @@ public interface AcademicTermControllerPort {
    * @return a {@link ResponseEntity} containing a paginated list of academic
    *         terms
    */
-  ResponseEntity<Page<AcademicTermResponseDTO>> getAllAcademicTerms(DomainBaseModelStatus status, Pageable pageable);
+  ResponseEntity<Page<ResponseDTO>> getAllAcademicTerms(EntityStatus status, Pageable pageable);
 
   /**
    * Disables an academic term, preventing it from being used or displayed

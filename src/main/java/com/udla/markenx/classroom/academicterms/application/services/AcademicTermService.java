@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.application.services;
+package com.udla.markenx.classroom.academicterms.application.services;
 
 import java.util.List;
 import java.util.UUID;
@@ -10,12 +10,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.application.commands.academicterm.CreateAcademicTermCommand;
-import com.udla.markenx.classroom.application.commands.academicterm.UpdateAcademicTermCommand;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
+import com.udla.markenx.classroom.academicterms.application.commands.CreateCommand;
+import com.udla.markenx.classroom.academicterms.application.commands.UpdateCommand;
+import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 import com.udla.markenx.classroom.domain.factories.AcademicTermFactory;
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.services.AcademicTermDomainService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class AcademicTermService {
   private final AcademicTermFactory factory;
 
   @Transactional
-  public AcademicTerm createAcademicTerm(CreateAcademicTermCommand command) {
+  public AcademicTerm createAcademicTerm(CreateCommand command) {
 
     List<AcademicTerm> existingTerms = repository.findByAcademicYear(command.academicYear());
 
@@ -44,7 +44,7 @@ public class AcademicTermService {
   }
 
   @Transactional
-  public AcademicTerm createHistoricalAcademicTerm(CreateAcademicTermCommand command) {
+  public AcademicTerm createHistoricalAcademicTerm(CreateCommand command) {
 
     List<AcademicTerm> existingTerms = repository.findByAcademicYear(command.academicYear());
 
@@ -59,7 +59,7 @@ public class AcademicTermService {
   }
 
   @Transactional
-  public AcademicTerm updateAcademicTerm(UpdateAcademicTermCommand command) {
+  public AcademicTerm updateAcademicTerm(UpdateCommand command) {
     AcademicTerm existing = repository
         .findByIdIncludingDisabled(command.id())
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", command.id()));
@@ -96,7 +96,7 @@ public class AcademicTermService {
 
   @Transactional(readOnly = true)
   public Page<AcademicTerm> getAcademicPeriodsByStatus(
-      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+      com.udla.markenx.shared.domain.valueobjects.EntityStatus status, Pageable pageable) {
     return repository.findByStatus(status, pageable);
   }
 

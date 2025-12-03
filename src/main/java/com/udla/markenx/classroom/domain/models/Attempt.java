@@ -6,12 +6,12 @@ import java.util.UUID;
 
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
-import com.udla.markenx.shared.domain.util.validator.EntityValidator;
+import com.udla.markenx.shared.domain.util.EntityValidator;
 import com.udla.markenx.classroom.domain.valueobjects.Score;
 
 import com.udla.markenx.classroom.domain.valueobjects.enums.AttemptResult;
 import com.udla.markenx.classroom.domain.valueobjects.enums.AttemptStatus;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public class Attempt extends DomainBaseModel {
 	private static final Class<Attempt> CLAZZ = Attempt.class;
@@ -28,7 +28,7 @@ public class Attempt extends DomainBaseModel {
 	private final AttemptResult result;
 	private final AttemptStatus attemptStatus;
 
-	public Attempt(UUID id, String code, Long sequence, DomainBaseModelStatus status, UUID studentTaskId,
+	public Attempt(UUID id, String code, Long sequence, EntityStatus status, UUID studentTaskId,
 			Long studentSequence,
 			Long taskSequence, double taskMinScoreToPass, double score, Duration timeSpent, AttemptResult result,
 			AttemptStatus attemptStatus, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {

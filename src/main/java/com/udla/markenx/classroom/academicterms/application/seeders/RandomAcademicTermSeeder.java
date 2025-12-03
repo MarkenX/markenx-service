@@ -1,4 +1,4 @@
-package com.udla.markenx.classroom.application.seeders;
+package com.udla.markenx.classroom.academicterms.application.seeders;
 
 import java.time.LocalDate;
 
@@ -8,8 +8,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.application.commands.academicterm.CreateAcademicTermCommand;
-import com.udla.markenx.classroom.application.services.AcademicTermService;
+import com.udla.markenx.classroom.academicterms.application.commands.CreateCommand;
+import com.udla.markenx.classroom.academicterms.application.services.AcademicTermService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +29,7 @@ public class RandomAcademicTermSeeder implements CommandLineRunner {
     var endDate = LocalDate.of(2025, 6, 30);
     int year = startDate.getYear();
 
-    var command = new CreateAcademicTermCommand(startDate, endDate, year, "SYSTEM");
+    var command = new CreateCommand(startDate, endDate, year, "SYSTEM");
     service.createHistoricalAcademicTerm(command);
   }
 

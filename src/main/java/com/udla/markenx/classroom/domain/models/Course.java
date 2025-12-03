@@ -7,8 +7,8 @@ import java.util.UUID;
 
 import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
-import com.udla.markenx.shared.domain.util.validator.EntityValidator;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public class Course extends DomainBaseModel {
   private static final Class<Course> CLAZZ = Course.class;
@@ -26,7 +26,7 @@ public class Course extends DomainBaseModel {
       UUID id,
       String code,
       Long serialNumber,
-      DomainBaseModelStatus status,
+      EntityStatus status,
       UUID academicTermId,
       int academicTermYear,
       String name,
@@ -73,7 +73,7 @@ public class Course extends DomainBaseModel {
       UUID id,
       String code,
       Long serialNumber,
-      DomainBaseModelStatus status,
+      EntityStatus status,
       UUID academicTermId,
       int academicTermYear,
       String name,

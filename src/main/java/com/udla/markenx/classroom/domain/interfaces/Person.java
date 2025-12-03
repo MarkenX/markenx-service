@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
-import com.udla.markenx.shared.domain.util.validator.EntityValidator;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public abstract class Person extends DomainBaseModel {
 	private final String firstName;
 	private final String lastName;
 
-	public Person(UUID id, String code, DomainBaseModelStatus status, String firstName, String lastName, String createdBy,
+	public Person(UUID id, String code, EntityStatus status, String firstName, String lastName, String createdBy,
 			LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(id, code, status, createdBy, createdAt, updatedAt);
 		this.firstName = EntityValidator.ensureNotNullOrEmpty(getClass(), firstName, "firstName");

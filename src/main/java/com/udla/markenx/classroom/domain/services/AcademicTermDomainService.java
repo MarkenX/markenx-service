@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.exceptions.MaxAcademicTermsReachedException;
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
 
 @Component
 public class AcademicTermDomainService {
@@ -40,7 +40,7 @@ public class AcademicTermDomainService {
 
     if (existingTerms.size() == 1) {
       AcademicTerm other = existingTerms.get(0);
-      return newStartDate.isBefore(other.getStartOfTerm()) ? 1 : 2;
+      return newStartDate.isBefore(other.getTermStartDate()) ? 1 : 2;
     }
 
     throw new MaxAcademicTermsReachedException(newStartDate.getYear());
@@ -80,11 +80,11 @@ public class AcademicTermDomainService {
 
   public void validateNoOverlaps(LocalDate newStart, LocalDate newEnd, List<AcademicTerm> existing) {
     for (AcademicTerm t : existing) {
-      if (!newStart.isAfter(t.getEndOfTerm()) && !newEnd.isBefore(t.getStartOfTerm())) {
+      if (!newStart.isAfter(t.getTermEndDate()) && !newEnd.isBefore(t.getTermStartDate())) {
         throw new InvalidEntityException(
             AcademicTerm.class,
             String.format("Se solapa con el período existente %s (%s a %s)",
-                t.getLabel(), t.getStartOfTerm(), t.getEndOfTerm()));
+                t.getLabel(), t.getTermStartDate(), t.getTermEndDate()));
       }
     }
   }
@@ -94,7 +94,7 @@ public class AcademicTermDomainService {
       return terms;
 
     return terms.stream()
-        .sorted(Comparator.comparing(AcademicTerm::getStartOfTerm))
+        .sorted(Comparator.comparing(AcademicTerm::getTermStartDate))
         .toList();
   }
 }

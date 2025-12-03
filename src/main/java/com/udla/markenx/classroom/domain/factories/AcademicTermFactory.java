@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.domain.services.AcademicTermDomainService;
 
 @Component

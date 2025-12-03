@@ -18,18 +18,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.application.dtos.requests.BulkStudentImportDTO;
 import com.udla.markenx.classroom.application.dtos.responses.AttemptResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentTaskWithDetailsResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.StudentWithCourseResponseDTO;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.StudentRepositoryPort;
 import com.udla.markenx.classroom.domain.exceptions.BulkImportException;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEmailException;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Attempt;
 import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.domain.models.Student;
@@ -183,7 +183,7 @@ public class StudentService {
       studentTaskEntity.setCreatedBy(createdBy);
       studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
       studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
-      studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED);
+      studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED);
 
       // Create external reference
       var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
@@ -412,7 +412,7 @@ public class StudentService {
           studentTaskEntity.setCreatedBy(createdBy);
           studentTaskEntity.setCreatedAt(java.time.LocalDateTime.now());
           studentTaskEntity.setUpdatedAt(java.time.LocalDateTime.now());
-          studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED);
+          studentTaskEntity.setStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED);
 
           // Create external reference
           var externalRef = new com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.ExternalReferenceJpaEntity();
@@ -471,17 +471,17 @@ public class StudentService {
         .firstName(student.getFirstName())
         .lastName(student.getLastName())
         .email(student.getAcademicEmail())
-        .status(isAdmin ? student.getStatus().name() : null)
+        .status(isAdmin ? student.getEntityStatus().name() : null)
         .course(StudentWithCourseResponseDTO.CourseInfo.builder()
             .id(course.getId())
             .code(course.getCode())
             .name(course.getName())
-            .status(isAdmin ? course.getStatus().name() : null)
+            .status(isAdmin ? course.getEntityStatus().name() : null)
             .academicTerm(StudentWithCourseResponseDTO.AcademicTermInfo.builder()
                 .id(academicTerm.getId())
                 .code(academicTerm.getCode())
                 .name(academicTerm.getLabel())
-                .year(academicTerm.getAcademicYear())
+                .academicYear(academicTerm.getAcademicYear())
                 .build())
             .build())
         .build();
@@ -546,7 +546,7 @@ public class StudentService {
       StudentTaskWithDetailsResponseDTO dto = StudentTaskWithDetailsResponseDTO.builder()
           .studentTaskId(studentTask.getId())
           .studentTaskCode(studentTask.getCode())
-          .studentTaskStatus(isAdmin ? studentTask.getStatus().name() : null)
+          .studentTaskStatus(isAdmin ? studentTask.getEntityStatus().name() : null)
           .assignmentStatus(studentTask.getAssignmentStatus().name())
           .attemptCount(studentTask.getAttempts().size())
           .task(StudentTaskWithDetailsResponseDTO.TaskInfo.builder()
@@ -557,7 +557,7 @@ public class StudentService {
               .maxScore(100.0)
               .minScoreToPass(task.getMinScoreToPass())
               .maxAttempts(task.getMaxAttempts())
-              .status(isAdmin ? task.getStatus().name() : null)
+              .status(isAdmin ? task.getEntityStatus().name() : null)
               .startDate(null) // Task doesn't have start date in domain model
               .endDate(task.getDueDate().atStartOfDay())
               .courseCode(course.getCode())

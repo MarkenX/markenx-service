@@ -53,7 +53,7 @@ public class StudentManagementService {
 
   @Transactional(readOnly = true)
   public Page<Student> getStudentsByStatus(
-      com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable) {
+      com.udla.markenx.shared.domain.valueobjects.EntityStatus status, Pageable pageable) {
     return studentRepository.findByStatus(status, pageable);
   }
 

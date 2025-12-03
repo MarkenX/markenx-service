@@ -65,7 +65,7 @@ public class StudentController implements StudentControllerPort {
       @ApiResponse(responseCode = "401", description = "Unauthorized")
   })
   public ResponseEntity<Page<StudentResponseDTO>> getAllStudents(
-      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.EntityStatus status,
       @Parameter(hidden = true) Pageable pageable) {
     Page<Student> students;
     if (status != null) {

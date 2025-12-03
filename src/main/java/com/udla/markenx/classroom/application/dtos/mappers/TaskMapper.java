@@ -17,7 +17,7 @@ public class TaskMapper {
 				domain.getDueDate(),
 				domain.getMaxAttempts(),
 				domain.getMinScoreToPass(),
-				SecurityUtils.isAdmin() ? domain.getStatus() : null);
+				SecurityUtils.isAdmin() ? domain.getEntityStatus() : null);
 
 		return dto;
 	}

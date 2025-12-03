@@ -23,7 +23,7 @@ public interface TaskRepositoryPort {
 
 	Page<Task> findAllIncludingDisabled(Pageable pageable);
 
-	Page<Task> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status, Pageable pageable);
+	Page<Task> findByStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus status, Pageable pageable);
 
 	Page<Task> getTasksByCourseId(Long courseId, Pageable pageable);
 

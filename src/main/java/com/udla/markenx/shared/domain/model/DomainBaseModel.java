@@ -5,63 +5,45 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.lang.NonNull;
-
-import com.udla.markenx.classroom.domain.valueobjects.AuditInfo;
-import com.udla.markenx.shared.domain.util.validator.EntityValidator;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.AuditParams;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
+import com.udla.markenx.shared.domain.util.EntityValidator;
 
 public abstract class DomainBaseModel {
 
   private final UUID id;
-  private DomainBaseModelStatus status;
+  private EntityStatus entityStatus;
   private final AuditInfo auditInfo;
-  private String code;
 
-  public DomainBaseModel(
-      UUID id,
-      String code,
-      DomainBaseModelStatus status,
-      String createdBy,
-      LocalDateTime createdAt,
-      LocalDateTime updatedAt) {
-    this.id = requireId(id);
-    this.code = code;
-    this.status = requireStatus(status);
-    this.auditInfo = requireAuditInfo(new AuditInfo(createdBy, createdAt, updatedAt));
-  }
-
-  public DomainBaseModel(String createdBy) {
-    this.id = UUID.randomUUID();
-    this.status = DomainBaseModelStatus.ENABLED;
-    this.auditInfo = new AuditInfo(createdBy);
-    // Code generation deferred to subclass after field initialization
-    this.code = null;
-  }
-
+  // Para cuando se crea nueva entidad desde el servicio
   public DomainBaseModel() {
     this.id = UUID.randomUUID();
-    this.status = DomainBaseModelStatus.ENABLED;
-    this.auditInfo = new AuditInfo();
-    // Code generation deferred to subclass after field initialization
-    this.code = null;
+    enable();
+    this.auditInfo = validateAuditInfo(new AuditInfo());
   }
 
-  @NonNull
+  // Para cuando se crea una nueva entidad con datos fuera del servicio
+  public DomainBaseModel(String createdBy) {
+    this.id = UUID.randomUUID();
+    enable();
+    this.auditInfo = validateAuditInfo(new AuditInfo(createdBy));
+  }
+
+  // Para cuando se carga una entidad desde la base de datos
+  public DomainBaseModel(UUID id, EntityStatus entityStatus, AuditParams params) {
+    this.id = validateId(id);
+    this.entityStatus = validateStatus(entityStatus);
+    this.auditInfo = validateAuditInfo(new AuditInfo(params));
+  }
+
+  // #region Getters
+
   public UUID getId() {
     return Objects.requireNonNull(id);
   }
 
-  public DomainBaseModelStatus getStatus() {
-    return status;
-  }
-
-  public String getCode() {
-    return code;
-  }
-
-  protected void setCode(String code) {
-    this.code = code;
+  public EntityStatus getEntityStatus() {
+    return entityStatus;
   }
 
   public String getCreatedBy() {
@@ -69,7 +51,7 @@ public abstract class DomainBaseModel {
   }
 
   public String getUpdatedBy() {
-    return auditInfo.getLastModifiedBy();
+    return auditInfo.getUpdatedBy();
   }
 
   public LocalDate getCreatedAtDate() {
@@ -88,33 +70,33 @@ public abstract class DomainBaseModel {
     return auditInfo.getUpdatedDateTime();
   }
 
-  private UUID requireId(UUID id) {
+  // #endregion
+
+  // #region Validations
+
+  private UUID validateId(UUID id) {
     return EntityValidator.ensureNotNull(getClass(), id, "id");
   }
 
-  private DomainBaseModelStatus requireStatus(DomainBaseModelStatus status) {
+  private EntityStatus validateStatus(EntityStatus status) {
     return EntityValidator.ensureNotNull(getClass(), status, "status");
   }
 
-  private AuditInfo requireAuditInfo(AuditInfo auditInfo) {
+  private AuditInfo validateAuditInfo(AuditInfo auditInfo) {
     return EntityValidator.ensureNotNull(getClass(), auditInfo, "auditInfo");
   }
 
-  protected abstract String generateCode();
-
-  public void regenerateCode() {
-    this.code = generateCode();
-  }
+  // #endregion
 
   public void markUpdated() {
     auditInfo.markUpdated();
   }
 
   public void enable() {
-    this.status = DomainBaseModelStatus.ENABLED;
+    this.entityStatus = EntityStatus.ENABLED;
   }
 
   public void disable() {
-    this.status = DomainBaseModelStatus.DISABLED;
+    this.entityStatus = EntityStatus.DISABLED;
   }
 }

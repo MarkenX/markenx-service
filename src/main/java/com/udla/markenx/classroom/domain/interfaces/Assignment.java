@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
-import com.udla.markenx.shared.domain.util.validator.EntityValidator;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 import lombok.Getter;
 
@@ -19,7 +19,7 @@ public abstract class Assignment extends DomainBaseModel {
 	private String summary;
 	private LocalDate dueDate;
 
-	public Assignment(UUID id, String code, Long sequence, DomainBaseModelStatus status, String title, String summary,
+	public Assignment(UUID id, String code, Long sequence, EntityStatus status, String title, String summary,
 			LocalDate dueDate, String createdBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super(id, code, status, createdBy, createdAt, updatedAt);
 		this.serialNumber = sequence;

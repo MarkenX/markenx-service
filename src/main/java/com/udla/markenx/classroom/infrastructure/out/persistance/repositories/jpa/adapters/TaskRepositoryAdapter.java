@@ -43,7 +43,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 		Objects.requireNonNull(id, "Task ID cannot be null");
 		return jpaRepository.findById(id)
 				.filter(
-						entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+						entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
 				.map(mapper::toDomain);
 	}
 
@@ -57,7 +57,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	public Page<Task> findAll(Pageable pageable) {
 		Objects.requireNonNull(pageable, "Pageable cannot be null");
 		return jpaRepository.findAll(pageable)
-				.map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
+				.map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED
 						? mapper.toDomain(entity)
 						: null)
 				.map(domain -> domain);
@@ -70,7 +70,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 	}
 
 	@Override
-	public Page<Task> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+	public Page<Task> findByStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus status,
 			Pageable pageable) {
 		Objects.requireNonNull(status, "Status cannot be null");
 		Objects.requireNonNull(pageable, "Pageable cannot be null");
@@ -84,7 +84,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 		return jpaRepository.findAll().stream()
 				.filter(entity -> entity.getExternalReference() != null &&
 						entity.getExternalReference().getPublicId().equals(id) &&
-						entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+						entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
 				.findFirst()
 				.map(mapper::toDomain);
 	}
@@ -107,7 +107,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 					if (entity.getCourse() != null &&
 							entity.getCourse().getExternalReference() != null &&
 							entity.getCourse().getExternalReference().getPublicId().equals(courseId) &&
-							entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED) {
+							entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED) {
 						return mapper.toDomain(entity);
 					}
 					return null;
@@ -127,7 +127,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 							entity.getDueDate() != null &&
 							!entity.getDueDate().isBefore(rangeDate.getStartDate()) &&
 							!entity.getDueDate().isAfter(rangeDate.getEndDate()) &&
-							entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED) {
+							entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED) {
 						return mapper.toDomain(entity);
 					}
 					return null;
@@ -142,7 +142,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 				.filter(entity -> entity.getCourse() != null &&
 						entity.getCourse().getExternalReference() != null &&
 						entity.getCourse().getExternalReference().getPublicId().equals(courseId) &&
-						entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+						entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
 				.map(mapper::toDomain)
 				.toList();
 	}
@@ -191,7 +191,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 				.orElseThrow(() -> new IllegalArgumentException("Task not found with ID: " + task.getId()));
 
 		// Update entity with new values
-		existingEntity.setStatus(task.getStatus());
+		existingEntity.setStatus(task.getEntityStatus());
 		existingEntity.setTitle(task.getTitle());
 		existingEntity.setSummary(task.getSummary());
 		existingEntity.setDueDate(task.getDueDate());

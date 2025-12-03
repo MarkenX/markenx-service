@@ -1,3 +1,4 @@
+package com.udla.markenx.classroom.academicterms.application.seeders;
 // package com.udla.markenx.classroom.application.seeders;
 
 // import java.time.LocalDate;

@@ -138,7 +138,7 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
 
   private void mapBasicFields(Course domain, CourseJpaEntity target) {
     target.setId(domain.getSequence());
-    target.setStatus(domain.getStatus());
+    target.setStatus(domain.getEntityStatus());
     target.setName(domain.getName());
     target.setCreatedBy(domain.getCreatedBy());
     target.setCreatedAt(domain.getCreatedAtDateTime());

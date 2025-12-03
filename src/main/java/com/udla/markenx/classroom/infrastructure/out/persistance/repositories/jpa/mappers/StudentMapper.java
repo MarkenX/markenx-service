@@ -137,7 +137,7 @@ public final class StudentMapper implements BaseMapper<Student, StudentJpaEntity
   }
 
   private void mapBasicFields(Student domain, StudentJpaEntity entity) {
-    entity.setStatus(domain.getStatus());
+    entity.setStatus(domain.getEntityStatus());
     entity.setFirstName(domain.getFirstName());
     entity.setLastName(domain.getLastName());
     entity.setEmail(domain.getAcademicEmail());

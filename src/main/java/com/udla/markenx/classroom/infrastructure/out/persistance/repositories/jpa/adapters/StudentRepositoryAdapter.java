@@ -30,7 +30,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
     Objects.requireNonNull(id, "Student ID cannot be null");
     return jpaRepository.findById(id)
         .filter(
-            entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+            entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
         .map(mapper::toDomain);
   }
 
@@ -44,7 +44,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   public Optional<Student> findByEmail(String email) {
     return jpaRepository.findByEmail(email)
         .filter(
-            entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+            entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
         .map(mapper::toDomain);
   }
 
@@ -52,7 +52,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   public Page<Student> findAll(Pageable pageable) {
     Objects.requireNonNull(pageable, "Pageable cannot be null");
     return jpaRepository.findAll(pageable)
-        .map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED
+        .map(entity -> entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED
             ? mapper.toDomainWithoutTasks(entity)
             : null)
         .map(domain -> domain);
@@ -65,7 +65,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
   }
 
   @Override
-  public Page<Student> findByStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+  public Page<Student> findByStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus status,
       Pageable pageable) {
     Objects.requireNonNull(status, "Status cannot be null");
     Objects.requireNonNull(pageable, "Pageable cannot be null");
@@ -85,7 +85,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
         .filter(entity -> entity.getCourse() != null &&
             entity.getCourse().getExternalReference() != null &&
             entity.getCourse().getExternalReference().getPublicId().equals(courseId) &&
-            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
         .map(mapper::toDomainWithoutTasks)
         .toList();
   }
@@ -96,7 +96,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
     return jpaRepository.findAll().stream()
         .filter(entity -> entity.getExternalReference() != null &&
             entity.getExternalReference().getPublicId().equals(id) &&
-            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.ENABLED)
+            entity.getStatus() == com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED)
         .findFirst()
         .map(mapper::toDomain);
   }
@@ -155,7 +155,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
     existingEntity.setFirstName(student.getFirstName());
     existingEntity.setLastName(student.getLastName());
     existingEntity.setEmail(student.getAcademicEmail());
-    existingEntity.setStatus(student.getStatus());
+    existingEntity.setStatus(student.getEntityStatus());
     existingEntity.setUpdatedBy(student.getUpdatedBy());
     existingEntity.setUpdatedAt(student.getUpdatedAtDateTime());
 
@@ -174,7 +174,7 @@ public class StudentRepositoryAdapter implements StudentRepositoryPort {
         .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + id));
 
     // Soft delete: set status to DISABLED
-    entity.setStatus(com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus.DISABLED);
+    entity.setStatus(com.udla.markenx.shared.domain.valueobjects.EntityStatus.DISABLED);
     jpaRepository.save(entity);
   }
 }

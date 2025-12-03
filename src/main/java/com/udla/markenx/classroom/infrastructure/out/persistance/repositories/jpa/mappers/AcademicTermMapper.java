@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
@@ -51,9 +51,9 @@ public final class AcademicTermMapper {
     ref.setEntityType(AcademicTerm.class.getSimpleName());
 
     entity.setExternalReference(ref);
-    entity.setStatus(domain.getStatus());
-    entity.setStartOfTerm(domain.getStartOfTerm());
-    entity.setEndOfTerm(domain.getEndOfTerm());
+    entity.setStatus(domain.getTermStatus());
+    entity.setStartOfTerm(domain.getTermStartDate());
+    entity.setEndOfTerm(domain.getTermEndDate());
     entity.setAcademicYear(domain.getAcademicYear());
     entity.setTermNumber(domain.getTermNumber());
     entity.setCreatedBy(domain.getCreatedBy());

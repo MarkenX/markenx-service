@@ -126,7 +126,7 @@ public final class AttemptMapper implements BaseMapper<Attempt, AttemptJpaEntity
   }
 
   private void mapBasicFields(Attempt domain, AttemptJpaEntity entity) {
-    entity.setStatus(domain.getStatus());
+    entity.setStatus(domain.getEntityStatus());
     entity.setScore(domain.getScore());
     entity.setDuration(domain.getTimeSpent());
     entity.setResult(domain.getResult());

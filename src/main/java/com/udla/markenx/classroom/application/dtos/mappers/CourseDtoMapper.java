@@ -14,7 +14,7 @@ public class CourseDtoMapper {
         domain.getId(),
         domain.getCode(),
         domain.getName(),
-        SecurityUtils.isAdmin() ? domain.getStatus() : null);
+        SecurityUtils.isAdmin() ? domain.getEntityStatus() : null);
     return dto;
   }
 }

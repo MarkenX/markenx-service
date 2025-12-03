@@ -61,7 +61,7 @@ public class TaskController implements TaskControllerPort {
       @ApiResponse(responseCode = "401", description = "Unauthorized")
   })
   public ResponseEntity<Page<TaskResponseDTO>> getAllTasks(
-      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus status,
+      @Parameter(description = "Filter by status (ENABLED or DISABLED)", required = false) @RequestParam(required = false) com.udla.markenx.shared.domain.valueobjects.EntityStatus status,
       @Parameter(hidden = true) Pageable pageable) {
     Page<Task> tasks;
     if (status != null) {

@@ -22,6 +22,6 @@ public final class StudentMapper {
         domain.getFirstName(),
         domain.getLastName(),
         domain.getAcademicEmail(),
-        SecurityUtils.isAdmin() ? domain.getStatus() : null);
+        SecurityUtils.isAdmin() ? domain.getEntityStatus() : null);
   }
 }

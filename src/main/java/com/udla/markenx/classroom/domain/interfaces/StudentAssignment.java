@@ -5,7 +5,7 @@ import java.util.UUID;
 
 // import com.udla.markenx.core.models.Student;
 import com.udla.markenx.classroom.domain.valueobjects.enums.AssignmentStatus;
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
 
 public abstract class StudentAssignment<A extends Assignment> extends DomainBaseModel {
@@ -22,7 +22,7 @@ public abstract class StudentAssignment<A extends Assignment> extends DomainBase
   public StudentAssignment(
       UUID id,
       String code,
-      DomainBaseModelStatus status,
+      EntityStatus status,
       A assignment,
       UUID studentId,
       Long studentSerialNumber,

@@ -3,10 +3,10 @@ package com.udla.markenx.game.domain.model.stage;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.udla.markenx.shared.domain.valueobjects.DomainBaseModelStatus;
+import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 import com.udla.markenx.game.domain.model.consumer.ConsumerProfile;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
-import com.udla.markenx.shared.domain.util.validator.EntityValidator;
+import com.udla.markenx.shared.domain.util.EntityValidator;
 
 public class Stage extends DomainBaseModel {
   private static final Class<Stage> CLAZZ = Stage.class;
@@ -21,7 +21,7 @@ public class Stage extends DomainBaseModel {
   public Stage(
       UUID id,
       String code,
-      DomainBaseModelStatus status,
+      EntityStatus status,
       String name,
       String description,
       Double budget,

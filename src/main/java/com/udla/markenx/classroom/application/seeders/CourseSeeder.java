@@ -11,11 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.application.builders.CourseBuilder;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
 
 /**

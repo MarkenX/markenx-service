@@ -12,12 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
+import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
 import com.udla.markenx.classroom.application.factories.RandomTaskFactory;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
-import com.udla.markenx.classroom.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.TaskRepositoryPort;
-import com.udla.markenx.classroom.domain.models.AcademicTerm;
 import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.domain.models.Task;
 
@@ -84,8 +84,8 @@ public class TaskSeeder implements CommandLineRunner {
         AcademicTerm term = academicTermRepository.findById(course.getAcademicTermId())
             .orElseThrow(() -> new RuntimeException("Academic term not found for course: " + course.getId()));
 
-        LocalDate termStartDate = term.getStartOfTerm();
-        LocalDate termEndDate = term.getEndOfTerm();
+        LocalDate termStartDate = term.getTermStartDate();
+        LocalDate termEndDate = term.getTermEndDate();
         int academicYear = term.getAcademicYear();
 
         int taskCount = numberGenerator.positiveIntegerBetween(MIN_TASKS_PER_COURSE, MAX_TASKS_PER_COURSE);

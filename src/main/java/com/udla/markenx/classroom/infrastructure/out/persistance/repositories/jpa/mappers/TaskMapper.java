@@ -103,7 +103,7 @@ public final class TaskMapper implements BaseMapper<Task, TaskJpaEntity> {
 	}
 
 	private void mapBasicFields(Task domain, TaskJpaEntity entity) {
-		entity.setStatus(domain.getStatus());
+		entity.setStatus(domain.getEntityStatus());
 		entity.setTitle(domain.getTitle());
 		entity.setSummary(domain.getSummary());
 		entity.setDueDate(domain.getDueDate());
