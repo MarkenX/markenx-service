@@ -105,8 +105,16 @@ spec:
               value: "markenx"
             - name: LAUNCHDARKLY_ENABLED
               value: {{ .Values.launchdarkly.enabled | quote }}
+            {{- if .Values.launchdarkly.secretName }}
+            - name: LAUNCHDARKLY_SDK_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.launchdarkly.secretName | quote }}
+                  key: sdkKey
+            {{- else }}
             - name: LAUNCHDARKLY_SDK_KEY
               value: {{ .Values.launchdarkly.sdkKey | quote }}
+            {{- end }}
             {{- /* Include any extra envs except the computed ones above */}}
             {{- $skip := list "SPRING_PROFILES_ACTIVE" "SPRING_DATASOURCE_URL" "SPRING_DATASOURCE_USERNAME" "SPRING_DATASOURCE_PASSWORD" "KEYCLOAK_AUTH_SERVER_URL" "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI" "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI" "KEYCLOAK_REALM" "LAUNCHDARKLY_ENABLED" "LAUNCHDARKLY_SDK_KEY" }}
             {{- range $i, $e := .Values.env }}

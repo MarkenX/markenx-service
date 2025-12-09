@@ -50,6 +50,7 @@ resources:
 launchdarkly:
   enabled: false
   sdkKey: ""
+  secretName: ""
 
 livenessProbe:
   httpGet:
