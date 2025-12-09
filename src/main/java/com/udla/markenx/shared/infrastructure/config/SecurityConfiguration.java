@@ -30,13 +30,17 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-            .requestMatchers("/api/markenx/admin/**").hasRole("ADMIN")
-            .requestMatchers("/api/markenx/students/**").hasAnyRole("STUDENT", "ADMIN")
-            .requestMatchers("/api/markenx/assignments/status").permitAll()
-            .anyRequest().authenticated())
+      .csrf(csrf -> csrf.disable())
+      .authorizeHttpRequests(auth -> auth
+        // Public documentation
+        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+        // Allow Kubernetes and health checks to access actuator health endpoints without auth
+        .requestMatchers("/actuator/health/**", "/actuator/health", "/actuator/info").permitAll()
+        // Application routes
+        .requestMatchers("/api/markenx/admin/**").hasRole("ADMIN")
+        .requestMatchers("/api/markenx/students/**").hasAnyRole("STUDENT", "ADMIN")
+        .requestMatchers("/api/markenx/assignments/status").permitAll()
+        .anyRequest().authenticated())
         .oauth2ResourceServer(oauth2 -> oauth2
             .jwt(jwt -> jwt
                 .jwtAuthenticationConverter(new KeycloakJwtAuthenticationConverter())
