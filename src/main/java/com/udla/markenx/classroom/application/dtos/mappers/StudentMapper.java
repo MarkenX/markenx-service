@@ -1,9 +1,9 @@
 package com.udla.markenx.classroom.application.dtos.mappers;
 
 import com.udla.markenx.classroom.application.dtos.responses.StudentResponseDTO;
-import com.udla.markenx.classroom.domain.exceptions.UtilityClassInstantiationException;
+import com.udla.markenx.shared.domain.exceptions.UtilityClassInstantiationException;
 import com.udla.markenx.classroom.domain.models.Student;
-import com.udla.markenx.shared.domain.util.SecurityUtils;
+import com.udla.markenx.shared.domain.utils.SecurityUtils;
 
 public final class StudentMapper {
 

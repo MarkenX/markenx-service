@@ -3,6 +3,7 @@ package com.udla.markenx.classroom.infrastructure.out.persistance.repositories.j
 import java.util.ArrayList;
 import java.util.List;
 
+import com.udla.markenx.classroom.terms.infrastructure.out.data.persistance.repositories.jpa.entities.TermJpaEntity;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.entity.BaseJpaEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -36,5 +37,5 @@ public class CourseJpaEntity extends BaseJpaEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "term_id")
-  private AcademicTermJpaEntity academicTerm;
+  private TermJpaEntity academicTerm;
 }

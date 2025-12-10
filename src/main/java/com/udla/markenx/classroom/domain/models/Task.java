@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import lombok.EqualsAndHashCode;
 
-import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.shared.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.classroom.domain.valueobjects.Score;
 import com.udla.markenx.shared.domain.valueobjects.EntityStatus;

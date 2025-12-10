@@ -1,6 +1,6 @@
 package com.udla.markenx.classroom.domain.valueobjects;
 
-import com.udla.markenx.classroom.domain.exceptions.InvalidValueException;
+import com.udla.markenx.shared.domain.exceptions.InvalidValueException;
 
 public record Score(Double value) {
   public Score {

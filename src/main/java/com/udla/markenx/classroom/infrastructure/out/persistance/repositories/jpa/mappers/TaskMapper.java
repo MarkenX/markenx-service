@@ -89,7 +89,7 @@ public final class TaskMapper implements BaseMapper<Task, TaskJpaEntity> {
 
 	private int extractAcademicTermYear(TaskJpaEntity entity) {
 		if (entity.getCourse() != null && entity.getCourse().getAcademicTerm() != null) {
-			return entity.getCourse().getAcademicTerm().getAcademicYear();
+			return entity.getCourse().getAcademicTerm().getYear();
 		}
 		return -1;
 	}

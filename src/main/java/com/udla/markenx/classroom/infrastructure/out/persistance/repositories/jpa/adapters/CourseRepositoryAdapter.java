@@ -33,7 +33,7 @@ public class CourseRepositoryAdapter implements CourseRepositoryPort {
     if (course.getCode() == null && saved.getId() != null && saved.getAcademicTerm() != null) {
       String generatedCode = com.udla.markenx.classroom.domain.models.Course.generateCodeFromId(
           saved.getId(),
-          saved.getAcademicTerm().getAcademicYear());
+          saved.getAcademicTerm().getYear());
       saved.getExternalReference().setCode(generatedCode);
       saved = jpaRepository.save(saved);
     }

@@ -3,8 +3,8 @@ package com.udla.markenx.classroom.domain.valueobjects;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
-import com.udla.markenx.classroom.domain.exceptions.NullFieldException;
+import com.udla.markenx.shared.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.shared.domain.exceptions.NullFieldException;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

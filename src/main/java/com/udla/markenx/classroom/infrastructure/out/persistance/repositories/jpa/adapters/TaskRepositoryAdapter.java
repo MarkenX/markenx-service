@@ -170,7 +170,7 @@ public class TaskRepositoryAdapter implements TaskRepositoryPort {
 				&& savedEntity.getCourse().getAcademicTerm() != null) {
 			String generatedCode = com.udla.markenx.classroom.domain.models.Task.generateCodeFromId(
 					savedEntity.getId(),
-					savedEntity.getCourse().getAcademicTerm().getAcademicYear());
+					savedEntity.getCourse().getAcademicTerm().getYear());
 			savedEntity.getExternalReference().setCode(generatedCode);
 			savedEntity = jpaRepository.save(savedEntity);
 		}

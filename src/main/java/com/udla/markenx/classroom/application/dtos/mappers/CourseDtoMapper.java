@@ -2,7 +2,7 @@ package com.udla.markenx.classroom.application.dtos.mappers;
 
 import com.udla.markenx.classroom.application.dtos.responses.CourseResponseDTO;
 import com.udla.markenx.classroom.domain.models.Course;
-import com.udla.markenx.shared.domain.util.SecurityUtils;
+import com.udla.markenx.shared.domain.utils.SecurityUtils;
 
 public class CourseDtoMapper {
 

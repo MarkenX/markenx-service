@@ -13,7 +13,7 @@ import com.udla.markenx.classroom.application.dtos.responses.ErrorResponseDTO;
 import com.udla.markenx.classroom.domain.exceptions.BulkImportException;
 import com.udla.markenx.classroom.domain.exceptions.DuplicateResourceException;
 import com.udla.markenx.classroom.domain.exceptions.InvalidEmailException;
-import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.shared.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.classroom.domain.exceptions.ResourceNotFoundException;
 
 /**

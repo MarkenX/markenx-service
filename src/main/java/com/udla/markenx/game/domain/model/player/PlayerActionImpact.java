@@ -3,7 +3,7 @@ package com.udla.markenx.game.domain.model.player;
 import java.util.UUID;
 
 import com.udla.markenx.game.domain.model.consumer.Subfactor;
-import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.utils.EntityValidator;
 
 public class PlayerActionImpact {
   private static final Class<PlayerActionImpact> CLAZZ = PlayerActionImpact.class;

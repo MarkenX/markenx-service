@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.classroom.domain.models.Course;
 import com.udla.markenx.classroom.domain.models.Student;
-import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AcademicTermJpaEntity;
+import com.udla.markenx.classroom.terms.infrastructure.out.data.persistance.repositories.jpa.entities.TermJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.AssignmentJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.CourseJpaEntity;
 import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.entities.StudentJpaEntity;
-import com.udla.markenx.classroom.infrastructure.out.persistance.repositories.jpa.interfaces.AcademicTermJpaRepository;
+import com.udla.markenx.classroom.terms.infrastructure.out.data.persistance.repositories.jpa.interfaces.TermJpaRepository;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.BaseMapper;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.ExternalReferenceMapperHelper;
 import com.udla.markenx.shared.infrastructure.out.data.persistence.jpa.mapper.util.MapperValidator;
@@ -29,7 +29,7 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
   private final AssignmentMapper assignmentMapper;
   private final MapperValidator validator;
   private final ExternalReferenceMapperHelper externalReferenceHelper;
-  private final AcademicTermJpaRepository academicTermRepository;
+  private final TermJpaRepository academicTermRepository;
 
   /**
    * Converts domain to entity with full relationship resolution.
@@ -153,7 +153,7 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
     }
 
     // Find the existing AcademicTermJpaEntity by UUID
-    AcademicTermJpaEntity academicTerm = academicTermRepository.findAll().stream()
+    TermJpaEntity academicTerm = academicTermRepository.findAll().stream()
         .filter(term -> term.getExternalReference() != null &&
             term.getExternalReference().getPublicId().equals(domain.getAcademicTermId()))
         .findFirst()
@@ -211,7 +211,7 @@ public class CourseMapper implements BaseMapper<Course, CourseJpaEntity> {
 
   private int extractAcademicTermYear(CourseJpaEntity entity) {
     if (entity.getAcademicTerm() != null) {
-      return entity.getAcademicTerm().getAcademicYear();
+      return entity.getAcademicTerm().getYear();
     }
     return -1;
   }

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import com.udla.markenx.classroom.domain.interfaces.Assignment;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
-import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.utils.EntityValidator;
 import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 public class Course extends DomainBaseModel {

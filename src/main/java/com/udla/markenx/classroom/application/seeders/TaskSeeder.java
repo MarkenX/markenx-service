@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
-import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
+import com.udla.markenx.classroom.terms.application.ports.out.persistance.repositories.TermRepositoryPort;
+import com.udla.markenx.classroom.terms.domain.model.Term;
 import com.udla.markenx.classroom.application.factories.RandomTaskFactory;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
@@ -37,14 +37,14 @@ public class TaskSeeder implements CommandLineRunner {
   private final RandomTaskFactory taskFactory;
   private final TaskRepositoryPort taskRepository;
   private final CourseRepositoryPort courseRepository;
-  private final AcademicTermRepositoryPort academicTermRepository;
+  private final TermRepositoryPort academicTermRepository;
   private final RandomNumberGeneratorPort numberGenerator;
 
   public TaskSeeder(
       RandomTaskFactory taskFactory,
       TaskRepositoryPort taskRepository,
       CourseRepositoryPort courseRepository,
-      AcademicTermRepositoryPort academicTermRepository,
+      TermRepositoryPort academicTermRepository,
       RandomNumberGeneratorPort numberGenerator) {
     this.taskFactory = taskFactory;
     this.taskRepository = taskRepository;
@@ -81,12 +81,12 @@ public class TaskSeeder implements CommandLineRunner {
         UUID courseId = course.getId();
 
         // Get academic term to set proper due dates
-        AcademicTerm term = academicTermRepository.findById(course.getAcademicTermId())
+        Term term = academicTermRepository.findById(course.getAcademicTermId())
             .orElseThrow(() -> new RuntimeException("Academic term not found for course: " + course.getId()));
 
-        LocalDate termStartDate = term.getTermStartDate();
-        LocalDate termEndDate = term.getTermEndDate();
-        int academicYear = term.getAcademicYear();
+        LocalDate termStartDate = term.getStartDate();
+        LocalDate termEndDate = term.getEndDate();
+        int academicYear = term.getYear();
 
         int taskCount = numberGenerator.positiveIntegerBetween(MIN_TASKS_PER_COURSE, MAX_TASKS_PER_COURSE);
 

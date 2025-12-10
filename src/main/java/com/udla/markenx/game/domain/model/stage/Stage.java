@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 import com.udla.markenx.game.domain.model.consumer.ConsumerProfile;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
-import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.utils.EntityValidator;
 
 public class Stage extends DomainBaseModel {
   private static final Class<Stage> CLAZZ = Stage.class;

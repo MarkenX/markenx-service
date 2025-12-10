@@ -18,8 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
-import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
+import com.udla.markenx.classroom.terms.application.ports.out.persistance.repositories.TermRepositoryPort;
+import com.udla.markenx.classroom.terms.domain.model.Term;
 import com.udla.markenx.classroom.application.dtos.requests.BulkStudentImportDTO;
 import com.udla.markenx.classroom.application.dtos.responses.AttemptResponseDTO;
 import com.udla.markenx.classroom.application.dtos.responses.BulkImportResponseDTO;
@@ -59,7 +59,7 @@ public class StudentService {
 
   private final StudentRepositoryPort studentRepository;
   private final CourseRepositoryPort courseRepository;
-  private final AcademicTermRepositoryPort academicTermRepository;
+  private final TermRepositoryPort academicTermRepository;
   private final AuthenticationServicePort authenticationService;
   private final StudentAssignmentJpaRepository studentAssignmentRepository;
   private final AttemptJpaRepository attemptRepository;
@@ -72,7 +72,7 @@ public class StudentService {
   public StudentService(
       StudentRepositoryPort studentRepository,
       CourseRepositoryPort courseRepository,
-      AcademicTermRepositoryPort academicTermRepository,
+      TermRepositoryPort academicTermRepository,
       AuthenticationServicePort authenticationService,
       StudentAssignmentJpaRepository studentAssignmentRepository,
       AttemptJpaRepository attemptRepository,
@@ -458,11 +458,11 @@ public class StudentService {
         .orElseThrow(() -> new ResourceNotFoundException("Curso", student.getEnrolledCourseId()));
 
     // Find academic term
-    AcademicTerm academicTerm = academicTermRepository.findById(course.getAcademicTermId())
+    Term term = academicTermRepository.findById(course.getAcademicTermId())
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", course.getAcademicTermId()));
 
     // Check if user is admin to include status fields
-    boolean isAdmin = com.udla.markenx.shared.domain.util.SecurityUtils.isAdmin();
+    boolean isAdmin = com.udla.markenx.shared.domain.utils.SecurityUtils.isAdmin();
 
     // Build response DTO
     return StudentWithCourseResponseDTO.builder()
@@ -478,10 +478,10 @@ public class StudentService {
             .name(course.getName())
             .status(isAdmin ? course.getEntityStatus().name() : null)
             .academicTerm(StudentWithCourseResponseDTO.AcademicTermInfo.builder()
-                .id(academicTerm.getId())
-                .code(academicTerm.getCode())
-                .name(academicTerm.getLabel())
-                .academicYear(academicTerm.getAcademicYear())
+                .id(term.getId())
+                .code(term.getCode())
+                .name(term.getLabel())
+                .academicYear(term.getYear())
                 .build())
             .build())
         .build();
@@ -518,7 +518,7 @@ public class StudentService {
         .map(entity -> (StudentTaskJpaEntity) entity)
         .toList();
 
-    boolean isAdmin = com.udla.markenx.shared.domain.util.SecurityUtils.isAdmin();
+    boolean isAdmin = com.udla.markenx.shared.domain.utils.SecurityUtils.isAdmin();
 
     for (StudentTaskJpaEntity entity : taskEntities) {
       StudentTask studentTask = studentTaskMapper.toDomain(entity);
@@ -540,7 +540,7 @@ public class StudentService {
       Course course = courseRepository.findById(task.getCourseId())
           .orElseThrow(() -> new ResourceNotFoundException("Curso", task.getCourseId()));
 
-      AcademicTerm academicTerm = academicTermRepository.findById(course.getAcademicTermId())
+      Term term = academicTermRepository.findById(course.getAcademicTermId())
           .orElseThrow(() -> new ResourceNotFoundException("Período académico", course.getAcademicTermId()));
 
       StudentTaskWithDetailsResponseDTO dto = StudentTaskWithDetailsResponseDTO.builder()
@@ -562,7 +562,7 @@ public class StudentService {
               .endDate(task.getDueDate().atStartOfDay())
               .courseCode(course.getCode())
               .courseName(course.getName())
-              .academicTermYear(academicTerm.getAcademicYear())
+              .academicTermYear(term.getYear())
               .build())
           .build();
 

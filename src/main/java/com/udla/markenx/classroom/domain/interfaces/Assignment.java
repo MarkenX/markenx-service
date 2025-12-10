@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.udla.markenx.classroom.domain.exceptions.InvalidEntityException;
+import com.udla.markenx.shared.domain.exceptions.InvalidEntityException;
 import com.udla.markenx.shared.domain.model.DomainBaseModel;
-import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.utils.EntityValidator;
 import com.udla.markenx.shared.domain.valueobjects.EntityStatus;
 
 import lombok.Getter;

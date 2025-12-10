@@ -1,5 +1,6 @@
 package com.udla.markenx.classroom.application.services;
 
+import com.udla.markenx.shared.domain.exceptions.InvalidEntityException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -7,8 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
-import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
+import com.udla.markenx.classroom.terms.application.ports.out.persistance.repositories.TermRepositoryPort;
+import com.udla.markenx.classroom.terms.domain.model.Term;
 import com.udla.markenx.classroom.application.dtos.requests.CreateCourseRequestDTO;
 import com.udla.markenx.classroom.application.dtos.requests.UpdateCourseRequestDTO;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
@@ -19,28 +20,28 @@ import com.udla.markenx.classroom.domain.models.Course;
 public class CourseManagementService {
 
   private final CourseRepositoryPort courseRepository;
-  private final AcademicTermRepositoryPort academicPeriodRepository;
+  private final TermRepositoryPort academicPeriodRepository;
 
   public CourseManagementService(
       CourseRepositoryPort courseRepository,
-      AcademicTermRepositoryPort academicPeriodRepository) {
+      TermRepositoryPort academicPeriodRepository) {
     this.courseRepository = courseRepository;
     this.academicPeriodRepository = academicPeriodRepository;
   }
 
   @Transactional
   public Course createCourse(CreateCourseRequestDTO request) {
-    AcademicTerm academicTerm = academicPeriodRepository.findByIdIncludingDisabled(request.getAcademicPeriodId())
+    Term term = academicPeriodRepository.findByIdIncludingDisabled(request.getAcademicPeriodId())
         .orElseThrow(() -> new ResourceNotFoundException("Período académico", request.getAcademicPeriodId()));
 
-    if (academicTerm.getTermStatus() != com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED) {
-      throw new com.udla.markenx.classroom.domain.exceptions.InvalidEntityException(
+    if (term.getStatus() != com.udla.markenx.shared.domain.valueobjects.EntityStatus.ENABLED) {
+      throw new InvalidEntityException(
           "No se puede crear un curso para un período académico deshabilitado");
     }
 
     Course newCourse = new Course(
-        academicTerm.getId(),
-        academicTerm.getAcademicYear(),
+        term.getId(),
+        term.getYear(),
         request.getLabel());
 
     return courseRepository.save(newCourse);
@@ -93,7 +94,7 @@ public class CourseManagementService {
         .count();
 
     if (enabledTasksCount > 0) {
-      throw new com.udla.markenx.classroom.domain.exceptions.InvalidEntityException(
+      throw new InvalidEntityException(
           String.format("No se puede deshabilitar el curso con ID %s porque tiene %d tarea(s) habilitada(s)",
               id, enabledTasksCount));
     }

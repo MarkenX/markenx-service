@@ -11,8 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.udla.markenx.classroom.academicterms.application.ports.out.persistance.repositories.AcademicTermRepositoryPort;
-import com.udla.markenx.classroom.academicterms.domain.model.AcademicTerm;
+import com.udla.markenx.classroom.terms.application.ports.out.persistance.repositories.TermRepositoryPort;
+import com.udla.markenx.classroom.terms.domain.model.Term;
 import com.udla.markenx.classroom.application.builders.CourseBuilder;
 import com.udla.markenx.classroom.application.ports.out.data.generators.random.RandomNumberGeneratorPort;
 import com.udla.markenx.classroom.application.ports.out.persistance.repositories.CourseRepositoryPort;
@@ -33,13 +33,13 @@ public class CourseSeeder implements CommandLineRunner {
 
   private final CourseBuilder courseBuilder;
   private final CourseRepositoryPort courseRepository;
-  private final AcademicTermRepositoryPort academicTermRepository;
+  private final TermRepositoryPort academicTermRepository;
   private final RandomNumberGeneratorPort numberGenerator;
 
   public CourseSeeder(
       CourseBuilder courseBuilder,
       CourseRepositoryPort courseRepository,
-      AcademicTermRepositoryPort academicTermRepository,
+      TermRepositoryPort academicTermRepository,
       RandomNumberGeneratorPort numberGenerator) {
     this.courseBuilder = courseBuilder;
     this.courseRepository = courseRepository;
@@ -60,8 +60,8 @@ public class CourseSeeder implements CommandLineRunner {
       }
 
       // Get academic terms
-      Page<AcademicTerm> termsPage = academicTermRepository.findAllPaged(Pageable.unpaged());
-      List<AcademicTerm> terms = termsPage.getContent();
+      Page<Term> termsPage = academicTermRepository.findAllPaged(Pageable.unpaged());
+      List<Term> terms = termsPage.getContent();
 
       if (terms.isEmpty()) {
         System.err.println("  ✗ No Academic Terms found. Run AcademicTermSeeder first.");
@@ -71,7 +71,7 @@ public class CourseSeeder implements CommandLineRunner {
       // Create courses for EACH academic term (past and present)
       int totalCourses = 0;
 
-      for (AcademicTerm term : terms) {
+      for (Term term : terms) {
         UUID termId = term.getId();
         int courseCount = numberGenerator.positiveIntegerBetween(MIN_COURSES, MAX_COURSES);
 

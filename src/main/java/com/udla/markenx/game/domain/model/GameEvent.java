@@ -3,7 +3,7 @@ package com.udla.markenx.game.domain.model;
 import java.util.UUID;
 
 import com.udla.markenx.game.domain.valueobject.StageEventCategory;
-import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.utils.EntityValidator;
 
 public class GameEvent {
   private static final Class<GameEvent> CLAZZ = GameEvent.class;

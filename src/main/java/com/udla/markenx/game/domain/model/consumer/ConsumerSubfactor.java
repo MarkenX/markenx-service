@@ -2,7 +2,7 @@ package com.udla.markenx.game.domain.model.consumer;
 
 import java.util.UUID;
 
-import com.udla.markenx.shared.domain.util.EntityValidator;
+import com.udla.markenx.shared.domain.utils.EntityValidator;
 
 public class ConsumerSubfactor {
   private static final Class<ConsumerSubfactor> CLAZZ = ConsumerSubfactor.class;
